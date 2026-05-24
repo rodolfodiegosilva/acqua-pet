@@ -4,8 +4,8 @@ import { ThemeToggle } from './ThemeToggle';
 import acquaPetIcon from '../assets/acqua_pet_icon.svg';
 
 interface HeaderProps {
-  view: 'landing' | 'store';
-  setView: (view: 'landing' | 'store') => void;
+  view: 'landing' | 'store' | 'client';
+  setView: (view: 'landing' | 'store' | 'client') => void;
   cartItemCount: number;
   onCartClick: () => void;
 }
@@ -24,6 +24,7 @@ export const Header: React.FC<HeaderProps> = ({
     { name: 'Início', id: 'inicio', type: 'anchor' },
     { name: 'Serviços', id: 'servicos', type: 'anchor' },
     { name: 'Loja Pet', id: 'loja', type: 'store' },
+    { name: 'Área do Cliente', id: 'cliente', type: 'client' },
     { name: 'Agendamento', id: 'agendamento', type: 'anchor' },
     { name: 'Contato', id: 'contato', type: 'anchor' }
   ];
@@ -33,6 +34,9 @@ export const Header: React.FC<HeaderProps> = ({
     if (item.type === 'store') {
       setView('store');
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (item.type === 'client') {
+      setView('client');
+      window.scrollTo({ top: 0, behavior: 'auto' });
     } else {
       setView('landing');
       // Pequeno timeout para dar tempo da renderização da landing ocorrer se estivesse na loja
@@ -111,8 +115,10 @@ export const Header: React.FC<HeaderProps> = ({
               fontWeight: 500
             }}>
               {menuItems.map((item) => {
-                const isActive = (item.type === 'store' && view === 'store') || 
-                                 (item.type === 'anchor' && view === 'landing');
+                const isActive =
+                  (item.type === 'store' && view === 'store') ||
+                  (item.type === 'client' && view === 'client') ||
+                  (item.type === 'anchor' && view === 'landing');
                 return (
                   <li key={item.id}>
                     <button
@@ -210,7 +216,7 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
           
           <button
-            onClick={() => handleNavClick({ name: 'Agendamento', id: 'agendamento', type: 'anchor' })}
+            onClick={() => handleNavClick({ name: 'Área do Cliente', id: 'cliente', type: 'client' })}
             className="gradient-bg gradient-bg-hover cta-header-btn"
             style={{
               display: 'none',
@@ -225,7 +231,7 @@ export const Header: React.FC<HeaderProps> = ({
               transition: 'var(--transition-smooth)'
             }}
           >
-            Agendar Consulta
+            Entrar no Portal
           </button>
 
           {/* Mobile Menu Toggle */}
@@ -289,7 +295,7 @@ export const Header: React.FC<HeaderProps> = ({
             ))}
             <li style={{ width: '80%', marginTop: '8px' }}>
               <button
-                onClick={() => handleNavClick({ name: 'Agendamento', id: 'agendamento', type: 'anchor' })}
+                onClick={() => handleNavClick({ name: 'Área do Cliente', id: 'cliente', type: 'client' })}
                 className="gradient-bg text-center"
                 style={{
                   display: 'block',
@@ -303,7 +309,7 @@ export const Header: React.FC<HeaderProps> = ({
                   cursor: 'pointer'
                 }}
               >
-                Agendar Agora
+                Entrar no Portal
               </button>
             </li>
           </ul>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Header } from './components/Header';
 import { Hero } from './sections/Hero';
 import { Essence } from './sections/Essence';
@@ -6,11 +6,18 @@ import { Services } from './sections/Services';
 import { Contact } from './sections/Contact';
 import { Footer } from './components/Footer';
 import { Store } from './pages/Store';
+import { ClientPortal } from './pages/ClientPortal';
 import type { CartItem } from './pages/Store';
 import type { Product } from './services/api';
 
 function App() {
-  const [view, setView] = useState<'landing' | 'store'>('landing');
+  const resolveViewFromPath = useCallback((pathname: string): 'landing' | 'store' | 'client' => {
+    if (pathname === '/area-cliente') return 'client';
+    if (pathname === '/loja') return 'store';
+    return 'landing';
+  }, []);
+
+  const [view, setViewState] = useState<'landing' | 'store' | 'client'>(() => resolveViewFromPath(window.location.pathname));
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
 
@@ -40,35 +47,45 @@ function App() {
   const clearCart = () => setCart([]);
 
   const cartItemCount = cart.reduce((acc, item) => acc + item.quantity, 0);
+  const isClientPortal = view === 'client';
+
+  const setView = useCallback((nextView: 'landing' | 'store' | 'client') => {
+    setViewState(nextView);
+    const nextPath = nextView === 'client' ? '/area-cliente' : nextView === 'store' ? '/loja' : '/';
+    if (window.location.pathname !== nextPath) {
+      window.history.pushState({}, '', nextPath);
+    }
+  }, []);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setViewState(resolveViewFromPath(window.location.pathname));
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [resolveViewFromPath]);
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Header Fixo com Glassmorphism e controles de navegação SPA */}
-      <Header
-        view={view}
-        setView={setView}
-        cartItemCount={cartItemCount}
-        onCartClick={() => setIsCartOpen(true)}
-      />
+      {!isClientPortal && (
+        <Header
+          view={view}
+          setView={setView}
+          cartItemCount={cartItemCount}
+          onCartClick={() => setIsCartOpen(true)}
+        />
+      )}
       
-      {/* Corpo da Landing Page ou E-commerce */}
       <main style={{ flex: '1 0 auto' }}>
         {view === 'landing' ? (
           <>
-            {/* Seção Hero Cinematográfica com Vídeo */}
             <Hero />
-            
-            {/* Seção Exclusiva da Essência (Equilíbrio Biológico e Saúde) */}
             <Essence />
-            
-            {/* Seção de Serviços */}
             <Services />
-            
-            {/* Seção de Agendamento e Contato */}
             <Contact />
           </>
-        ) : (
-          /* Loja Virtual Premium */
+        ) : view === 'store' ? (
           <Store
             cart={cart}
             addToCart={addToCart}
@@ -79,11 +96,15 @@ function App() {
             setIsCartOpen={setIsCartOpen}
             setView={setView}
           />
+        ) : (
+          <ClientPortal
+            setView={setView}
+            addToCart={addToCart}
+          />
         )}
       </main>
       
-      {/* Rodapé com Links e Redes Sociais integrado à SPA */}
-      <Footer setView={setView} />
+      {!isClientPortal && <Footer setView={setView} />}
     </div>
   );
 }

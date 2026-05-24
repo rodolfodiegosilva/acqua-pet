@@ -3,7 +3,7 @@ import { Phone, MapPin, Mail, Clock } from 'lucide-react';
 import acquaPetIcon from '../assets/acqua_pet_icon.svg';
 
 interface FooterProps {
-  setView?: (view: 'landing' | 'store') => void;
+  setView?: (view: 'landing' | 'store' | 'client') => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ setView }) => {
@@ -11,6 +11,7 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
     { name: 'Início', id: 'inicio', type: 'anchor' },
     { name: 'Serviços', id: 'servicos', type: 'anchor' },
     { name: 'Loja Pet', id: 'loja', type: 'store' },
+    { name: 'Área do Cliente', id: 'cliente', type: 'client' },
     { name: 'Agendamento', id: 'agendamento', type: 'anchor' },
     { name: 'Contato', id: 'contato', type: 'anchor' }
   ];
@@ -20,6 +21,9 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
       if (item.type === 'store') {
         setView('store');
         window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else if (item.type === 'client') {
+        setView('client');
+        window.scrollTo({ top: 0, behavior: 'auto' });
       } else {
         setView('landing');
         setTimeout(() => {
