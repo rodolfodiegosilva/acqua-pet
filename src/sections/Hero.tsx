@@ -27,17 +27,55 @@ export const Hero: React.FC = () => {
   return (
     <section
       id="inicio"
+      className="section-dark"
       style={{
         position: 'relative',
-        paddingTop: '160px',
-        paddingBottom: '100px',
-        background: 'linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%)',
+        paddingTop: '180px',
+        paddingBottom: '120px',
         overflow: 'hidden',
-        textAlign: 'left'
+        textAlign: 'left',
+        minHeight: '85vh',
+        display: 'flex',
+        alignItems: 'center'
       }}
     >
-      {/* Bolhas flutuantes decorativas de fundo */}
-      <div className="bubble-container">
+      {/* 1. Vídeo de Background Cinematográfico (Mixkit CDN estável) */}
+      <video
+        autoPlay
+        loop
+        muted
+        playsInline
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: 1,
+          pointerEvents: 'none'
+        }}
+      >
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-dogs-playing-in-a-lake-43180-large.mp4" type="video/mp4" />
+        <source src="https://assets.mixkit.co/videos/preview/mixkit-underwater-bubbles-background-40748-large.mp4" type="video/mp4" />
+        Seu navegador não suporta vídeos em background.
+      </video>
+
+      {/* 2. Overlay de Contraste Seguro (Garante a perfeita legibilidade da fonte branca) */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          background: 'linear-gradient(135deg, rgba(3, 2, 116, 0.95) 0%, rgba(3, 2, 116, 0.75) 60%, rgba(1, 0, 46, 0.45) 100%)',
+          zIndex: 2
+        }}
+      />
+
+      {/* 3. Bolhas flutuantes decorativas (Acima do overlay, abaixo do conteúdo) */}
+      <div className="bubble-container" style={{ zIndex: 3 }}>
         <div className="bubble" style={{ left: '10%', width: '40px', height: '40px', animationDelay: '0s', animationDuration: '8s' }} />
         <div className="bubble" style={{ left: '25%', width: '20px', height: '20px', animationDelay: '2s', animationDuration: '12s' }} />
         <div className="bubble" style={{ left: '50%', width: '60px', height: '60px', animationDelay: '1s', animationDuration: '10s' }} />
@@ -45,27 +83,26 @@ export const Hero: React.FC = () => {
         <div className="bubble" style={{ left: '85%', width: '50px', height: '50px', animationDelay: '3s', animationDuration: '14s' }} />
       </div>
 
-      <div className="container">
+      {/* 4. Conteúdo da Página */}
+      <div className="container" style={{ position: 'relative', zIndex: 4 }}>
         <div className="hero-grid" style={{
           display: 'grid',
           gridTemplateColumns: '1fr',
           gap: '50px',
-          alignItems: 'center',
-          position: 'relative',
-          zIndex: 10
+          alignItems: 'center'
         }}>
           {/* Texto Principal */}
           <div>
-            {/* Tag em Destaque */}
+            {/* Tag em Destaque com o Amarelo Ouro de alto contraste */}
             <div style={{
               display: 'inline-flex',
               alignItems: 'center',
               gap: '8px',
-              backgroundColor: 'rgba(0, 180, 216, 0.12)',
-              border: '1px solid rgba(0, 180, 216, 0.25)',
+              backgroundColor: 'rgba(231, 164, 12, 0.15)',
+              border: '1px solid rgba(231, 164, 12, 0.3)',
               padding: '8px 16px',
               borderRadius: 'var(--radius-full)',
-              color: 'var(--primary)',
+              color: 'var(--accent-gold)',
               fontSize: '13px',
               fontWeight: 700,
               textTransform: 'uppercase',
@@ -83,15 +120,16 @@ export const Hero: React.FC = () => {
               lineHeight: 1.15,
               marginBottom: '24px',
               letterSpacing: '-1.5px',
-              fontFamily: 'var(--font-heading)'
+              fontFamily: 'var(--font-heading)',
+              color: '#ffffff'
             }}>
-              Onde o cuidado encontra a <span className="gradient-text">calmaria das águas</span>
+              Onde o cuidado encontra a <span style={{ color: 'var(--accent-gold)' }}>calmaria das águas</span>
             </h1>
 
             {/* Descricao */}
             <p style={{
               fontSize: 'clamp(16px, 2vw, 19px)',
-              color: 'var(--text-muted)',
+              color: 'rgba(248, 249, 251, 0.9)',
               lineHeight: 1.7,
               marginBottom: '36px',
               maxWidth: '560px'
@@ -118,7 +156,7 @@ export const Hero: React.FC = () => {
                   color: '#fff',
                   fontSize: '16px',
                   fontWeight: 700,
-                  boxShadow: '0 10px 20px rgba(0, 180, 216, 0.3)',
+                  boxShadow: '0 10px 20px rgba(3, 2, 116, 0.4)',
                   transition: 'var(--transition-smooth)'
                 }}
               >
@@ -134,20 +172,22 @@ export const Hero: React.FC = () => {
                   gap: '8px',
                   padding: '16px 30px',
                   borderRadius: 'var(--radius-md)',
-                  backgroundColor: 'var(--bg-secondary)',
-                  border: '1px solid var(--border-glass)',
-                  color: 'var(--text-main)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  color: '#ffffff',
                   fontSize: '16px',
                   fontWeight: 600,
                   boxShadow: 'var(--shadow-sm)',
                   transition: 'var(--transition-smooth)'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--primary)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
                   e.currentTarget.style.transform = 'translateY(-2px)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--border-glass)';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
                   e.currentTarget.style.transform = 'translateY(0)';
                 }}
               >
@@ -161,46 +201,36 @@ export const Hero: React.FC = () => {
               display: 'flex',
               flexWrap: 'wrap',
               gap: '24px',
-              borderTop: '1px solid var(--border-glass)',
+              borderTop: '1px solid rgba(255, 255, 255, 0.15)',
               paddingTop: '32px'
             }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: 'var(--text-muted)' }}>
-                <ShieldCheck size={18} style={{ color: 'var(--primary)' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: 'rgba(248, 249, 251, 0.8)' }}>
+                <ShieldCheck size={18} style={{ color: 'var(--accent-gold)' }} />
                 <span>Veterinários no local</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: 'var(--text-muted)' }}>
-                <Sparkles size={18} style={{ color: 'var(--primary)' }} />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '14px', color: 'rgba(248, 249, 251, 0.8)' }}>
+                <Sparkles size={18} style={{ color: 'var(--accent-gold)' }} />
                 <span>Cosméticos Hipoalergênicos</span>
               </div>
             </div>
           </div>
 
-          {/* Painel Interativo Direto / Representação Visual Premium */}
+          {/* Painel Interativo Direto / Fila do Spa ao Vivo */}
           <div className="hero-visual" style={{
             position: 'relative',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center'
           }}>
-            {/* Círculo de Luz do Fundo */}
-            <div style={{
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(0, 180, 216, 0.15) 0%, rgba(0,0,0,0) 70%)',
-              zIndex: 1,
-              filter: 'blur(30px)'
-            }} />
-
             {/* Card Principal - "Spa Live Status" */}
             <div className="glass-card animate-float" style={{
               width: '100%',
               maxWidth: '420px',
               padding: '30px',
               borderRadius: 'var(--radius-lg)',
-              zIndex: 2,
-              position: 'relative'
+              background: 'rgba(255, 255, 255, 0.08)',
+              border: '1px solid rgba(255, 255, 255, 0.15)',
+              color: '#ffffff'
             }}>
               <div style={{
                 display: 'flex',
@@ -209,8 +239,8 @@ export const Hero: React.FC = () => {
                 marginBottom: '24px'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Activity size={18} style={{ color: 'var(--primary)' }} />
-                  <span style={{ fontSize: '14px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)' }}>
+                  <Activity size={18} style={{ color: 'var(--accent-gold)' }} />
+                  <span style={{ fontSize: '14px', fontWeight: 700, textTransform: 'uppercase', color: 'rgba(248, 249, 251, 0.7)' }}>
                     Fila do Spa ao Vivo
                   </span>
                 </div>
@@ -239,45 +269,45 @@ export const Hero: React.FC = () => {
 
               {/* Box Ilustrativo com Pet Ativo */}
               <div style={{
-                backgroundColor: 'var(--bg-primary)',
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
                 borderRadius: 'var(--radius-md)',
                 padding: '24px',
                 marginBottom: '20px',
-                border: '1px solid var(--border-glass)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
                 textAlign: 'center'
               }}>
                 <div style={{
                   fontSize: '72px',
                   marginBottom: '16px',
-                  filter: 'drop-shadow(0 10px 10px rgba(0, 180, 216, 0.25))'
+                  filter: 'drop-shadow(0 10px 10px rgba(0, 0, 0, 0.3))'
                 }}>
                   🐶
                 </div>
-                <h4 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '4px' }}>
+                <h4 style={{ fontSize: '20px', fontWeight: 800, marginBottom: '4px', color: '#ffffff' }}>
                   {petStatus.name}
                 </h4>
-                <p style={{ fontSize: '14px', color: 'var(--primary)', fontWeight: 600 }}>
+                <p style={{ fontSize: '14px', color: 'var(--accent-gold)', fontWeight: 600 }}>
                   {petStatus.status}
                 </p>
               </div>
 
               {/* Barra de Progresso do Cuidado */}
               <div style={{ marginBottom: '8px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'var(--text-muted)', marginBottom: '6px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '12px', color: 'rgba(248, 249, 251, 0.7)', marginBottom: '6px' }}>
                   <span>Sessão de Cuidado</span>
-                  <strong>{petStatus.progress}% Concluído</strong>
+                  <strong style={{ color: '#fff' }}>{petStatus.progress}% Concluído</strong>
                 </div>
                 <div style={{
                   width: '100%',
                   height: '8px',
-                  backgroundColor: 'rgba(0,0,0,0.06)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
                   borderRadius: 'var(--radius-full)',
                   overflow: 'hidden'
                 }}>
                   <div style={{
                     width: `${petStatus.progress}%`,
                     height: '100%',
-                    background: 'linear-gradient(90deg, #00b4d8 0%, #0077b6 100%)',
+                    background: 'linear-gradient(90deg, #E7A40C 0%, #ffbd21 100%)',
                     borderRadius: 'var(--radius-full)',
                     transition: 'width 0.8s ease'
                   }} />
@@ -286,7 +316,7 @@ export const Hero: React.FC = () => {
 
               <p style={{
                 fontSize: '12px',
-                color: 'var(--text-muted)',
+                color: 'rgba(248, 249, 251, 0.6)',
                 textAlign: 'center',
                 marginTop: '16px',
                 fontStyle: 'italic'
