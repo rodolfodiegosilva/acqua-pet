@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { Plus, X } from 'lucide-react';
 import type { ClientAppointment, ClientPet, VetAvailability } from '../../../services/clientPortal';
 import { PortalSectionCard } from '../../../components/client/PortalSectionCard';
 
@@ -48,6 +49,7 @@ export const AppointmentsTab: React.FC<AppointmentsTabProps> = ({
   const [typeFilter, setTypeFilter] = useState<'Todos' | ClientAppointment['type']>('Todos');
   const [sortBy, setSortBy] = useState<'date-desc' | 'date-asc' | 'status' | 'type'>('date-desc');
   const [currentPage, setCurrentPage] = useState(1);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const filteredAppointments = useMemo(() => {
     const normalizedQuery = searchQuery.trim().toLowerCase();
@@ -93,9 +95,99 @@ export const AppointmentsTab: React.FC<AppointmentsTabProps> = ({
   const totalPages = Math.max(1, Math.ceil(sortedAppointments.length / appointmentsPerPage));
   const paginatedAppointments = sortedAppointments.slice((currentPage - 1) * appointmentsPerPage, currentPage * appointmentsPerPage);
 
+  const renderAppointmentForm = () => (
+    <form onSubmit={onCreateAppointment} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <select className="portal-input" value={appointmentForm.type} onChange={(event) => setAppointmentForm((prev) => ({
+        ...prev,
+        type: event.target.value as ClientAppointment['type'],
+        service: event.target.value === 'Táxi Pet' ? 'Táxi Pet para consulta ou banho' : 'Consulta clínica premium',
+        veterinarian: event.target.value === 'Táxi Pet' ? 'Central de mobilidade pet' : veterinarians[0]?.name ?? ''
+      }))}>
+        <option value="Serviço">Serviço veterinário</option>
+        <option value="Táxi Pet">Táxi Pet</option>
+      </select>
+      <select className="portal-input" value={appointmentForm.petId} onChange={(event) => setAppointmentForm({ ...appointmentForm, petId: event.target.value })}>
+        {pets.map((pet) => (
+          <option key={pet.id} value={pet.id}>{pet.name}</option>
+        ))}
+      </select>
+      {appointmentForm.type === 'Táxi Pet' ? (
+        <>
+          <select className="portal-input" value={appointmentForm.service} onChange={(event) => setAppointmentForm({ ...appointmentForm, service: event.target.value })}>
+            <option>Táxi Pet para consulta ou banho</option>
+            <option>Táxi Pet para retorno veterinário</option>
+            <option>Táxi Pet para hospedagem e day care</option>
+          </select>
+          <input
+            className="portal-input"
+            type="text"
+            placeholder="Endereço de coleta"
+            value={appointmentForm.pickupAddress}
+            onChange={(event) => setAppointmentForm({ ...appointmentForm, pickupAddress: event.target.value })}
+          />
+          <select className="portal-input" value={appointmentForm.destinationAddress} onChange={(event) => setAppointmentForm({ ...appointmentForm, destinationAddress: event.target.value })}>
+            <option>Unidade Coroado</option>
+            <option>Unidade Vieiralves</option>
+            <option>Centro cirúrgico pet</option>
+          </select>
+          <div className="portal-appointments-form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '12px' }}>
+            <select className="portal-input" value={appointmentForm.transportMode} onChange={(event) => setAppointmentForm({ ...appointmentForm, transportMode: event.target.value as NonNullable<ClientAppointment['transportMode']> })}>
+              <option>Somente ida</option>
+              <option>Ida e volta</option>
+            </select>
+            <select className="portal-input" value={appointmentForm.companion} onChange={(event) => setAppointmentForm({ ...appointmentForm, companion: event.target.value as NonNullable<ClientAppointment['companion']> })}>
+              <option>Tutor acompanha</option>
+              <option>Pet desacompanhado</option>
+            </select>
+          </div>
+        </>
+      ) : (
+        <>
+          <select className="portal-input" value={appointmentForm.service} onChange={(event) => setAppointmentForm({ ...appointmentForm, service: event.target.value })}>
+            <option>Consulta clínica premium</option>
+            <option>Banho terapêutico premium</option>
+            <option>Avaliação de ambiente aquático</option>
+            <option>Retorno veterinário</option>
+          </select>
+          <select className="portal-input" value={appointmentForm.veterinarian} onChange={(event) => setAppointmentForm({ ...appointmentForm, veterinarian: event.target.value })}>
+            {veterinarians.map((vet) => (
+              <option key={vet.id} value={vet.name}>{vet.name}</option>
+            ))}
+          </select>
+        </>
+      )}
+      <input
+        className="portal-input"
+        type="text"
+        inputMode="numeric"
+        placeholder="dd/mm/aaaa"
+        value={appointmentForm.date}
+        onChange={(event) => setAppointmentForm({ ...appointmentForm, date: formatDateInput(event.target.value) })}
+      />
+      <input className="portal-input" type="time" value={appointmentForm.time} onChange={(event) => setAppointmentForm({ ...appointmentForm, time: event.target.value })} />
+      <button
+        type="submit"
+        className="gradient-bg gradient-bg-hover"
+        style={{ padding: '15px', borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', fontWeight: 700, cursor: 'pointer' }}
+        onClick={() => setIsCreateModalOpen(false)}
+      >
+        {appointmentForm.type === 'Táxi Pet' ? 'Confirmar rota Táxi Pet' : 'Confirmar agendamento mockado'}
+      </button>
+    </form>
+  );
+
   return (
     <div className="portal-two-cols portal-appointments-layout" style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '20px' }}>
-      <PortalSectionCard title="Timeline de agendamentos" eyebrow="Serviços">
+      <PortalSectionCard
+        title="Timeline de agendamentos"
+        eyebrow="Serviços"
+        action={
+          <button className="portal-ghost-btn portal-appointments-mobile-trigger" onClick={() => setIsCreateModalOpen(true)}>
+            <Plus size={16} />
+            Novo agendamento
+          </button>
+        }
+      >
         <div style={{ display: 'grid', gap: '14px' }}>
           <div className="portal-appointments-controls" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) repeat(3, minmax(0, 0.7fr))', gap: '12px' }}>
             <input
@@ -224,80 +316,72 @@ export const AppointmentsTab: React.FC<AppointmentsTabProps> = ({
       </PortalSectionCard>
 
       <PortalSectionCard title="Novo agendamento" eyebrow="Mock funcional">
-        <form onSubmit={onCreateAppointment} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <select className="portal-input" value={appointmentForm.type} onChange={(event) => setAppointmentForm((prev) => ({
-            ...prev,
-            type: event.target.value as ClientAppointment['type'],
-            service: event.target.value === 'Táxi Pet' ? 'Táxi Pet para consulta ou banho' : 'Consulta clínica premium',
-            veterinarian: event.target.value === 'Táxi Pet' ? 'Central de mobilidade pet' : veterinarians[0]?.name ?? ''
-          }))}>
-            <option value="Serviço">Serviço veterinário</option>
-            <option value="Táxi Pet">Táxi Pet</option>
-          </select>
-          <select className="portal-input" value={appointmentForm.petId} onChange={(event) => setAppointmentForm({ ...appointmentForm, petId: event.target.value })}>
-            {pets.map((pet) => (
-              <option key={pet.id} value={pet.id}>{pet.name}</option>
-            ))}
-          </select>
-          {appointmentForm.type === 'Táxi Pet' ? (
-            <>
-              <select className="portal-input" value={appointmentForm.service} onChange={(event) => setAppointmentForm({ ...appointmentForm, service: event.target.value })}>
-                <option>Táxi Pet para consulta ou banho</option>
-                <option>Táxi Pet para retorno veterinário</option>
-                <option>Táxi Pet para hospedagem e day care</option>
-              </select>
-              <input
-                className="portal-input"
-                type="text"
-                placeholder="Endereço de coleta"
-                value={appointmentForm.pickupAddress}
-                onChange={(event) => setAppointmentForm({ ...appointmentForm, pickupAddress: event.target.value })}
-              />
-              <select className="portal-input" value={appointmentForm.destinationAddress} onChange={(event) => setAppointmentForm({ ...appointmentForm, destinationAddress: event.target.value })}>
-                <option>Unidade Coroado</option>
-                <option>Unidade Vieiralves</option>
-                <option>Centro cirúrgico pet</option>
-              </select>
-              <div className="portal-appointments-form-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '12px' }}>
-                <select className="portal-input" value={appointmentForm.transportMode} onChange={(event) => setAppointmentForm({ ...appointmentForm, transportMode: event.target.value as NonNullable<ClientAppointment['transportMode']> })}>
-                  <option>Somente ida</option>
-                  <option>Ida e volta</option>
-                </select>
-                <select className="portal-input" value={appointmentForm.companion} onChange={(event) => setAppointmentForm({ ...appointmentForm, companion: event.target.value as NonNullable<ClientAppointment['companion']> })}>
-                  <option>Tutor acompanha</option>
-                  <option>Pet desacompanhado</option>
-                </select>
-              </div>
-            </>
-          ) : (
-            <>
-              <select className="portal-input" value={appointmentForm.service} onChange={(event) => setAppointmentForm({ ...appointmentForm, service: event.target.value })}>
-                <option>Consulta clínica premium</option>
-                <option>Banho terapêutico premium</option>
-                <option>Avaliação de ambiente aquático</option>
-                <option>Retorno veterinário</option>
-              </select>
-              <select className="portal-input" value={appointmentForm.veterinarian} onChange={(event) => setAppointmentForm({ ...appointmentForm, veterinarian: event.target.value })}>
-                {veterinarians.map((vet) => (
-                  <option key={vet.id} value={vet.name}>{vet.name}</option>
-                ))}
-              </select>
-            </>
-          )}
-          <input
-            className="portal-input"
-            type="text"
-            inputMode="numeric"
-            placeholder="dd/mm/aaaa"
-            value={appointmentForm.date}
-            onChange={(event) => setAppointmentForm({ ...appointmentForm, date: formatDateInput(event.target.value) })}
-          />
-          <input className="portal-input" type="time" value={appointmentForm.time} onChange={(event) => setAppointmentForm({ ...appointmentForm, time: event.target.value })} />
-          <button type="submit" className="gradient-bg gradient-bg-hover" style={{ padding: '15px', borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', fontWeight: 700, cursor: 'pointer' }}>
-            {appointmentForm.type === 'Táxi Pet' ? 'Confirmar rota Táxi Pet' : 'Confirmar agendamento mockado'}
-          </button>
-        </form>
+        <div className="portal-appointments-desktop-form">
+          {renderAppointmentForm()}
+        </div>
       </PortalSectionCard>
+
+      {isCreateModalOpen && (
+        <div
+          className="portal-modal-backdrop portal-appointments-mobile-modal"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(2, 6, 23, 0.68)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            zIndex: 90
+          }}
+          onClick={() => setIsCreateModalOpen(false)}
+        >
+          <div
+            className="portal-modal-card"
+            style={{
+              width: 'min(640px, 100%)',
+              maxHeight: '88vh',
+              overflowY: 'auto',
+              borderRadius: '24px',
+              background: 'var(--portal-surface)',
+              border: '1px solid var(--portal-border)',
+              boxShadow: '0 24px 60px rgba(2, 6, 23, 0.3)',
+              padding: '24px'
+            }}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="portal-section-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', marginBottom: '18px' }}>
+              <div>
+                <span style={{ display: 'block', fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1.4px', color: 'var(--portal-danger-text)', marginBottom: '8px' }}>
+                  Novo agendamento
+                </span>
+                <h3 style={{ fontSize: '24px', color: 'var(--portal-text)' }}>Agendar serviço no mobile</h3>
+              </div>
+              <button
+                type="button"
+                aria-label="Fechar modal"
+                onClick={() => setIsCreateModalOpen(false)}
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '50%',
+                  border: '1px solid var(--portal-border)',
+                  background: 'var(--portal-soft-surface)',
+                  color: 'var(--portal-text)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  flexShrink: 0
+                }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+            {renderAppointmentForm()}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

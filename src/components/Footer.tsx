@@ -1,9 +1,10 @@
 import React from 'react';
 import { Phone, MapPin, Mail, Clock } from 'lucide-react';
 import acquaPetIcon from '../assets/acqua_pet_icon.svg';
+import type { AppView } from '../types/navigation';
 
 interface FooterProps {
-  setView?: (view: 'landing' | 'store' | 'client') => void;
+  setView?: (view: AppView) => void;
 }
 
 export const Footer: React.FC<FooterProps> = ({ setView }) => {
@@ -333,10 +334,56 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
           fontSize: '14px',
           color: 'var(--text-muted)'
         }} className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} Acqua Pet. Todos os direitos reservados.</p>
-          <p>
-            Desenvolvido com carinho para o bem-estar do seu ecossistema aquático 🐠💙
-          </p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            <p>&copy; {new Date().getFullYear()} Acqua Pet. Todos os direitos reservados.</p>
+            <p>
+              Desenvolvido com carinho para o bem-estar do seu ecossistema aquático 🐠💙
+            </p>
+          </div>
+          {setView && (
+            <div style={{ display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => {
+                  setView('admin');
+                  window.scrollTo({ top: 0, behavior: 'auto' });
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  color: 'var(--text-muted)',
+                  fontSize: '12px',
+                  letterSpacing: '0.4px',
+                  cursor: 'pointer',
+                  opacity: 0.7
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.7'; }}
+              >
+                Painel admin
+              </button>
+              <button
+                onClick={() => {
+                  setView('veterinary');
+                  window.scrollTo({ top: 0, behavior: 'auto' });
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  padding: 0,
+                  color: 'var(--text-muted)',
+                  fontSize: '12px',
+                  letterSpacing: '0.4px',
+                  cursor: 'pointer',
+                  opacity: 0.7
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.opacity = '1'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.opacity = '0.7'; }}
+              >
+                Painel veterinário
+              </button>
+            </div>
+          )}
         </div>
       </div>
       

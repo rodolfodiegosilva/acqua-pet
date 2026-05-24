@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Plus, X } from 'lucide-react';
 import { CLIENT_PET_SEXES, CLIENT_PET_SPECIES, type ClientPet, type ClientPetSex, type ClientPetSpecies } from '../../../services/clientPortal';
 import { PortalSectionCard } from '../../../components/client/PortalSectionCard';
 
@@ -11,9 +12,50 @@ interface PetsTabProps {
 }
 
 export const PetsTab: React.FC<PetsTabProps> = ({ pets, petForm, setPetForm, onAddPet, onOpenMedical }) => {
+  const [isCreatePetModalOpen, setIsCreatePetModalOpen] = useState(false);
+
+  const renderPetForm = () => (
+    <form onSubmit={onAddPet} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+      <input className="portal-input" type="text" placeholder="Nome do pet" value={petForm.name} onChange={(event) => setPetForm({ ...petForm, name: event.target.value })} />
+      <select className="portal-input" value={petForm.species} onChange={(event) => setPetForm({ ...petForm, species: event.target.value as ClientPetSpecies | '' })}>
+        <option value="">Selecione a espécie</option>
+        {CLIENT_PET_SPECIES.map((species) => (
+          <option key={species} value={species}>{species}</option>
+        ))}
+      </select>
+      <select className="portal-input" value={petForm.sex} onChange={(event) => setPetForm({ ...petForm, sex: event.target.value as ClientPetSex | '' })}>
+        <option value="">Selecione o sexo</option>
+        {CLIENT_PET_SEXES.map((sex) => (
+          <option key={sex} value={sex}>{sex}</option>
+        ))}
+      </select>
+      <input className="portal-input" type="text" placeholder="Raça" value={petForm.breed} onChange={(event) => setPetForm({ ...petForm, breed: event.target.value })} />
+      <input className="portal-input" type="text" placeholder="Idade" value={petForm.age} onChange={(event) => setPetForm({ ...petForm, age: event.target.value })} />
+      <input className="portal-input" type="text" placeholder="Peso" value={petForm.weight} onChange={(event) => setPetForm({ ...petForm, weight: event.target.value })} />
+      <textarea className="portal-input" placeholder="Observação" value={petForm.observation} onChange={(event) => setPetForm({ ...petForm, observation: event.target.value })} rows={4} style={{ resize: 'vertical' }} />
+      <button
+        type="submit"
+        className="gradient-bg gradient-bg-hover"
+        style={{ padding: '15px', borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', fontWeight: 700, cursor: 'pointer' }}
+        onClick={() => setIsCreatePetModalOpen(false)}
+      >
+        Adicionar pet ao portal
+      </button>
+    </form>
+  );
+
   return (
     <div className="portal-two-cols" style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: '20px' }}>
-      <PortalSectionCard title="Pets cadastrados" eyebrow="Perfis">
+      <PortalSectionCard
+        title="Pets cadastrados"
+        eyebrow="Perfis"
+        action={
+          <button className="portal-ghost-btn portal-pets-mobile-trigger" onClick={() => setIsCreatePetModalOpen(true)}>
+            <Plus size={16} />
+            Cadastrar novo pet
+          </button>
+        }
+      >
         <div style={{ display: 'grid', gap: '16px' }}>
           {pets.map((pet) => (
             <div key={pet.id} style={{ padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)', display: 'grid', gridTemplateColumns: '72px minmax(0, 1fr)', gap: '16px' }}>
@@ -50,29 +92,72 @@ export const PetsTab: React.FC<PetsTabProps> = ({ pets, petForm, setPetForm, onA
       </PortalSectionCard>
 
       <PortalSectionCard title="Cadastrar novo pet" eyebrow="Ação rápida">
-        <form onSubmit={onAddPet} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <input className="portal-input" type="text" placeholder="Nome do pet" value={petForm.name} onChange={(event) => setPetForm({ ...petForm, name: event.target.value })} />
-          <select className="portal-input" value={petForm.species} onChange={(event) => setPetForm({ ...petForm, species: event.target.value as ClientPetSpecies | '' })}>
-            <option value="">Selecione a espécie</option>
-            {CLIENT_PET_SPECIES.map((species) => (
-              <option key={species} value={species}>{species}</option>
-            ))}
-          </select>
-          <select className="portal-input" value={petForm.sex} onChange={(event) => setPetForm({ ...petForm, sex: event.target.value as ClientPetSex | '' })}>
-            <option value="">Selecione o sexo</option>
-            {CLIENT_PET_SEXES.map((sex) => (
-              <option key={sex} value={sex}>{sex}</option>
-            ))}
-          </select>
-          <input className="portal-input" type="text" placeholder="Raça" value={petForm.breed} onChange={(event) => setPetForm({ ...petForm, breed: event.target.value })} />
-          <input className="portal-input" type="text" placeholder="Idade" value={petForm.age} onChange={(event) => setPetForm({ ...petForm, age: event.target.value })} />
-          <input className="portal-input" type="text" placeholder="Peso" value={petForm.weight} onChange={(event) => setPetForm({ ...petForm, weight: event.target.value })} />
-          <textarea className="portal-input" placeholder="Observação" value={petForm.observation} onChange={(event) => setPetForm({ ...petForm, observation: event.target.value })} rows={4} style={{ resize: 'vertical' }} />
-          <button type="submit" className="gradient-bg gradient-bg-hover" style={{ padding: '15px', borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', fontWeight: 700, cursor: 'pointer' }}>
-            Adicionar pet ao portal
-          </button>
-        </form>
+        <div className="portal-pets-desktop-form">
+          {renderPetForm()}
+        </div>
       </PortalSectionCard>
+
+      {isCreatePetModalOpen && (
+        <div
+          className="portal-modal-backdrop portal-pets-mobile-modal"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(2, 6, 23, 0.68)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '20px',
+            zIndex: 90
+          }}
+          onClick={() => setIsCreatePetModalOpen(false)}
+        >
+          <div
+            className="portal-modal-card"
+            style={{
+              width: 'min(640px, 100%)',
+              maxHeight: '88vh',
+              overflowY: 'auto',
+              borderRadius: '24px',
+              background: 'var(--portal-surface)',
+              border: '1px solid var(--portal-border)',
+              boxShadow: '0 24px 60px rgba(2, 6, 23, 0.3)',
+              padding: '24px'
+            }}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="portal-section-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', marginBottom: '18px' }}>
+              <div>
+                <span style={{ display: 'block', fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1.4px', color: 'var(--portal-danger-text)', marginBottom: '8px' }}>
+                  Cadastro de pet
+                </span>
+                <h3 style={{ fontSize: '24px', color: 'var(--portal-text)' }}>Cadastrar novo pet</h3>
+              </div>
+              <button
+                type="button"
+                aria-label="Fechar modal"
+                onClick={() => setIsCreatePetModalOpen(false)}
+                style={{
+                  width: '42px',
+                  height: '42px',
+                  borderRadius: '50%',
+                  border: '1px solid var(--portal-border)',
+                  background: 'var(--portal-soft-surface)',
+                  color: 'var(--portal-text)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  flexShrink: 0
+                }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+            {renderPetForm()}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

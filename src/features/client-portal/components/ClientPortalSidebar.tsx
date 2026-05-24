@@ -1,7 +1,7 @@
 import React from 'react';
-import { LogOut } from 'lucide-react';
+import { LogOut, Moon, Sun, X } from 'lucide-react';
 import type { ClientUser } from '../../../services/clientPortal';
-import type { PortalTab, PortalTabItem } from '../types';
+import type { PortalTab, PortalTabItem, PortalTheme } from '../types';
 
 interface ClientPortalSidebarProps {
   currentUser: ClientUser;
@@ -10,6 +10,10 @@ interface ClientPortalSidebarProps {
   setActiveTab: (tab: PortalTab) => void;
   setView: (view: 'landing' | 'store' | 'client') => void;
   onLogout: () => void;
+  isOpen: boolean;
+  onClose: () => void;
+  portalTheme: PortalTheme;
+  setPortalTheme: React.Dispatch<React.SetStateAction<PortalTheme>>;
 }
 
 export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
@@ -18,10 +22,22 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
   tabItems,
   setActiveTab,
   setView,
-  onLogout
+  onLogout,
+  isOpen,
+  onClose,
+  portalTheme,
+  setPortalTheme
 }) => {
   return (
-    <aside className="glass-card portal-sidebar" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px', alignSelf: 'start', position: 'sticky', top: '24px' }}>
+    <>
+      <div className={`portal-sidebar-backdrop ${isOpen ? 'is-open' : ''}`} onClick={onClose} />
+      <aside className={`glass-card portal-sidebar ${isOpen ? 'is-open' : ''}`} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px', alignSelf: 'start', position: 'sticky', top: '24px' }}>
+      <div className="portal-sidebar-mobile-head" style={{ display: 'none', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
+        <strong style={{ color: 'var(--portal-text)' }}>Menu do cliente</strong>
+        <button type="button" className="portal-sidebar-close" onClick={onClose} style={{ lineHeight: 0 }}>
+          <X size={18} style={{ display: 'block', color: 'currentColor' }} />
+        </button>
+      </div>
       <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
         <div style={{ width: '54px', height: '54px', borderRadius: '18px', background: 'linear-gradient(135deg, var(--portal-accent) 0%, #1d4ed8 100%)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
           {currentUser.name.split(' ').map((name) => name[0]).slice(0, 2).join('')}
@@ -58,7 +74,10 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
           return (
             <button
               key={item.id}
-              onClick={() => setActiveTab(item.id)}
+              onClick={() => {
+                setActiveTab(item.id);
+                onClose();
+              }}
               style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -81,9 +100,37 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
         })}
       </nav>
 
+      <div className="portal-sidebar-mobile-actions" style={{ display: 'none', flexDirection: 'column', gap: '10px' }}>
+        <button onClick={() => setPortalTheme((current) => (current === 'dark' ? 'light' : 'dark'))} className="portal-ghost-btn">
+          {portalTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          {portalTheme === 'dark' ? 'Modo claro' : 'Modo escuro'}
+        </button>
+        <button
+          onClick={() => {
+            setView('store');
+            onClose();
+          }}
+          className="portal-ghost-btn"
+        >
+          Loja pública
+        </button>
+        <button
+          onClick={() => {
+            setView('landing');
+            onClose();
+          }}
+          className="portal-ghost-btn"
+        >
+          Site institucional
+        </button>
+      </div>
+
       <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <button
-          onClick={() => setView('landing')}
+          onClick={() => {
+            setView('landing');
+            onClose();
+          }}
           style={{
             padding: '14px 16px',
             borderRadius: 'var(--radius-md)',
@@ -117,5 +164,6 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
         </button>
       </div>
     </aside>
+    </>
   );
 };

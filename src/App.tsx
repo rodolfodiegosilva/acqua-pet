@@ -7,17 +7,22 @@ import { Contact } from './sections/Contact';
 import { Footer } from './components/Footer';
 import { Store } from './pages/Store';
 import { ClientPortal } from './pages/ClientPortal';
+import { AdminPortal } from './pages/AdminPortal';
+import { VeterinaryPortal } from './pages/VeterinaryPortal';
 import type { CartItem } from './pages/Store';
 import type { Product } from './services/api';
+import type { AppView } from './types/navigation';
 
 function App() {
-  const resolveViewFromPath = useCallback((pathname: string): 'landing' | 'store' | 'client' => {
+  const resolveViewFromPath = useCallback((pathname: string): AppView => {
+    if (pathname === '/area-admin') return 'admin';
+    if (pathname === '/area-veterinario') return 'veterinary';
     if (pathname === '/area-cliente') return 'client';
     if (pathname === '/loja') return 'store';
     return 'landing';
   }, []);
 
-  const [view, setViewState] = useState<'landing' | 'store' | 'client'>(() => resolveViewFromPath(window.location.pathname));
+  const [view, setViewState] = useState<AppView>(() => resolveViewFromPath(window.location.pathname));
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
 
@@ -47,11 +52,20 @@ function App() {
   const clearCart = () => setCart([]);
 
   const cartItemCount = cart.reduce((acc, item) => acc + item.quantity, 0);
-  const isClientPortal = view === 'client';
+  const isPrivatePortal = view === 'client' || view === 'admin' || view === 'veterinary';
 
-  const setView = useCallback((nextView: 'landing' | 'store' | 'client') => {
+  const setView = useCallback((nextView: AppView) => {
     setViewState(nextView);
-    const nextPath = nextView === 'client' ? '/area-cliente' : nextView === 'store' ? '/loja' : '/';
+    const nextPath =
+      nextView === 'client'
+        ? '/area-cliente'
+        : nextView === 'admin'
+          ? '/area-admin'
+          : nextView === 'veterinary'
+            ? '/area-veterinario'
+            : nextView === 'store'
+              ? '/loja'
+              : '/';
     if (window.location.pathname !== nextPath) {
       window.history.pushState({}, '', nextPath);
     }
@@ -68,7 +82,7 @@ function App() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {!isClientPortal && (
+      {!isPrivatePortal && (
         <Header
           view={view}
           setView={setView}
@@ -96,15 +110,19 @@ function App() {
             setIsCartOpen={setIsCartOpen}
             setView={setView}
           />
-        ) : (
+        ) : view === 'client' ? (
           <ClientPortal
             setView={setView}
             addToCart={addToCart}
           />
+        ) : view === 'admin' ? (
+          <AdminPortal setView={setView} />
+        ) : (
+          <VeterinaryPortal setView={setView} />
         )}
       </main>
       
-      {!isClientPortal && <Footer setView={setView} />}
+      {!isPrivatePortal && <Footer setView={setView} />}
     </div>
   );
 }

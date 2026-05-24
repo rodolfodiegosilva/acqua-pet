@@ -42,6 +42,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
   const [authMode, setAuthMode] = useState<AuthMode>('login');
   const [activeTab, setActiveTab] = useState<PortalTab>('dashboard');
   const [authLoading, setAuthLoading] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [portalTheme, setPortalTheme] = useState<PortalTheme>(() => {
     const saved = localStorage.getItem('acqua-pet-client-theme');
     return saved === 'dark' ? 'dark' : 'light';
@@ -206,7 +207,8 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
   return (
     <div className="portal-app" data-portal-theme={portalTheme} style={{ minHeight: '100vh', paddingTop: '32px', paddingBottom: '32px', background: 'var(--portal-bg)' }}>
       <div className="container">
-        <ClientPortalTopbar portalTheme={portalTheme} setPortalTheme={setPortalTheme} setView={setView} />
+        <ClientPortalTopbar portalTheme={portalTheme} setPortalTheme={setPortalTheme} setView={setView} onOpenSidebar={() => setIsSidebarOpen(true)} />
+        
 
         <div className="portal-shell" style={{ display: 'grid', gridTemplateColumns: '280px minmax(0, 1fr)', gap: '24px' }}>
           <ClientPortalSidebar
@@ -216,6 +218,10 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
             setActiveTab={setActiveTab}
             setView={setView}
             onLogout={handleLogout}
+            isOpen={isSidebarOpen}
+            onClose={() => setIsSidebarOpen(false)}
+            portalTheme={portalTheme}
+            setPortalTheme={setPortalTheme}
           />
 
           <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: '24px', minWidth: 0 }}>
@@ -294,6 +300,11 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
                 setView={setView}
               />
             )}
+
+            <footer className="portal-panel-footer">
+              <span>AcquaPet Client Suite</span>
+              <span>Ambiente privado mockado com estrutura pronta para API e produção.</span>
+            </footer>
           </div>
         </div>
       </div>

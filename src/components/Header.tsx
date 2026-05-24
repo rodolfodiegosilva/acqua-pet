@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import { Menu, X, ShoppingBag } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 import acquaPetIcon from '../assets/acqua_pet_icon.svg';
+import type { AppView } from '../types/navigation';
 
 interface HeaderProps {
-  view: 'landing' | 'store' | 'client';
-  setView: (view: 'landing' | 'store' | 'client') => void;
+  view: AppView;
+  setView: (view: AppView) => void;
   cartItemCount: number;
   onCartClick: () => void;
 }
