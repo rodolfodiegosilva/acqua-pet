@@ -276,32 +276,49 @@ a {
   color: var(--accent-gold) !important;
 }
 
-/* --- Form Card Light: Contraste Perfeito dentro da Seção Escura --- */
-.form-card-light {
-  background: #ffffff !important;
-  border: 1px solid rgba(3, 2, 116, 0.08) !important;
-  color: #030274 !important;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25) !important;
+/* --- Contact Form Card: Estilo de Vidro Premium (Glassmorphism) e Legibilidade Extrema --- */
+.contact-form-card {
+  background: rgba(255, 255, 255, 0.04) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4) !important;
+  backdrop-filter: blur(20px);
 }
 
-.form-card-light h3 {
-  color: #030274 !important;
+.contact-form-card h3 {
+  color: #ffffff !important;
 }
 
-.form-card-light label {
-  color: #4e4d8c !important;
+.contact-form-card label {
+  color: rgba(255, 255, 255, 0.95) !important; /* Fonte bem clara, de altíssimo contraste */
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
 }
 
-.form-card-light .input-premium {
-  background: #F8F9FB !important;
-  color: #030274 !important;
-  border-color: rgba(3, 2, 116, 0.1) !important;
+.contact-form-card .input-premium {
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: #ffffff !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
 
-.form-card-light .input-premium:focus {
-  border-color: #030274 !important;
-  box-shadow: 0 0 0 4px rgba(3, 2, 116, 0.1) !important;
-  background: #ffffff !important;
+.contact-form-card .input-premium::placeholder {
+  color: rgba(255, 255, 255, 0.4) !important;
+}
+
+.contact-form-card .input-premium:focus {
+  border-color: var(--accent-gold) !important;
+  box-shadow: 0 0 0 4px rgba(231, 164, 12, 0.2) !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Garante excelente legibilidade para selects e opções no mobile e desktop */
+.contact-form-card select.input-premium option {
+  background-color: #030274 !important; /* Fundo azul marinho escuro */
+  color: #ffffff !important; /* Texto branco */
+}
+
+/* Corrige o ícone de calendário no input tipo date para ficar claro */
+.contact-form-card input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1) brightness(1.2);
 }
 
 /* --- Layout Utilitário --- */
@@ -530,9 +547,6 @@ html, body, #root {
     height: 48px !important;
   }
 
-  .form-card-light {
-    padding: 24px !important;
-  }
 
   /* Ajustes do Footer no Mobile */
   footer {

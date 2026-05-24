@@ -150,7 +150,7 @@ export const Contact: React.FC = () => {
 
           {/* Coluna 2: Formulário de Agendamento Interativo */}
           <div id="contato">
-            <div className="glass-card form-card-light contact-form-card">
+            <div className="glass-card contact-form-card">
               {submitted ? (
                 /* Tela de Sucesso */
                 <div style={{
@@ -202,7 +202,7 @@ export const Contact: React.FC = () => {
                     alignItems: 'center',
                     gap: '10px'
                   }}>
-                    <Calendar size={22} style={{ color: '#030274' }} />
+                    <Calendar size={22} style={{ color: 'var(--accent-gold)' }} />
                     Dados do Agendamento
                   </h3>
 
@@ -221,7 +221,7 @@ export const Contact: React.FC = () => {
                         className="input-premium"
                         style={{ paddingLeft: '44px' }}
                       />
-                      <User size={18} style={{ position: 'absolute', left: '16px', top: '16px', color: 'rgba(3, 2, 116, 0.5)' }} />
+                      <User size={18} style={{ position: 'absolute', left: '16px', top: '16px', color: 'rgba(255, 255, 255, 0.6)' }} />
                     </div>
                   </div>
 
@@ -256,7 +256,7 @@ export const Contact: React.FC = () => {
                           className="input-premium"
                           style={{ paddingLeft: '44px' }}
                         />
-                        <Smile size={18} style={{ position: 'absolute', left: '16px', top: '16px', color: 'rgba(3, 2, 116, 0.5)' }} />
+                        <Smile size={18} style={{ position: 'absolute', left: '16px', top: '16px', color: 'rgba(255, 255, 255, 0.6)' }} />
                       </div>
                     </div>
 
