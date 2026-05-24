@@ -1,7 +1,36 @@
 import React from 'react';
-import { Droplet, Phone, Mail, MapPin, Clock } from 'lucide-react';
+import { Droplet, Phone, MapPin, Mail, Clock } from 'lucide-react';
 
-export const Footer: React.FC = () => {
+interface FooterProps {
+  setView?: (view: 'landing' | 'store') => void;
+}
+
+export const Footer: React.FC<FooterProps> = ({ setView }) => {
+  const footerMenuItems = [
+    { name: 'Início', id: 'inicio', type: 'anchor' },
+    { name: 'Serviços', id: 'servicos', type: 'anchor' },
+    { name: 'Loja Pet', id: 'loja', type: 'store' },
+    { name: 'Agendamento', id: 'agendamento', type: 'anchor' },
+    { name: 'Contato', id: 'contato', type: 'anchor' }
+  ];
+
+  const handleNavClick = (item: { name: string; id: string; type: string }) => {
+    if (setView) {
+      if (item.type === 'store') {
+        setView('store');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      } else {
+        setView('landing');
+        setTimeout(() => {
+          const element = document.getElementById(item.id);
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 50);
+      }
+    }
+  };
+
   return (
     <footer style={{
       width: '100%',
@@ -23,16 +52,28 @@ export const Footer: React.FC = () => {
         }}>
           {/* Coluna 1: Sobre */}
           <div>
-            <div style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              fontWeight: 800,
-              fontSize: '24px',
-              fontFamily: 'var(--font-heading)',
-              marginBottom: '20px',
-              color: 'var(--text-main)'
-            }}>
+            <button 
+              onClick={() => {
+                if (setView) {
+                  setView('landing');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+              }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontWeight: 800,
+                fontSize: '24px',
+                fontFamily: 'var(--font-heading)',
+                marginBottom: '20px',
+                color: 'var(--text-main)',
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0
+              }}
+            >
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
@@ -46,7 +87,7 @@ export const Footer: React.FC = () => {
                 <Droplet size={18} fill="#ffffff" />
               </div>
               <span>Acqua<span className="gradient-text">Pet</span></span>
-            </div>
+            </button>
             
             <p style={{
               color: 'var(--text-muted)',
@@ -151,19 +192,26 @@ export const Footer: React.FC = () => {
               gap: '12px',
               fontSize: '15px'
             }}>
-              {['Inicio', 'Servicos', 'Petshop', 'Agendamento', 'Contato'].map((item) => (
-                <li key={item}>
-                  <a
-                    href={`#${item.toLowerCase()}`}
+              {footerMenuItems.map((item) => (
+                <li key={item.id}>
+                  <button
+                    onClick={() => handleNavClick(item)}
                     style={{
                       color: 'var(--text-muted)',
+                      background: 'none',
+                      border: 'none',
+                      cursor: 'pointer',
+                      padding: 0,
+                      fontFamily: 'inherit',
+                      fontSize: '15px',
+                      textAlign: 'left',
                       transition: 'var(--transition-smooth)'
                     }}
                     onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary)'}
                     onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
                   >
-                    {item === 'Inicio' ? 'Início' : item === 'Servicos' ? 'Serviços' : item === 'Petshop' ? 'Pet Shop' : item}
-                  </a>
+                    {item.name}
+                  </button>
                 </li>
               ))}
             </ul>
@@ -199,7 +247,7 @@ export const Footer: React.FC = () => {
               color: 'var(--text-muted)'
             }}>
               <li style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Clock size={16} className="gradient-text" style={{ color: 'var(--primary)' }} />
+                <Clock size={16} style={{ color: 'var(--primary)' }} />
                 <div>
                   <strong>Segunda a Sexta:</strong>
                   <span style={{ display: 'block' }}>08:00h às 19:00h</span>

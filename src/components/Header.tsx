@@ -1,11 +1,48 @@
 import React, { useState } from 'react';
-import { Menu, X, Droplet } from 'lucide-react';
+import { Menu, X, Droplet, ShoppingBag } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  view: 'landing' | 'store';
+  setView: (view: 'landing' | 'store') => void;
+  cartItemCount: number;
+  onCartClick: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({
+  view,
+  setView,
+  cartItemCount,
+  onCartClick
+}) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  const menuItems = [
+    { name: 'Início', id: 'inicio', type: 'anchor' },
+    { name: 'Serviços', id: 'servicos', type: 'anchor' },
+    { name: 'Loja Pet', id: 'loja', type: 'store' },
+    { name: 'Agendamento', id: 'agendamento', type: 'anchor' },
+    { name: 'Contato', id: 'contato', type: 'anchor' }
+  ];
+
+  const handleNavClick = (item: { name: string; id: string; type: string }) => {
+    setIsOpen(false);
+    if (item.type === 'store') {
+      setView('store');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      setView('landing');
+      // Pequeno timeout para dar tempo da renderização da landing ocorrer se estivesse na loja
+      setTimeout(() => {
+        const element = document.getElementById(item.id);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 50);
+    }
+  };
 
   return (
     <header className="glass-nav" style={{
@@ -25,16 +62,26 @@ export const Header: React.FC = () => {
           flexGrow: 1
         }}>
           {/* Logo */}
-          <a href="#inicio" style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            fontWeight: 800,
-            fontFamily: 'var(--font-heading)',
-            fontSize: '24px',
-            color: 'var(--text-main)',
-            flexShrink: 0
-          }}>
+          <button 
+            onClick={() => {
+              setView('landing');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }} 
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              fontWeight: 800,
+              fontFamily: 'var(--font-heading)',
+              fontSize: '24px',
+              color: 'var(--text-main)',
+              flexShrink: 0,
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer',
+              padding: 0
+            }}
+          >
             <div style={{
               position: 'relative',
               display: 'flex',
@@ -60,7 +107,7 @@ export const Header: React.FC = () => {
               }} />
             </div>
             <span>Acqua<span className="gradient-text">Pet</span></span>
-          </a>
+          </button>
 
           {/* Desktop Navigation (Alinhada ao lado da Logo) */}
           <nav style={{
@@ -73,27 +120,38 @@ export const Header: React.FC = () => {
               fontSize: '16px',
               fontWeight: 500
             }}>
-              {['Inicio', 'Servicos', 'Petshop', 'Agendamento', 'Contato'].map((item) => (
-                <li key={item}>
-                  <a
-                    href={`#${item.toLowerCase()}`}
-                    style={{
-                      color: 'var(--text-muted)',
-                      transition: 'var(--transition-smooth)',
-                      padding: '8px 0',
-                      position: 'relative'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.color = 'var(--primary)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.color = 'var(--text-muted)';
-                    }}
-                  >
-                    {item === 'Inicio' ? 'Início' : item === 'Servicos' ? 'Serviços' : item === 'Petshop' ? 'Pet Shop' : item}
-                  </a>
-                </li>
-              ))}
+              {menuItems.map((item) => {
+                const isActive = (item.type === 'store' && view === 'store') || 
+                                 (item.type === 'anchor' && view === 'landing');
+                return (
+                  <li key={item.id}>
+                    <button
+                      onClick={() => handleNavClick(item)}
+                      style={{
+                        color: isActive ? 'var(--primary)' : 'var(--text-muted)',
+                        background: 'none',
+                        border: 'none',
+                        cursor: 'pointer',
+                        fontWeight: isActive ? 700 : 500,
+                        fontSize: '16px',
+                        transition: 'var(--transition-smooth)',
+                        padding: '8px 0',
+                        position: 'relative'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.color = 'var(--primary)';
+                      }}
+                      onMouseLeave={(e) => {
+                        if (!isActive) {
+                          e.currentTarget.style.color = 'var(--text-muted)';
+                        }
+                      }}
+                    >
+                      {item.name}
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           </nav>
         </div>
@@ -102,12 +160,67 @@ export const Header: React.FC = () => {
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '16px'
+          gap: '20px'
         }}>
           <ThemeToggle />
+
+          {/* Carrinho Flutuante e Luminoso */}
+          <button
+            onClick={onCartClick}
+            style={{
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--border-glass)',
+              color: 'var(--text-main)',
+              cursor: 'pointer',
+              width: '44px',
+              height: '44px',
+              borderRadius: '50%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              position: 'relative',
+              boxShadow: 'var(--shadow-sm)',
+              transition: 'var(--transition-smooth)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--primary)';
+              e.currentTarget.style.transform = 'scale(1.05)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border-glass)';
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+            aria-label="Abrir carrinho de compras"
+          >
+            <ShoppingBag size={20} />
+            {cartItemCount > 0 && (
+              <span 
+                className="cart-badge-glow"
+                style={{
+                  position: 'absolute',
+                  top: '-4px',
+                  right: '-4px',
+                  backgroundColor: 'var(--primary)',
+                  color: '#ffffff',
+                  fontSize: '11px',
+                  fontWeight: 800,
+                  width: '20px',
+                  height: '20px',
+                  borderRadius: '50%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  border: '2px solid var(--bg-primary)',
+                  boxShadow: '0 0 10px rgba(3, 2, 116, 0.4)'
+                }}
+              >
+                {cartItemCount}
+              </span>
+            )}
+          </button>
           
-          <a
-            href="#agendamento"
+          <button
+            onClick={() => handleNavClick({ name: 'Agendamento', id: 'agendamento', type: 'anchor' })}
             className="gradient-bg gradient-bg-hover cta-header-btn"
             style={{
               display: 'none',
@@ -117,11 +230,13 @@ export const Header: React.FC = () => {
               fontSize: '14px',
               fontWeight: 600,
               boxShadow: '0 4px 15px rgba(0, 180, 216, 0.2)',
+              border: 'none',
+              cursor: 'pointer',
               transition: 'var(--transition-smooth)'
             }}
           >
             Agendar Consulta
-          </a>
+          </button>
 
           {/* Mobile Menu Toggle */}
           <button
@@ -164,36 +279,42 @@ export const Header: React.FC = () => {
             fontSize: '18px',
             fontWeight: 600
           }}>
-            {['Inicio', 'Servicos', 'Petshop', 'Agendamento', 'Contato'].map((item) => (
-              <li key={item}>
-                <a
-                  href={`#${item.toLowerCase()}`}
-                  onClick={() => setIsOpen(false)}
+            {menuItems.map((item) => (
+              <li key={item.id}>
+                <button
+                  onClick={() => handleNavClick(item)}
                   style={{
                     color: 'var(--text-main)',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontSize: '18px',
+                    fontWeight: 600,
                     transition: 'var(--transition-smooth)'
                   }}
                 >
-                  {item === 'Inicio' ? 'Início' : item === 'Servicos' ? 'Serviços' : item === 'Petshop' ? 'Pet Shop' : item}
-                </a>
+                  {item.name}
+                </button>
               </li>
             ))}
             <li style={{ width: '80%', marginTop: '8px' }}>
-              <a
-                href="#agendamento"
-                onClick={() => setIsOpen(false)}
+              <button
+                onClick={() => handleNavClick({ name: 'Agendamento', id: 'agendamento', type: 'anchor' })}
                 className="gradient-bg text-center"
                 style={{
                   display: 'block',
+                  width: '100%',
                   padding: '14px',
                   borderRadius: 'var(--radius-md)',
                   color: '#fff',
+                  border: 'none',
                   fontSize: '16px',
-                  fontWeight: 600
+                  fontWeight: 600,
+                  cursor: 'pointer'
                 }}
               >
                 Agendar Agora
-              </a>
+              </button>
             </li>
           </ul>
         </div>
@@ -225,6 +346,14 @@ export const Header: React.FC = () => {
           .mobile-toggle {
             display: none !important;
           }
+        }
+
+        @keyframes pulse-glow {
+          0%, 100% { box-shadow: 0 0 5px rgba(3, 2, 116, 0.4); }
+          50% { box-shadow: 0 0 15px rgba(0, 180, 216, 0.8); }
+        }
+        .cart-badge-glow {
+          animation: pulse-glow 2s infinite;
         }
       `}</style>
     </header>
