@@ -36,9 +36,8 @@ export const Services: React.FC = () => {
   return (
     <section
       id="servicos"
-      className="section-spacing"
+      className="section-spacing section-dark"
       style={{
-        backgroundColor: 'var(--bg-tertiary)',
         position: 'relative',
         transition: 'var(--transition-smooth)'
       }}

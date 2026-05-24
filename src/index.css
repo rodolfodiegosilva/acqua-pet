@@ -37,7 +37,7 @@
   --transition-bounce: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Modo Escuro - Preservado para manter a versatilidade de alta qualidade */
+/* Modo Escuro */
 [data-theme="dark"] {
   --primary: #524fff;                /* Azul Elétrico de Destaque */
   --primary-hover: #3d3aff;
@@ -93,7 +93,6 @@ a {
 /* --- Efeitos Premium / Gradientes & Glassmorphism --- */
 
 .gradient-text {
-  /* Gradiente profissional dominado pelo azul principal transitando para o vermelho e dourado de forma sutil */
   background: linear-gradient(135deg, var(--primary) 0%, #1e1bff 60%, var(--accent-gold) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -101,7 +100,6 @@ a {
 }
 
 .gradient-bg {
-  /* Fundo gradiente profissional composto pelo azul marinho principal com uma transição energética de azul */
   background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
 }
 
@@ -130,6 +128,180 @@ a {
   transform: translateY(-8px);
   box-shadow: var(--shadow-lg);
   border-color: var(--primary);
+}
+
+/* --- Controle de Contraste Sistemático para Seções --- */
+
+/* Seção Clara (Branca) */
+.section-light {
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+}
+
+/* Seção Escura (Azul Marinho Principal) */
+.section-dark {
+  background-color: var(--primary) !important; /* Força o azul marinho principal */
+  color: var(--text-light) !important;
+}
+
+.section-dark h1, 
+.section-dark h2, 
+.section-dark h3, 
+.section-dark h4 {
+  color: var(--text-light) !important;
+}
+
+.section-dark p {
+  color: rgba(248, 249, 251, 0.8) !important; /* Alta legibilidade: Branco suave em fundo escuro */
+}
+
+.section-dark .text-muted {
+  color: rgba(248, 249, 251, 0.6) !important;
+}
+
+/* Comportamento automático de cards transparentes em seções escuras (Azul Marinho) */
+.section-dark .glass-card {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: var(--text-light) !important;
+}
+
+.section-dark .glass-card:hover {
+  background: rgba(255, 255, 255, 0.09) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* --- Service Card - Arquitetura Limpa CSS --- */
+.service-card {
+  padding: 40px 30px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.service-card-icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, rgba(3, 2, 116, 0.08) 0%, rgba(3, 2, 116, 0.02) 100%);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 28px;
+  border: 1px solid var(--border-glass);
+}
+
+.service-card h3 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  font-family: var(--font-heading);
+}
+
+.service-card-desc {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+  color: var(--text-muted);
+}
+
+.service-card-footer {
+  border-top: 1px solid var(--border-glass);
+  padding-top: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.service-card-price-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: block;
+}
+
+.service-card-price {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.service-card-action {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: var(--transition-smooth);
+}
+
+.service-card-action:hover {
+  color: var(--accent);
+  transform: translateX(4px);
+}
+
+/* Modificações automáticas do ServiceCard dentro de uma seção escura */
+.section-dark .service-card-icon {
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: var(--accent-gold) !important; /* Ícone dourado para realce */
+}
+
+.section-dark .service-card-desc {
+  color: rgba(248, 249, 251, 0.75) !important;
+}
+
+.section-dark .service-card-footer {
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+.section-dark .service-card-price-label {
+  color: rgba(248, 249, 251, 0.6) !important;
+}
+
+.section-dark .service-card-price {
+  color: var(--accent-gold) !important; /* Preço em Amarelo Ouro de alto contraste */
+}
+
+.section-dark .service-card-action {
+  color: var(--text-light) !important;
+}
+
+.section-dark .service-card-action:hover {
+  color: var(--accent-gold) !important;
+}
+
+/* --- Form Card Light: Contraste Perfeito dentro da Seção Escura --- */
+.form-card-light {
+  background: #ffffff !important;
+  border: 1px solid rgba(3, 2, 116, 0.08) !important;
+  color: #030274 !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.25) !important;
+}
+
+.form-card-light h3 {
+  color: #030274 !important;
+}
+
+.form-card-light label {
+  color: #4e4d8c !important;
+}
+
+.form-card-light .input-premium {
+  background: #F8F9FB !important;
+  color: #030274 !important;
+  border-color: rgba(3, 2, 116, 0.1) !important;
+}
+
+.form-card-light .input-premium:focus {
+  border-color: #030274 !important;
+  box-shadow: 0 0 0 4px rgba(3, 2, 116, 0.1) !important;
+  background: #ffffff !important;
 }
 
 /* --- Layout Utilitário --- */

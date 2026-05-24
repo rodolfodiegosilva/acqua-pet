@@ -41,9 +41,8 @@ export const Contact: React.FC = () => {
   return (
     <section
       id="agendamento"
-      className="section-spacing"
+      className="section-spacing section-dark"
       style={{
-        backgroundColor: 'var(--bg-tertiary)',
         position: 'relative',
         transition: 'var(--transition-smooth)'
       }}
@@ -151,7 +150,7 @@ export const Contact: React.FC = () => {
 
           {/* Coluna 2: Formulário de Agendamento Interativo */}
           <div id="contato">
-            <div className="glass-card" style={{
+            <div className="glass-card form-card-light" style={{
               padding: '40px',
               position: 'relative'
             }}>
