@@ -70,14 +70,14 @@ export const Hero: React.FC = () => {
           gap: '8px',
           backgroundColor: 'rgba(231, 164, 12, 0.15)',
           border: '1px solid rgba(231, 164, 12, 0.3)',
-          padding: '8px 20px',
+          padding: '8px 18px',
           borderRadius: 'var(--radius-full)',
           color: 'var(--accent-gold)',
-          fontSize: '13px',
+          fontSize: 'clamp(11px, 2vw, 13px)',
           fontWeight: 700,
           textTransform: 'uppercase',
           letterSpacing: '1px',
-          marginBottom: '30px'
+          marginBottom: '24px'
         }}>
           <Sparkles size={14} />
           <span>Experiência Estética Pet de Alto Padrão</span>
@@ -85,7 +85,7 @@ export const Hero: React.FC = () => {
 
         {/* Titulo com Frase Impactante */}
         <h1 style={{
-          fontSize: 'clamp(38px, 6vw, 64px)',
+          fontSize: 'clamp(32px, 6vw, 64px)',
           fontWeight: 800,
           lineHeight: 1.15,
           marginBottom: '24px',
@@ -99,7 +99,7 @@ export const Hero: React.FC = () => {
 
         {/* Tagline / Subtítulo */}
         <p style={{
-          fontSize: 'clamp(17px, 2.5vw, 21px)',
+          fontSize: 'clamp(15px, 2.2vw, 21px)',
           color: 'rgba(248, 249, 251, 0.95)',
           lineHeight: 1.7,
           marginBottom: '44px',
