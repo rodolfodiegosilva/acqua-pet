@@ -12,7 +12,7 @@ export const Footer: React.FC = () => {
       paddingBottom: '40px',
       transition: 'var(--transition-smooth)'
     }}>
-      <div className="container">
+      <div className="footer-container">
         {/* Footer Grid */}
         <div style={{
           display: 'grid',
@@ -273,7 +273,7 @@ export const Footer: React.FC = () => {
           paddingTop: '30px',
           display: 'flex',
           flexDirection: 'column',
-          alignItems: 'center',
+          alignItems: 'flex-start',
           justifyContent: 'space-between',
           gap: '16px',
           fontSize: '14px',
@@ -287,9 +287,19 @@ export const Footer: React.FC = () => {
       </div>
       
       <style>{`
+        .footer-container {
+          width: 100%;
+          box-sizing: border-box;
+          padding: 0 20px;
+        }
+
         @media (min-width: 768px) {
+          .footer-container {
+            padding: 0 40px;
+          }
           .footer-bottom {
             flex-direction: row !important;
+            align-items: center !important;
           }
         }
       `}</style>
