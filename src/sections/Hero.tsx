@@ -80,9 +80,9 @@ export const Hero: React.FC = () => {
           marginBottom: '24px'
         }}>
           <Sparkles size={14} />
-          <span>Spa Aquático Premium</span>
+          <span>Peixes Ornamentais & Consultório Veterinário</span>
         </div>
-
+ 
         {/* Titulo com Frase Impactante */}
         <h1 style={{
           fontSize: 'clamp(32px, 6vw, 64px)',
@@ -93,10 +93,10 @@ export const Hero: React.FC = () => {
           fontFamily: 'var(--font-heading)',
           color: '#ffffff'
         }}>
-          Cuidado de luxo e carinho <br />
-          <span style={{ color: 'var(--accent-gold)' }}>para o seu melhor amigo</span>
+          Peixes ornamentais e <br />
+          <span style={{ color: 'var(--accent-gold)' }}>consultório veterinário em Manaus</span>
         </h1>
-
+ 
         {/* Tagline / Subtítulo */}
         <p style={{
           fontSize: 'clamp(15px, 2.2vw, 21px)',
@@ -108,9 +108,9 @@ export const Hero: React.FC = () => {
           maxWidth: '680px',
           fontWeight: 400
         }}>
-          Banhos relaxantes em águas duplamente filtradas, spa de ofurô terapêutico e estética animal humanizada em um ambiente planejado para o relaxamento absoluto do seu pet.
+          O maior centro especializado em saúde de peixes, aquários de alto padrão e montagem de ecossistemas aquáticos. Da Rua da Legião nº 56 para toda a Amazônia.
         </p>
-
+ 
         {/* Ações */}
         <div style={{
           display: 'flex',
@@ -135,7 +135,7 @@ export const Hero: React.FC = () => {
             }}
           >
             <Calendar size={18} />
-            Agendar Sessão de Spa
+            Agendar Consulta / Visita
           </a>
 
           <a

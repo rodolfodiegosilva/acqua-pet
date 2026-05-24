@@ -2,17 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { Droplet, Sparkles, Activity, Heart } from 'lucide-react';
 
 export const Essence: React.FC = () => {
-  const [petStatus, setPetStatus] = useState({ name: 'Tobias', status: 'recebendo banho de ofurô 🛁', progress: 45 });
+  const [petStatus, setPetStatus] = useState({ name: 'Aquário Hospital A', status: 'dosando regenerador biológico 🫧', progress: 45 });
 
   // Simulação do status ao vivo
   useEffect(() => {
     const statuses = [
-      { name: 'Tobias', status: 'recebendo banho de ofurô 🛁', progress: 55 },
-      { name: 'Tobias', status: 'relaxando na cromoterapia 🌈', progress: 85 },
-      { name: 'Mel', status: 'fazendo tosa higiênica ✂️', progress: 20 },
-      { name: 'Mel', status: 'passando perfume suave 🌸', progress: 95 },
-      { name: 'Thor', status: 'em consulta com o Dr. Henrique 🩺', progress: 50 },
-      { name: 'Luna', status: 'se divertindo no Spa Aquático 🌊', progress: 75 },
+      { name: 'Aquário Hospital A', status: 'dosando regenerador biológico 🫧', progress: 55 },
+      { name: 'Estufa Ciclídeos', status: 'aclimatação gradual de pH e T 🌡️', progress: 85 },
+      { name: 'Bateria Betta Show', status: 'alimentação automática ativada 🪱', progress: 100 },
+      { name: 'Tanque Lagoa Lago', status: 'filtragem UV ativada contra algas ☀️', progress: 95 },
+      { name: 'Aquário Quarentena B', status: 'consulta diagnóstica com o Vet Aquático 🩺', progress: 50 },
+      { name: 'Aquaterrário C', status: 'tpa parcial e ozonização da água 💧', progress: 75 },
     ];
     
     let index = 0;
@@ -66,7 +66,7 @@ export const Essence: React.FC = () => {
               lineHeight: 1.2
             }}>
               Onde o cuidado encontra <br />
-              <span className="gradient-text">a calmaria das águas</span>
+              <span className="gradient-text">o equilíbrio biológico</span>
             </h2>
             
             <p style={{
@@ -76,7 +76,7 @@ export const Essence: React.FC = () => {
               marginBottom: '36px',
               maxWidth: '560px'
             }}>
-              Acreditamos que o banho não deve ser um momento de estresse, mas um ritual de renovação. O Acqua Pet foi planejado com isolamento acústico, controle fino de temperatura e terapias baseadas na água para acalmar a mente e tratar o corpo do seu pet.
+              Acreditamos que um ecossistema aquático perfeito exige equilíbrio biológico preciso e cuidado veterinário especializado. Nosso centro na Rua da Legião foi planejado com sistemas de filtragem industrial de última geração e atendimento médico dedicado para garantir a saúde e o esplendor dos seus peixes ornamentais.
             </p>
 
             {/* Fila do Spa ao Vivo (Hospedado na seção Essência) */}
@@ -97,7 +97,7 @@ export const Essence: React.FC = () => {
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                   <Activity size={18} style={{ color: 'var(--primary)' }} />
                   <span style={{ fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)' }}>
-                    Fila do Spa ao Vivo
+                    Parâmetros e Quarentena ao Vivo
                   </span>
                 </div>
                 <span style={{
@@ -133,7 +133,7 @@ export const Essence: React.FC = () => {
                 padding: '16px',
                 border: '1px solid var(--border-glass)'
               }}>
-                <div style={{ fontSize: '32px' }}>🐶</div>
+                <div style={{ fontSize: '32px' }}>🐠</div>
                 <div>
                   <h4 style={{ fontSize: '16px', fontWeight: 800, color: 'var(--text-main)' }}>
                     {petStatus.name}
@@ -147,7 +147,7 @@ export const Essence: React.FC = () => {
               {/* Barra de Progresso */}
               <div style={{ marginTop: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11px', color: 'var(--text-muted)', marginBottom: '4px' }}>
-                  <span>Progresso do Cuidado</span>
+                  <span>Progresso do Protocolo</span>
                   <strong>{petStatus.progress}%</strong>
                 </div>
                 <div style={{
@@ -169,7 +169,7 @@ export const Essence: React.FC = () => {
             </div>
           </div>
 
-          {/* Coluna 2: Os 4 Pilares da Calmaria das Águas */}
+          {/* Coluna 2: Os 4 Pilares */}
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
@@ -183,49 +183,49 @@ export const Essence: React.FC = () => {
                 <Droplet size={26} fill="rgba(3, 2, 116, 0.1)" />
               </div>
               <h4 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '8px', color: 'var(--text-main)' }}>
-                Água Duplamente Filtrada
+                Filtragem Industrial & UV/Ozônio
               </h4>
               <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.5 }}>
-                Banhos feitos com água 100% livre de cloro e impurezas, ideal para peles hipersensíveis, coceiras e alergias.
+                Manutenção rigorosa com filtragem física, química e biológica avançada, além de esterilização ultravioleta para patógenos zero.
               </p>
             </div>
 
-            {/* Pilar 2: Cromoterapia */}
-            <div className="glass-card" style={{ padding: '24px', background: 'var(--bg-secondary)' }}>
-              <div style={{ color: 'var(--primary)', marginBottom: '16px' }}>
-                <Sparkles size={26} />
-              </div>
-              <h4 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '8px', color: 'var(--text-main)' }}>
-                Cromoterapia Relaxante
-              </h4>
-              <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.5 }}>
-                Luzes subaquáticas terapêuticas aplicadas no banho de ofurô para induzir o relaxamento e controle da ansiedade.
-              </p>
-            </div>
-
-            {/* Pilar 3: Ozonioterapia */}
-            <div className="glass-card" style={{ padding: '24px', background: 'var(--bg-secondary)' }}>
-              <div style={{ color: 'var(--primary)', marginBottom: '16px' }}>
-                <Activity size={26} />
-              </div>
-              <h4 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '8px', color: 'var(--text-main)' }}>
-                Ozonioterapia Ativa
-              </h4>
-              <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.5 }}>
-                Bolhas de ozônio que penetram na pelagem combatendo bactérias, acelerando a cicatrização e clareando o pelo.
-              </p>
-            </div>
-
-            {/* Pilar 4: Secagem Silenciosa */}
+            {/* Pilar 2: Veterinário Aquático */}
             <div className="glass-card" style={{ padding: '24px', background: 'var(--bg-secondary)' }}>
               <div style={{ color: 'var(--primary)', marginBottom: '16px' }}>
                 <Heart size={26} fill="rgba(3, 2, 116, 0.1)" />
               </div>
               <h4 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '8px', color: 'var(--text-main)' }}>
-                Sopro de Baixo Ruído
+                Clínica Especializada
               </h4>
               <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.5 }}>
-                Equipamentos acústicos projetados para secar o pet de maneira aconchegante e suave, prevenindo sustos e pânico.
+                Atendimento veterinário pioneiro para peixes ornamentais e fauna aquática: diagnóstico de doenças, biópsias e cirurgias.
+              </p>
+            </div>
+
+            {/* Pilar 3: Aquascaping Autoral */}
+            <div className="glass-card" style={{ padding: '24px', background: 'var(--bg-secondary)' }}>
+              <div style={{ color: 'var(--primary)', marginBottom: '16px' }}>
+                <Sparkles size={26} />
+              </div>
+              <h4 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '8px', color: 'var(--text-main)' }}>
+                Aquascaping Autoral
+              </h4>
+              <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                Desenvolvimento de designs e ecossistemas plantados ou marinhos sob medida, recriando a beleza natural de rios e lagos.
+              </p>
+            </div>
+
+            {/* Pilar 4: Aclimatação Lenta */}
+            <div className="glass-card" style={{ padding: '24px', background: 'var(--bg-secondary)' }}>
+              <div style={{ color: 'var(--primary)', marginBottom: '16px' }}>
+                <Activity size={26} />
+              </div>
+              <h4 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '8px', color: 'var(--text-main)' }}>
+                Aclimatação Choque Zero
+              </h4>
+              <p style={{ fontSize: '14px', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                Protocolo estrito de quarentena gota a gota e estabilização de parâmetros químicos para introdução segura de novas espécies.
               </p>
             </div>
 

@@ -54,7 +54,7 @@ export const Footer: React.FC = () => {
               lineHeight: '1.6',
               marginBottom: '24px'
             }}>
-              Cuidado de alto padrão, carinho e inovação para o bem-estar do seu pet. Especialistas em estética animal e hidromassagem.
+              O maior centro especializado em peixes ornamentais, equipamentos de aquarismo de elite e consultório veterinário aquático em Manaus.
             </p>
 
             {/* Redes Sociais */}
@@ -253,11 +253,11 @@ export const Footer: React.FC = () => {
             }}>
               <li style={{ display: 'flex', gap: '10px', alignItems: 'flex-start' }}>
                 <MapPin size={18} style={{ color: 'var(--primary)', flexShrink: 0, marginTop: '2px' }} />
-                <span>Av. Beira Mar, 1500 - Praia dos Recifes, Vitória - ES</span>
+                <span>Rua da Legião, nº 56 - Coroado, Manaus - AM</span>
               </li>
               <li style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <Phone size={18} style={{ color: 'var(--primary)', flexShrink: 0 }} />
-                <span>(27) 3344-9988 / (27) 99988-7766</span>
+                <span>(92) 3344-9988 / (92) 99988-7766</span>
               </li>
               <li style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
                 <Mail size={18} style={{ color: 'var(--primary)', flexShrink: 0 }} />
@@ -279,9 +279,9 @@ export const Footer: React.FC = () => {
           fontSize: '14px',
           color: 'var(--text-muted)'
         }} className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} Acqua Pet Shop. Todos os direitos reservados.</p>
+          <p>&copy; {new Date().getFullYear()} Acqua Pet. Todos os direitos reservados.</p>
           <p>
-            Desenvolvido com carinho para o bem-estar do seu melhor amigo 🐾💙
+            Desenvolvido com carinho para o bem-estar do seu ecossistema aquático 🐠💙
           </p>
         </div>
       </div>

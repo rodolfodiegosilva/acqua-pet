@@ -6,8 +6,8 @@ export const Contact: React.FC = () => {
     ownerName: '',
     phone: '',
     petName: '',
-    petType: 'dog',
-    service: 'spa',
+    petType: 'fish',
+    service: 'vet',
     date: '',
     time: ''
   });
@@ -30,8 +30,8 @@ export const Contact: React.FC = () => {
       ownerName: '',
       phone: '',
       petName: '',
-      petType: 'dog',
-      service: 'spa',
+      petType: 'fish',
+      service: 'vet',
       date: '',
       time: ''
     });
@@ -75,7 +75,7 @@ export const Contact: React.FC = () => {
               letterSpacing: '-1px',
               fontFamily: 'var(--font-heading)'
             }}>
-              Dê ao seu pet o <span className="gradient-text">cuidado que ele merece</span>
+              Dê ao seu peixe o <span className="gradient-text">cuidado especializado</span>
             </h2>
             <p style={{
               color: 'var(--text-muted)',
@@ -83,7 +83,7 @@ export const Contact: React.FC = () => {
               lineHeight: 1.6,
               marginBottom: '32px'
             }}>
-              Preencha o formulário ao lado para solicitar uma pré-reserva de banho, tosa ou consulta veterinária. Nossa equipe entrará em contato via WhatsApp em até 15 minutos para confirmar.
+              Preencha o formulário ao lado para solicitar uma pré-reserva de consulta veterinária aquática, consultoria de parâmetros ou projeto de aquascaping. Nossa equipe entrará em contato via WhatsApp em até 15 minutos para confirmar.
             </p>
 
             {/* Suporte Rápido WhatsApp */}
@@ -116,7 +116,7 @@ export const Contact: React.FC = () => {
                   Tire dúvidas ou agende de forma imediata com nossa atendente.
                 </p>
                 <a
-                  href="https://wa.me/5527999887766"
+                  href="https://wa.me/5592999887766"
                   target="_blank"
                   rel="noreferrer"
                   style={{
@@ -169,7 +169,12 @@ export const Contact: React.FC = () => {
                     Solicitação Recebida!
                   </h3>
                   <p style={{ color: 'var(--text-muted)', fontSize: '15px', lineHeight: 1.6, marginBottom: '30px' }}>
-                    Obrigado, <strong>{form.ownerName}</strong>. Nós registramos a solicitação de <strong>{form.service === 'spa' ? 'Spa de Hidromassagem' : form.service === 'grooming' ? 'Estética & Tosa' : 'Clínica Veterinária'}</strong> para o(a) <strong>{form.petName}</strong> em <strong>{form.date} às {form.time}</strong>.
+                    Obrigado, <strong>{form.ownerName}</strong>. Nós registramos a solicitação de <strong>{
+                      form.service === 'vet' ? 'Consulta Veterinária Especializada' : 
+                      form.service === 'aquascaping' ? 'Projeto & Montagem de Aquário' : 
+                      form.service === 'water_analysis' ? 'Análise de Parâmetros' : 
+                      'Hospedagem & Quarentena Premium'
+                    }</strong> para o(a) <strong>{form.petName || 'Espécime'}</strong> em <strong>{form.date} às {form.time}</strong>.
                     <br /><br />
                     Enviamos um resumo no seu celular e entraremos em contato para confirmar o agendamento final!
                   </p>
@@ -233,7 +238,7 @@ export const Contact: React.FC = () => {
                     <input
                       type="tel"
                       required
-                      placeholder="Ex: (27) 99988-7766"
+                      placeholder="Ex: (92) 99988-7766"
                       value={form.phone}
                       onChange={(e) => setForm({ ...form, phone: e.target.value })}
                       className="input-premium"
@@ -244,13 +249,13 @@ export const Contact: React.FC = () => {
                   <div className="form-grid-responsive">
                     <div>
                       <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>
-                        Nome do Pet
+                        Nome do Peixe / Identificação
                       </label>
                       <div style={{ position: 'relative' }}>
                         <input
                           type="text"
                           required
-                          placeholder="Ex: Rex"
+                          placeholder="Ex: Betta Azul / Aquário Sala"
                           value={form.petName}
                           onChange={(e) => setForm({ ...form, petName: e.target.value })}
                           className="input-premium"
@@ -262,7 +267,7 @@ export const Contact: React.FC = () => {
 
                     <div>
                       <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>
-                        Tipo de Pet
+                        Tipo de Espécime / Sistema
                       </label>
                       <select
                         value={form.petType}
@@ -270,9 +275,9 @@ export const Contact: React.FC = () => {
                         className="input-premium"
                         style={{ height: '52px' }}
                       >
-                        <option value="dog">Cão 🐶</option>
-                        <option value="cat">Gato 🐱</option>
-                        <option value="other">Outro 🐾</option>
+                        <option value="fish">Peixe Ornamental 🐠</option>
+                        <option value="aquarium">Aquário / Ecossistema 🫧</option>
+                        <option value="other">Outros Pets Aquáticos 🐢</option>
                       </select>
                     </div>
                   </div>
@@ -288,10 +293,10 @@ export const Contact: React.FC = () => {
                       className="input-premium"
                       style={{ height: '52px' }}
                     >
-                      <option value="spa">Spa de Hidromassagem (Ofurô + Ozônio)</option>
-                      <option value="grooming">Estética & Tosa Estilizada</option>
-                      <option value="vet">Consulta Veterinária Preventiva</option>
-                      <option value="hotel">Hospedagem / Hotelzinho Acqua</option>
+                      <option value="vet">Consulta Veterinária Especializada 🩺</option>
+                      <option value="aquascaping">Projeto & Montagem de Aquário (Aquascaping) 🌿</option>
+                      <option value="water_analysis">Análise de Parâmetros & Consultoria de Água 💧</option>
+                      <option value="quarantine">Hospedagem & Quarentena Premium 🛡️</option>
                     </select>
                   </div>
 

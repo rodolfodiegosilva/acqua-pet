@@ -120,7 +120,7 @@ export const Header: React.FC = () => {
               transition: 'var(--transition-smooth)'
             }}
           >
-            Agendar Banho
+            Agendar Consulta
           </a>
 
           {/* Mobile Menu Toggle */}

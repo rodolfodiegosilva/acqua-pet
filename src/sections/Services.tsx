@@ -1,34 +1,35 @@
 import React from 'react';
-import { Droplet, Scissors, Heart, Home } from 'lucide-react';
+import { Droplet, Heart, Sparkles, ShieldAlert } from 'lucide-react';
 import { ServiceCard } from '../components/ServiceCard';
 
 export const Services: React.FC = () => {
   const servicesData = [
     {
-      title: 'Spa de Hidromassagem',
-      description: 'Banhos terapêuticos de ofurô com sais minerais, ozonoterapia e cromoterapia. Ajuda no relaxamento muscular e na saúde da pele.',
-      icon: <Droplet size={32} strokeWidth={1.5} />,
-      price: 'R$ 119,90',
+      title: 'Consultório Veterinário Aquático',
+      description: 'Atendimento clínico especializado em peixes ornamentais: biópsias branquiais, exames parasitológicos, raspados de pele e cirurgias de precisão com anestesia aquática.',
+      icon: <Heart size={32} strokeWidth={1.5} />,
+      price: 'R$ 179,90',
       badge: 'Exclusivo'
     },
     {
-      title: 'Estética & Tosa',
-      description: 'Banho completo com água duplamente filtrada, secagem silenciosa e tosas estéticas personalizadas feitas por especialistas da raça.',
-      icon: <Scissors size={32} strokeWidth={1.5} />,
-      price: 'R$ 79,90',
+      title: 'Design & Aquascaping',
+      description: 'Planejamento, montagem e manutenção sob medida de aquários plantados, marinhos, lagoas ornamentais e ecossistemas complexos inspirados na Bacia Amazônica.',
+      icon: <Droplet size={32} strokeWidth={1.5} />,
+      price: 'Sob Consulta',
+      badge: 'Sob Medida'
+    },
+    {
+      title: 'Análise de Água & Consultoria',
+      description: 'Biorremediação completa e análise físico-química laboratorial precisa de pH, amônia total, nitrito, nitrato, GH e KH com prescrição de tratamento biológico ideal.',
+      icon: <Sparkles size={32} strokeWidth={1.5} />,
+      price: 'R$ 89,90',
       badge: 'Mais Procurado'
     },
     {
-      title: 'Clínica Veterinária',
-      description: 'Atendimento clínico preventivo, exames rápidos, aplicação de vacinas importadas e acompanhamento pediátrico/geriátrico com afeto.',
-      icon: <Heart size={32} strokeWidth={1.5} />,
-      price: 'R$ 149,90',
-    },
-    {
-      title: 'Hotelzinho Acqua',
-      description: 'Hospedagem humanizada em suítes climatizadas, rotina de socialização, piscina pet monitorada e envio diário de fotos e vídeos.',
-      icon: <Home size={32} strokeWidth={1.5} />,
-      price: 'R$ 89,90',
+      title: 'Quarentena & Aclimatação',
+      description: 'Hospedagem segura em sistemas individuais de quarentena biológica, tratamento preventivo contra patógenos e aclimatação gradual gota a gota de novos espécimes.',
+      icon: <ShieldAlert size={32} strokeWidth={1.5} />,
+      price: 'R$ 99,90',
       badge: 'Novidade'
     }
   ];
@@ -58,7 +59,7 @@ export const Services: React.FC = () => {
             display: 'block',
             marginBottom: '12px'
           }}>
-            Serviços de Alto Padrão
+            Serviços Especializados
           </span>
           <h2 style={{
             fontSize: 'clamp(28px, 4vw, 40px)',
@@ -67,14 +68,15 @@ export const Services: React.FC = () => {
             letterSpacing: '-1px',
             fontFamily: 'var(--font-heading)'
           }}>
-            Tratamentos que seu pet <span className="gradient-text">vai amar experimentar</span>
+            Saúde aquática e ecossistemas <br />
+            <span className="gradient-text">de altíssimo padrão</span>
           </h2>
           <p style={{
             color: 'var(--text-muted)',
             fontSize: '16px',
             lineHeight: 1.6
           }}>
-            Combinamos técnicas modernas de estética e cuidados veterinários em um ecossistema projetado inteiramente para minimizar o estresse e maximizar o carinho.
+            Combinamos a precisão da biologia marinha com o cuidado veterinário especializado em um ambiente projetado para maximizar a saúde e a exuberância dos seus peixes ornamentais.
           </p>
         </div>
 
