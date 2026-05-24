@@ -4,6 +4,8 @@ import { Droplet, Phone, Mail, MapPin, Clock } from 'lucide-react';
 export const Footer: React.FC = () => {
   return (
     <footer style={{
+      width: '100%',
+      boxSizing: 'border-box',
       backgroundColor: 'var(--bg-secondary)',
       borderTop: '1px solid var(--border-glass)',
       paddingTop: '80px',
