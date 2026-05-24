@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Menu, X, Droplet, ShoppingBag } from 'lucide-react';
+import { Menu, X, ShoppingBag } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
+import acquaPetIcon from '../assets/acqua_pet_icon.svg';
 
 interface HeaderProps {
   view: 'landing' | 'store';
@@ -82,31 +83,20 @@ export const Header: React.FC<HeaderProps> = ({
               padding: 0
             }}
           >
-            <div style={{
-              position: 'relative',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '40px',
-              height: '40px',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)',
-              color: '#fff',
-              boxShadow: '0 4px 10px rgba(3, 2, 116, 0.2)'
-            }}>
-              <Droplet size={20} fill="#ffffff" />
-              <span style={{
-                position: 'absolute',
-                bottom: '2px',
-                right: '2px',
-                width: '8px',
-                height: '8px',
-                borderRadius: '50%',
-                backgroundColor: 'var(--accent)',
-                border: '2px solid #fff'
-              }} />
-            </div>
-            <span>Acqua<span className="gradient-text">Pet</span></span>
+            <img
+              src={acquaPetIcon}
+              alt="Acqua Pet"
+              style={{
+                width: '40px',
+                height: '40px',
+                flexShrink: 0,
+                objectFit: 'contain'
+              }}
+            />
+            <span>
+              Acqua
+              <span style={{ color: 'var(--accent)' }}>Pet</span>
+            </span>
           </button>
 
           {/* Desktop Navigation (Alinhada ao lado da Logo) */}

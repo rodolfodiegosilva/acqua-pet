@@ -34,6 +34,11 @@ export const Store: React.FC<StoreProps> = ({
   const [activeCategory, setActiveCategory] = useState<string>('Todos');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [sortBy, setSortBy] = useState<string>('relevance');
+  const [priceRange, setPriceRange] = useState<string>('all');
+  const [minRating, setMinRating] = useState<string>('all');
+  const [promoOnly, setPromoOnly] = useState<boolean>(false);
+  const [inStockOnly, setInStockOnly] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   // Checkout Flow states
   const [isCheckoutOpen, setIsCheckoutOpen] = useState<boolean>(false);
@@ -59,7 +64,8 @@ export const Store: React.FC<StoreProps> = ({
     cvv: ''
   });
 
-  const categories = ['Todos', 'Cães 🐶', 'Gatos 🐱', 'Peixes 🐠', 'Aves 🦜', 'Répteis 🐢'];
+  const categories = ['Todos', 'Cães 🐶', 'Gatos 🐱', 'Peixes 🐠', 'Aves 🦜', 'Répteis 🐢', 'Pequenos Pets 🐹'];
+  const productsPerPage = 8;
 
   // Carregar produtos da API mockada
   useEffect(() => {
@@ -70,18 +76,56 @@ export const Store: React.FC<StoreProps> = ({
     });
   }, [activeCategory]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [activeCategory, searchQuery, sortBy, priceRange, minRating, promoOnly, inStockOnly]);
+
   // Filtragem local baseada na busca
-  const filteredProducts = products.filter(p =>
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredProducts = products.filter((p) => {
+    const normalizedSearch = searchQuery.trim().toLowerCase();
+    const matchesSearch =
+      normalizedSearch.length === 0 ||
+      p.name.toLowerCase().includes(normalizedSearch) ||
+      p.description.toLowerCase().includes(normalizedSearch) ||
+      p.category.toLowerCase().includes(normalizedSearch);
+
+    const matchesPrice =
+      priceRange === 'all' ||
+      (priceRange === 'under-50' && p.price < 50) ||
+      (priceRange === '50-150' && p.price >= 50 && p.price <= 150) ||
+      (priceRange === '150-300' && p.price > 150 && p.price <= 300) ||
+      (priceRange === '300-plus' && p.price > 300);
+
+    const matchesRating =
+      minRating === 'all' ||
+      (minRating === '4-plus' && p.rating >= 4) ||
+      (minRating === '4.5-plus' && p.rating >= 4.5) ||
+      (minRating === '4.8-plus' && p.rating >= 4.8);
+
+    const matchesPromo = !promoOnly || Boolean(p.originalPrice);
+    const matchesStock = !inStockOnly || p.stock > 0;
+
+    return matchesSearch && matchesPrice && matchesRating && matchesPromo && matchesStock;
+  });
 
   // Ordenação
   const sortedProducts = [...filteredProducts].sort((a, b) => {
+    if (sortBy === 'rating-desc') return b.rating - a.rating || a.price - b.price;
+    if (sortBy === 'name-asc') return a.name.localeCompare(b.name, 'pt-BR');
     if (sortBy === 'price-asc') return a.price - b.price;
     if (sortBy === 'price-desc') return b.price - a.price;
-    return a.id - b.id; // relevance
+    if (sortBy === 'discount-desc') return ((b.originalPrice ?? b.price) - b.price) - ((a.originalPrice ?? a.price) - a.price);
+    if (sortBy === 'stock-desc') return b.stock - a.stock;
+    return b.rating - a.rating || a.id - b.id;
   });
+
+  const totalPages = Math.max(1, Math.ceil(sortedProducts.length / productsPerPage));
+  const paginatedProducts = sortedProducts.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage);
+  const startItem = sortedProducts.length === 0 ? 0 : (currentPage - 1) * productsPerPage + 1;
+  const endItem = Math.min(currentPage * productsPerPage, sortedProducts.length);
+  const hasActiveRefinements = Boolean(
+    searchQuery.trim() || priceRange !== 'all' || minRating !== 'all' || promoOnly || inStockOnly || activeCategory !== 'Todos'
+  );
 
   // Cálculos do Carrinho
   const cartSubtotal = cart.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
@@ -125,6 +169,17 @@ export const Store: React.FC<StoreProps> = ({
     setView('landing'); // Retorna para a home com sucesso
   };
 
+  const clearFilters = () => {
+    setActiveCategory('Todos');
+    setSearchQuery('');
+    setSortBy('relevance');
+    setPriceRange('all');
+    setMinRating('all');
+    setPromoOnly(false);
+    setInStockOnly(false);
+    setCurrentPage(1);
+  };
+
   return (
     <div style={{
       width: '100%',
@@ -155,7 +210,7 @@ export const Store: React.FC<StoreProps> = ({
             display: 'block',
             marginBottom: '8px'
           }}>
-            Aquarismo de Elite
+            Loja Pet Multiespécies
           </span>
           <h1 style={{
             fontSize: 'clamp(28px, 4vw, 44px)',
@@ -165,7 +220,7 @@ export const Store: React.FC<StoreProps> = ({
             letterSpacing: '-1.5px',
             lineHeight: 1.2
           }}>
-            A Boutique Oficial do seu <span className="gradient-text">Ecossistema Aquático</span>
+            Produtos para <span className="gradient-text">todos os tipos de pets</span>
           </h1>
           <p style={{
             color: 'var(--text-muted)',
@@ -173,7 +228,7 @@ export const Store: React.FC<StoreProps> = ({
             maxWidth: '650px',
             lineHeight: 1.6
           }}>
-            Encontre equipamentos de alta performance, nutrição premium internacional, tratamentos biológicos e troncos artesanais para manter seus peixes com saúde perfeita.
+            Explore uma vitrine completa com rações, brinquedos, habitats, acessórios e cuidados para cães, gatos, peixes, aves, répteis e pequenos pets.
           </p>
         </div>
 
@@ -200,7 +255,7 @@ export const Store: React.FC<StoreProps> = ({
             }}>
               <input
                 type="text"
-                placeholder="Buscar equipamentos, rações ou condicionadores..."
+                placeholder="Buscar rações, brinquedos, aquários, viveiros e acessórios..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 style={{
@@ -225,7 +280,7 @@ export const Store: React.FC<StoreProps> = ({
             </div>
 
             {/* Ordenação */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexShrink: 0 }} className="sort-controls">
               <span style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-muted)' }}>Ordenar por:</span>
               <select
                 value={sortBy}
@@ -243,9 +298,143 @@ export const Store: React.FC<StoreProps> = ({
                 }}
               >
                 <option value="relevance">Destaque</option>
+                <option value="rating-desc">Melhor avaliação</option>
                 <option value="price-asc">Menor Preço</option>
                 <option value="price-desc">Maior Preço</option>
+                <option value="discount-desc">Maiores descontos</option>
+                <option value="stock-desc">Mais disponíveis</option>
+                <option value="name-asc">Nome A-Z</option>
               </select>
+            </div>
+          </div>
+
+          <div
+            className="filters-panel"
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '16px',
+              padding: '20px',
+              borderRadius: 'var(--radius-md)',
+              border: '1px solid var(--border-glass)',
+              background: 'var(--bg-secondary)'
+            }}
+          >
+            <div className="filters-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '12px' }}>
+              <label style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-muted)' }}>Faixa de preço</span>
+                <select
+                  value={priceRange}
+                  onChange={(e) => setPriceRange(e.target.value)}
+                  style={{
+                    padding: '12px 16px',
+                    borderRadius: 'var(--radius-sm)',
+                    border: '1px solid var(--border-glass)',
+                    background: 'var(--bg-primary)',
+                    color: 'var(--text-main)',
+                    fontSize: '14px',
+                    outline: 'none'
+                  }}
+                >
+                  <option value="all">Todas</option>
+                  <option value="under-50">Até R$ 49</option>
+                  <option value="50-150">R$ 50 a R$ 150</option>
+                  <option value="150-300">R$ 151 a R$ 300</option>
+                  <option value="300-plus">Acima de R$ 300</option>
+                </select>
+              </label>
+
+              <label style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                <span style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-muted)' }}>Avaliação mínima</span>
+                <select
+                  value={minRating}
+                  onChange={(e) => setMinRating(e.target.value)}
+                  style={{
+                    padding: '12px 16px',
+                    borderRadius: 'var(--radius-sm)',
+                    border: '1px solid var(--border-glass)',
+                    background: 'var(--bg-primary)',
+                    color: 'var(--text-main)',
+                    fontSize: '14px',
+                    outline: 'none'
+                  }}
+                >
+                  <option value="all">Qualquer nota</option>
+                  <option value="4-plus">4.0+</option>
+                  <option value="4.5-plus">4.5+</option>
+                  <option value="4.8-plus">4.8+</option>
+                </select>
+              </label>
+
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: '14px 16px',
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid var(--border-glass)',
+                  background: 'var(--bg-primary)',
+                  cursor: 'pointer',
+                  marginTop: '22px'
+                }}
+              >
+                <input type="checkbox" checked={promoOnly} onChange={(e) => setPromoOnly(e.target.checked)} />
+                <span style={{ fontSize: '14px', fontWeight: 600 }}>Somente promoções</span>
+              </label>
+
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '10px',
+                  padding: '14px 16px',
+                  borderRadius: 'var(--radius-sm)',
+                  border: '1px solid var(--border-glass)',
+                  background: 'var(--bg-primary)',
+                  cursor: 'pointer',
+                  marginTop: '22px'
+                }}
+              >
+                <input type="checkbox" checked={inStockOnly} onChange={(e) => setInStockOnly(e.target.checked)} />
+                <span style={{ fontSize: '14px', fontWeight: 600 }}>Somente em estoque</span>
+              </label>
+            </div>
+
+            <div
+              className="results-toolbar"
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                gap: '12px'
+              }}
+            >
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                <strong style={{ fontSize: '15px', color: 'var(--text-main)' }}>
+                  {sortedProducts.length} produtos encontrados
+                </strong>
+                <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>
+                  Exibindo {startItem}-{endItem} na página {currentPage} de {totalPages}
+                </span>
+              </div>
+
+              <button
+                onClick={clearFilters}
+                disabled={!hasActiveRefinements}
+                style={{
+                  padding: '12px 18px',
+                  borderRadius: 'var(--radius-full)',
+                  border: '1px solid var(--border-glass)',
+                  background: hasActiveRefinements ? 'var(--bg-primary)' : 'rgba(3, 2, 116, 0.04)',
+                  color: 'var(--text-main)',
+                  fontWeight: 700,
+                  cursor: hasActiveRefinements ? 'pointer' : 'not-allowed',
+                  opacity: hasActiveRefinements ? 1 : 0.55
+                }}
+              >
+                Limpar filtros
+              </button>
             </div>
           </div>
 
@@ -335,16 +524,18 @@ export const Store: React.FC<StoreProps> = ({
             color: 'var(--text-muted)'
           }}>
             <h3 style={{ fontSize: '20px', fontWeight: 700, marginBottom: '8px' }}>Nenhum produto encontrado</h3>
-            <p>Tente reescrever a busca ou trocar de categoria.</p>
+            <p>Tente ajustar os filtros, trocar a categoria ou limpar os refinamentos ativos.</p>
           </div>
         ) : (
           /* GRID REAL DE PRODUTOS */
-          <div style={{
+          <div
+            className="products-store-grid"
+            style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
             gap: '30px'
           }}>
-            {sortedProducts.map((product) => {
+            {paginatedProducts.map((product) => {
               const cartItem = cart.find(item => item.product.id === product.id);
               const qty = cartItem ? cartItem.quantity : 0;
               return (
@@ -421,7 +612,7 @@ export const Store: React.FC<StoreProps> = ({
                   </div>
 
                   {/* Preços e Ações */}
-                  <div style={{
+                  <div className="product-card-footer" style={{
                     width: '100%',
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -523,6 +714,77 @@ export const Store: React.FC<StoreProps> = ({
                 </div>
               );
             })}
+          </div>
+        )}
+
+        {!loading && sortedProducts.length > 0 && totalPages > 1 && (
+          <div
+            className="pagination-bar"
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              gap: '10px',
+              marginTop: '36px',
+              flexWrap: 'wrap'
+            }}
+          >
+            <button
+              onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+              disabled={currentPage === 1}
+              style={{
+                padding: '12px 18px',
+                borderRadius: 'var(--radius-full)',
+                border: '1px solid var(--border-glass)',
+                background: 'var(--bg-secondary)',
+                color: 'var(--text-main)',
+                fontWeight: 700,
+                cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
+                opacity: currentPage === 1 ? 0.45 : 1
+              }}
+            >
+              Anterior
+            </button>
+
+            {Array.from({ length: totalPages }, (_, index) => {
+              const page = index + 1;
+              return (
+                <button
+                  key={page}
+                  onClick={() => setCurrentPage(page)}
+                  style={{
+                    width: '42px',
+                    height: '42px',
+                    borderRadius: '50%',
+                    border: '1px solid',
+                    borderColor: currentPage === page ? 'var(--primary)' : 'var(--border-glass)',
+                    background: currentPage === page ? 'var(--primary)' : 'var(--bg-secondary)',
+                    color: currentPage === page ? '#fff' : 'var(--text-main)',
+                    fontWeight: 700,
+                    cursor: 'pointer'
+                  }}
+                >
+                  {page}
+                </button>
+              );
+            })}
+
+            <button
+              onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+              disabled={currentPage === totalPages}
+              style={{
+                padding: '12px 18px',
+                borderRadius: 'var(--radius-full)',
+                border: '1px solid var(--border-glass)',
+                background: 'var(--bg-secondary)',
+                color: 'var(--text-main)',
+                fontWeight: 700,
+                cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
+                opacity: currentPage === totalPages ? 0.45 : 1
+              }}
+            >
+              Próxima
+            </button>
           </div>
         )}
       </div>
@@ -944,7 +1206,7 @@ export const Store: React.FC<StoreProps> = ({
                     <label style={{ display: 'block', fontSize: '14px', fontWeight: 700, marginBottom: '10px' }}>
                       Como deseja receber seus produtos?
                     </label>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div className="checkout-choice-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                       
                       {/* Retirada */}
                       <button
@@ -1013,7 +1275,7 @@ export const Store: React.FC<StoreProps> = ({
                     <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                       <h4 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-main)' }}>Endereço de Entrega em Manaus:</h4>
                       
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px' }}>
+                      <div className="checkout-address-grid-top" style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px' }}>
                         <input
                           type="text"
                           placeholder="CEP"
@@ -1040,7 +1302,7 @@ export const Store: React.FC<StoreProps> = ({
                         required
                       />
 
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                      <div className="checkout-address-grid-bottom" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                         <input
                           type="text"
                           placeholder="Número (Obrigatório)"
@@ -1124,7 +1386,7 @@ export const Store: React.FC<StoreProps> = ({
                     <label style={{ display: 'block', fontSize: '14px', fontWeight: 700, marginBottom: '10px' }}>
                       Escolha a forma de pagamento:
                     </label>
-                    <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                    <div className="checkout-choice-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                       
                       {/* PIX */}
                       <button
@@ -1261,7 +1523,7 @@ export const Store: React.FC<StoreProps> = ({
                         required
                       />
 
-                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                      <div className="checkout-address-grid-bottom" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                         <input
                           type="text"
                           placeholder="Validade: MM/AA"
@@ -1319,7 +1581,7 @@ export const Store: React.FC<StoreProps> = ({
                   </div>
 
                   {/* Botoes de Ação */}
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px' }}>
+                  <div className="checkout-actions-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '10px' }}>
                     <button
                       onClick={() => setCheckoutStep(1)}
                       style={{
@@ -1454,6 +1716,48 @@ export const Store: React.FC<StoreProps> = ({
           .catalog-controls-grid {
             flex-direction: row !important;
             align-items: center !important;
+          }
+        }
+        @media (max-width: 767px) {
+          .sort-controls {
+            width: 100%;
+            flex-direction: column;
+            align-items: stretch !important;
+          }
+          .sort-controls select {
+            width: 100%;
+          }
+          .filters-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .results-toolbar {
+            flex-direction: column;
+            align-items: stretch !important;
+          }
+          .products-store-grid {
+            grid-template-columns: 1fr !important;
+            gap: 20px !important;
+          }
+          .product-card-footer {
+            flex-direction: column;
+            align-items: stretch !important;
+            gap: 16px;
+          }
+          .product-card-footer > div:last-child,
+          .product-card-footer > button:last-child {
+            align-self: flex-start;
+          }
+          .checkout-choice-grid,
+          .checkout-address-grid-top,
+          .checkout-address-grid-bottom,
+          .checkout-actions-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .cart-drawer-panel {
+            max-width: 100% !important;
+          }
+          .pagination-bar {
+            justify-content: stretch;
           }
         }
         @keyframes pulse-soft {
