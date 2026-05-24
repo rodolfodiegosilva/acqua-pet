@@ -202,13 +202,13 @@ export const Contact: React.FC = () => {
                     alignItems: 'center',
                     gap: '10px'
                   }}>
-                    <Calendar size={22} style={{ color: 'var(--primary)' }} />
+                    <Calendar size={22} style={{ color: '#030274' }} />
                     Dados do Agendamento
                   </h3>
 
                   {/* Nome do Tutor */}
                   <div style={{ marginBottom: '20px' }}>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-muted)' }}>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>
                       Seu Nome Completo
                     </label>
                     <div style={{ position: 'relative' }}>
@@ -221,13 +221,13 @@ export const Contact: React.FC = () => {
                         className="input-premium"
                         style={{ paddingLeft: '44px' }}
                       />
-                      <User size={18} style={{ position: 'absolute', left: '16px', top: '16px', color: 'var(--text-muted)' }} />
+                      <User size={18} style={{ position: 'absolute', left: '16px', top: '16px', color: 'rgba(3, 2, 116, 0.5)' }} />
                     </div>
                   </div>
 
                   {/* Contato (Telefone/WhatsApp) */}
                   <div style={{ marginBottom: '20px' }}>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-muted)' }}>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>
                       Celular / WhatsApp
                     </label>
                     <input
@@ -243,7 +243,7 @@ export const Contact: React.FC = () => {
                   {/* Nome & Tipo do Pet */}
                   <div className="form-grid-responsive">
                     <div>
-                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-muted)' }}>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>
                         Nome do Pet
                       </label>
                       <div style={{ position: 'relative' }}>
@@ -256,12 +256,12 @@ export const Contact: React.FC = () => {
                           className="input-premium"
                           style={{ paddingLeft: '44px' }}
                         />
-                        <Smile size={18} style={{ position: 'absolute', left: '16px', top: '16px', color: 'var(--text-muted)' }} />
+                        <Smile size={18} style={{ position: 'absolute', left: '16px', top: '16px', color: 'rgba(3, 2, 116, 0.5)' }} />
                       </div>
                     </div>
 
                     <div>
-                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-muted)' }}>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>
                         Tipo de Pet
                       </label>
                       <select
@@ -279,7 +279,7 @@ export const Contact: React.FC = () => {
 
                   {/* Serviço Escolhido */}
                   <div style={{ marginBottom: '20px' }}>
-                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-muted)' }}>
+                    <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>
                       Serviço Desejado
                     </label>
                     <select
@@ -298,7 +298,7 @@ export const Contact: React.FC = () => {
                   {/* Data & Hora */}
                   <div className="form-grid-responsive" style={{ marginBottom: '30px' }}>
                     <div>
-                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-muted)' }}>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>
                         Data
                       </label>
                       <input
@@ -311,7 +311,7 @@ export const Contact: React.FC = () => {
                     </div>
 
                     <div>
-                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-muted)' }}>
+                      <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px' }}>
                         Melhor Horário
                       </label>
                       <select
