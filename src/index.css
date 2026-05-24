@@ -306,10 +306,17 @@ a {
 
 /* --- Layout Utilitário --- */
 .container {
-  width: 100%;
-  max-width: 1200px;
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box;
+  padding: 0 20px !important;
   margin: 0 auto;
-  padding: 0 24px;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding: 0 40px !important;
+  }
 }
 
 .section-spacing {
