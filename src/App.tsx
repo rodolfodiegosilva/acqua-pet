@@ -1,5 +1,6 @@
 import { Header } from './components/Header';
 import { Hero } from './sections/Hero';
+import { Essence } from './sections/Essence';
 import { Services } from './sections/Services';
 import { Products } from './sections/Products';
 import { Contact } from './sections/Contact';
@@ -13,8 +14,11 @@ function App() {
       
       {/* Corpo da Landing Page */}
       <main style={{ flex: '1 0 auto' }}>
-        {/* Seção Hero */}
+        {/* Seção Hero Cinematográfica com Vídeo */}
         <Hero />
+        
+        {/* Seção Exclusiva da Essência (Cuidado e Calmaria das Águas) */}
+        <Essence />
         
         {/* Seção de Serviços */}
         <Services />
