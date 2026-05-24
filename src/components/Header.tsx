@@ -16,83 +16,96 @@ export const Header: React.FC = () => {
       zIndex: 1000,
       transition: 'var(--transition-smooth)'
     }}>
-      <div className="container" style={{
+      <div style={{
+        width: '100%',
+        boxSizing: 'border-box',
+        padding: '0 40px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        height: '80px'
+        height: '80px',
+        gap: '40px'
       }}>
-        {/* Logo */}
-        <a href="#inicio" style={{
+        {/* Bloco Agrupado à Esquerda: Logo + Navegação */}
+        <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '8px',
-          fontWeight: 800,
-          fontFamily: 'var(--font-heading)',
-          fontSize: '24px',
-          color: 'var(--text-main)'
+          gap: '48px',
+          flexGrow: 1
         }}>
-          <div style={{
-            position: 'relative',
+          {/* Logo */}
+          <a href="#inicio" style={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-            width: '40px',
-            height: '40px',
-            borderRadius: '50%',
-            background: 'linear-gradient(135deg, #00b4d8 0%, #0077b6 100%)',
-            color: '#fff',
-            boxShadow: '0 4px 10px rgba(0, 180, 216, 0.3)'
+            gap: '8px',
+            fontWeight: 800,
+            fontFamily: 'var(--font-heading)',
+            fontSize: '24px',
+            color: 'var(--text-main)',
+            flexShrink: 0
           }}>
-            <Droplet size={20} fill="#ffffff" />
-            <span style={{
-              position: 'absolute',
-              bottom: '2px',
-              right: '2px',
-              width: '8px',
-              height: '8px',
+            <div style={{
+              position: 'relative',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              width: '40px',
+              height: '40px',
               borderRadius: '50%',
-              backgroundColor: 'var(--accent)',
-              border: '2px solid #fff'
-            }} />
-          </div>
-          <span>Acqua<span className="gradient-text">Pet</span></span>
-        </a>
+              background: 'linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%)',
+              color: '#fff',
+              boxShadow: '0 4px 10px rgba(3, 2, 116, 0.2)'
+            }}>
+              <Droplet size={20} fill="#ffffff" />
+              <span style={{
+                position: 'absolute',
+                bottom: '2px',
+                right: '2px',
+                width: '8px',
+                height: '8px',
+                borderRadius: '50%',
+                backgroundColor: 'var(--accent)',
+                border: '2px solid #fff'
+              }} />
+            </div>
+            <span>Acqua<span className="gradient-text">Pet</span></span>
+          </a>
 
-        {/* Desktop Navigation */}
-        <nav style={{
-          display: 'none',
-        }} className="desktop-menu">
-          <ul style={{
-            display: 'flex',
-            gap: '32px',
-            listStyle: 'none',
-            fontSize: '16px',
-            fontWeight: 500
-          }}>
-            {['Inicio', 'Servicos', 'Petshop', 'Agendamento', 'Contato'].map((item) => (
-              <li key={item}>
-                <a
-                  href={`#${item.toLowerCase()}`}
-                  style={{
-                    color: 'var(--text-muted)',
-                    transition: 'var(--transition-smooth)',
-                    padding: '8px 0',
-                    position: 'relative'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = 'var(--primary)';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = 'var(--text-muted)';
-                  }}
-                >
-                  {item === 'Inicio' ? 'Início' : item === 'Servicos' ? 'Serviços' : item === 'Petshop' ? 'Pet Shop' : item}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
+          {/* Desktop Navigation (Alinhada ao lado da Logo) */}
+          <nav style={{
+            display: 'none',
+          }} className="desktop-menu">
+            <ul style={{
+              display: 'flex',
+              gap: '32px',
+              listStyle: 'none',
+              fontSize: '16px',
+              fontWeight: 500
+            }}>
+              {['Inicio', 'Servicos', 'Petshop', 'Agendamento', 'Contato'].map((item) => (
+                <li key={item}>
+                  <a
+                    href={`#${item.toLowerCase()}`}
+                    style={{
+                      color: 'var(--text-muted)',
+                      transition: 'var(--transition-smooth)',
+                      padding: '8px 0',
+                      position: 'relative'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = 'var(--primary)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = 'var(--text-muted)';
+                    }}
+                  >
+                    {item === 'Inicio' ? 'Início' : item === 'Servicos' ? 'Serviços' : item === 'Petshop' ? 'Pet Shop' : item}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
 
         {/* Action Controls */}
         <div style={{
