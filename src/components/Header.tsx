@@ -16,16 +16,7 @@ export const Header: React.FC = () => {
       zIndex: 1000,
       transition: 'var(--transition-smooth)'
     }}>
-      <div style={{
-        width: '100%',
-        boxSizing: 'border-box',
-        padding: '0 40px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        height: '80px',
-        gap: '40px'
-      }}>
+      <div className="header-container">
         {/* Bloco Agrupado à Esquerda: Logo + Navegação */}
         <div style={{
           display: 'flex',
@@ -208,9 +199,23 @@ export const Header: React.FC = () => {
         </div>
       )}
 
-      {/* CSS embutido para controlar responsividade sem Tailwind */}
       <style>{`
+        .header-container {
+          width: 100%;
+          box-sizing: border-box;
+          padding: 0 20px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          height: 80px;
+          gap: 20px;
+        }
+
         @media (min-width: 768px) {
+          .header-container {
+            padding: 0 40px;
+            gap: 40px;
+          }
           .desktop-menu {
             display: block !important;
           }
