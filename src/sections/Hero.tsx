@@ -80,7 +80,7 @@ export const Hero: React.FC = () => {
           marginBottom: '24px'
         }}>
           <Sparkles size={14} />
-          <span>Experiência Estética Pet de Alto Padrão</span>
+          <span>Spa Aquático Premium</span>
         </div>
 
         {/* Titulo com Frase Impactante */}
