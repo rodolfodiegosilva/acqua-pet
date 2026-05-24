@@ -1,5 +1,6 @@
 import React from 'react';
-import { Droplet, Phone, MapPin, Mail, Clock } from 'lucide-react';
+import { Phone, MapPin, Mail, Clock } from 'lucide-react';
+import acquaPetIcon from '../assets/acqua_pet_icon.svg';
 
 interface FooterProps {
   setView?: (view: 'landing' | 'store') => void;
@@ -74,19 +75,20 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
                 padding: 0
               }}
             >
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                width: '36px',
-                height: '36px',
-                borderRadius: '50%',
-                background: 'linear-gradient(135deg, #00b4d8 0%, #0077b6 100%)',
-                color: '#fff'
-              }}>
-                <Droplet size={18} fill="#ffffff" />
-              </div>
-              <span>Acqua<span className="gradient-text">Pet</span></span>
+              <img
+                src={acquaPetIcon}
+                alt="Acqua Pet"
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  flexShrink: 0,
+                  objectFit: 'contain'
+                }}
+              />
+              <span>
+                Acqua
+                <span style={{ color: 'var(--accent)' }}>Pet</span>
+              </span>
             </button>
             
             <p style={{
