@@ -35,7 +35,7 @@ export const Hero: React.FC = () => {
           pointerEvents: 'none'
         }}
       >
-        <source src="https://acqua-pet-assets-rodolfodiego.s3.amazonaws.com/hero.mp4" type="video/mp4" />
+        <source src="https://acqua-pet-assets.s3.amazonaws.com/hero.mp4" type="video/mp4" />
         <source src="https://assets.mixkit.co/videos/preview/mixkit-underwater-bubbles-background-40748-large.mp4" type="video/mp4" />
         Seu navegador não suporta vídeos em background.
       </video>
