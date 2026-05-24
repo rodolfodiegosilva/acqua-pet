@@ -455,3 +455,109 @@ html, body, #root {
     grid-template-columns: 1fr 1fr; /* 2 colunas a partir de tablets e desktops */
   }
 }
+
+/* --- SISTEMA COMPLETO DE TIPOGRAFIA E ELEMENTOS RESPONSIVOS (MOBILE < 768px) --- */
+@media (max-width: 767px) {
+  /* Títulos Principais */
+  h1 {
+    font-size: 32px !important;
+    line-height: 1.25 !important;
+    letter-spacing: -1px !important;
+    margin-bottom: 16px !important;
+  }
+
+  h2 {
+    font-size: 24px !important;
+    line-height: 1.3 !important;
+    letter-spacing: -0.5px !important;
+    margin-bottom: 16px !important;
+  }
+
+  h3 {
+    font-size: 18px !important;
+    line-height: 1.35 !important;
+    margin-bottom: 8px !important;
+  }
+
+  h4 {
+    font-size: 15px !important;
+    line-height: 1.4 !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* Parágrafos e Textos Secundários */
+  p, span, a, label, li {
+    font-size: 14px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Seção Hero - Ajuste de Margem e Espaçamento */
+  #inicio {
+    padding-top: 140px !important;
+    padding-bottom: 80px !important;
+    min-height: auto !important;
+  }
+
+  #inicio p {
+    font-size: 15px !important;
+    line-height: 1.6 !important;
+    margin-bottom: 32px !important;
+  }
+
+  /* Botões e CTAs Compactos e Dedotáveis */
+  button, 
+  a.gradient-bg, 
+  a[style*="padding"],
+  .service-card-action,
+  .cta-header-btn {
+    font-size: 14px !important;
+    padding: 12px 24px !important;
+  }
+
+  .theme-toggle-btn {
+    padding: 6px !important;
+  }
+
+  /* Form Inputs (Strict 16px para prevenir auto-zoom chato no iOS Safari) */
+  .input-premium, 
+  select.input-premium,
+  input[type="text"], 
+  input[type="tel"], 
+  input[type="date"], 
+  select {
+    font-size: 16px !important; /* Mantido estritamente em 16px para evitar zoom automático */
+    padding: 12px 16px !important; /* Padding levemente menor para melhor acomodação horizontal */
+    height: 48px !important;
+  }
+
+  .form-card-light {
+    padding: 24px !important;
+  }
+
+  /* Ajustes do Footer no Mobile */
+  footer {
+    padding-top: 50px !important;
+    padding-bottom: 30px !important;
+  }
+
+  footer h4 {
+    font-size: 16px !important;
+    margin-bottom: 16px !important;
+    padding-bottom: 6px !important;
+  }
+
+  footer ul {
+    gap: 8px !important;
+  }
+
+  footer li, footer p, footer span, footer a {
+    font-size: 13px !important; /* Texto levemente mais delicado no rodapé */
+  }
+
+  .footer-bottom {
+    padding-top: 20px !important;
+    gap: 12px !important;
+    text-align: left !important;
+    align-items: flex-start !important;
+  }
+}
