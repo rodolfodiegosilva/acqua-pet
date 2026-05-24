@@ -150,10 +150,7 @@ export const Contact: React.FC = () => {
 
           {/* Coluna 2: Formulário de Agendamento Interativo */}
           <div id="contato">
-            <div className="glass-card form-card-light" style={{
-              padding: '40px',
-              position: 'relative'
-            }}>
+            <div className="glass-card form-card-light contact-form-card">
               {submitted ? (
                 /* Tela de Sucesso */
                 <div style={{
@@ -244,12 +241,7 @@ export const Contact: React.FC = () => {
                   </div>
 
                   {/* Nome & Tipo do Pet */}
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '16px',
-                    marginBottom: '20px'
-                  }}>
+                  <div className="form-grid-responsive">
                     <div>
                       <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-muted)' }}>
                         Nome do Pet
@@ -304,12 +296,7 @@ export const Contact: React.FC = () => {
                   </div>
 
                   {/* Data & Hora */}
-                  <div style={{
-                    display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
-                    gap: '16px',
-                    marginBottom: '30px'
-                  }}>
+                  <div className="form-grid-responsive" style={{ marginBottom: '30px' }}>
                     <div>
                       <label style={{ display: 'block', fontSize: '14px', fontWeight: 600, marginBottom: '8px', color: 'var(--text-muted)' }}>
                         Data

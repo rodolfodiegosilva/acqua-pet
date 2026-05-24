@@ -421,3 +421,37 @@ a {
 .mb-8 { margin-bottom: 32px; }
 
 .text-center { text-align: center; }
+
+/* --- Prevenção Absoluta de Transbordo Lateral (Horizontal Overflow) --- */
+html, body, #root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+/* --- Card de Formulário Responsivo --- */
+.contact-form-card {
+  padding: 20px !important;
+  position: relative;
+}
+
+@media (min-width: 576px) {
+  .contact-form-card {
+    padding: 40px !important;
+  }
+}
+
+/* --- Grid de Formulário Responsivo --- */
+.form-grid-responsive {
+  display: grid;
+  grid-template-columns: 1fr; /* 1 coluna em celulares para evitar esmagamento dos inputs */
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 576px) {
+  .form-grid-responsive {
+    grid-template-columns: 1fr 1fr; /* 2 colunas a partir de tablets e desktops */
+  }
+}
