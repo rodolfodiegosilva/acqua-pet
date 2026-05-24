@@ -302,10 +302,15 @@ export const Contact: React.FC = () => {
                         Data
                       </label>
                       <input
-                        type="date"
+                        type={form.date ? "date" : "text"}
+                        placeholder="Escolha a data... (dd/mm/aaaa)"
                         required
                         value={form.date}
                         onChange={(e) => setForm({ ...form, date: e.target.value })}
+                        onFocus={(e) => (e.target.type = "date")}
+                        onBlur={(e) => {
+                          if (!e.target.value) e.target.type = "text";
+                        }}
                         className="input-premium"
                       />
                     </div>
