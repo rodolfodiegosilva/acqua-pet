@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100">
+  <defs>
+    <linearGradient id="acquaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00b4d8" />
+      <stop offset="100%" stop-color="#0077b6" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#03045e" flood-opacity="0.15" />
+    </filter>
+  </defs>
+  
+  <!-- Fundo Circular com Gradiente de Água -->
+  <circle cx="50" cy="50" r="46" fill="url(#acquaGrad)" filter="url(#shadow)" />
+  
+  <!-- Linha Decorativa de Onda -->
+  <path d="M 15,65 Q 35,55 50,65 T 85,65" fill="none" stroke="#90e0ef" stroke-width="4" stroke-linecap="round" opacity="0.6" />
+  <path d="M 20,73 Q 40,65 50,73 T 80,73" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" opacity="0.8" />
+
+  <!-- Patinha de Pet no Centro -->
+  <g fill="#ffffff">
+    <!-- Almofada Central -->
+    <path d="M 50,34 C 41,34 38,42 38,47 C 38,54 44,57 50,57 C 56,57 62,54 62,47 C 62,42 59,34 50,34 Z" />
+    <!-- Dedinho Esquerdo Externo -->
+    <circle cx="29" cy="40" r="6" />
+    <!-- Dedinho Esquerdo Interno -->
+    <circle cx="39" cy="27" r="7" />
+    <!-- Dedinho Direito Interno -->
+    <circle cx="61" cy="27" r="7" />
+    <!-- Dedinho Direito Externo -->
+    <circle cx="71" cy="40" r="6" />
+  </g>
+  
+  <!-- Bolhas de Água Decorativas -->
+  <circle cx="22" cy="24" r="3" fill="#ffffff" opacity="0.5" />
+  <circle cx="78" cy="20" r="4" fill="#ffffff" opacity="0.6" />
+  <circle cx="75" cy="52" r="2.5" fill="#ffffff" opacity="0.4" />
+</svg>
