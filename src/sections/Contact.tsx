@@ -43,7 +43,7 @@ export const Contact: React.FC = () => {
       id="agendamento"
       className="section-spacing"
       style={{
-        backgroundColor: 'var(--bg-primary)',
+        backgroundColor: 'var(--bg-tertiary)',
         position: 'relative',
         transition: 'var(--transition-smooth)'
       }}

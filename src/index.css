@@ -1,24 +1,29 @@
 /* CSS Design System - Acqua Pet */
 
 :root {
-  /* Cores Principais do Projeto - Design Partner */
+  /* Cores Principais do Projeto - Design Partner (Combinação Branco + Azul Marinho) */
   --primary: #030274;                /* Azul Marinho Intenso */
-  --primary-hover: #020152;
-  --bg-primary: #F8F9FB;             /* Branco / Gelo Secundário */
-  --bg-secondary: #ffffff;           /* Puro Branco */
-  --accent: #D6142C;                 /* Vermelho Vivo */
-  --accent-gold: #E7A40C;            /* Amarelo Ouro */
+  --primary-hover: #01004a;
   
-  --bg-glass: rgba(248, 249, 251, 0.8);
+  /* Paleta de Brancos e Azuis Suaves para o Modo Claro */
+  --bg-primary: #ffffff;             /* Branco Puro para fundo principal */
+  --bg-secondary: #F8F9FB;           /* Branco / Gelo especial para os cards */
+  --bg-tertiary: #f0f3ff;            /* Combinação perfeita: Branco com um toque do Azul Principal para alternar seções */
+  
+  --accent: #D6142C;                 /* Vermelho Vivo para pequenos detalhes e alertas */
+  --accent-gold: #E7A40C;            /* Amarelo Ouro para avaliações e selos */
+  
+  --bg-glass: rgba(255, 255, 255, 0.85);
   --border-glass: rgba(3, 2, 116, 0.08);
   
-  --text-main: #0c0b3e;               /* Azul Escuro Quase Preto */
-  --text-muted: #5e6282;              /* Azul Acinzentado */
+  /* Textos baseados no Azul Marinho Principal */
+  --text-main: #030274;               /* Azul Marinho Principal para títulos e textos destacados */
+  --text-muted: #4e4d8c;              /* Azul Marinho Misto para textos secundários */
   --text-light: #ffffff;
   
-  --shadow-sm: 0 2px 4px rgba(3, 2, 116, 0.04);
-  --shadow-md: 0 10px 25px -5px rgba(3, 2, 116, 0.08), 0 8px 10px -6px rgba(3, 2, 116, 0.06);
-  --shadow-lg: 0 20px 40px -10px rgba(3, 2, 116, 0.15);
+  --shadow-sm: 0 4px 6px rgba(3, 2, 116, 0.02);
+  --shadow-md: 0 10px 30px -5px rgba(3, 2, 116, 0.06), 0 8px 12px -6px rgba(3, 2, 116, 0.04);
+  --shadow-lg: 0 20px 40px -10px rgba(3, 2, 116, 0.12);
   
   --radius-sm: 8px;
   --radius-md: 16px;
@@ -32,12 +37,13 @@
   --transition-bounce: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* Modo Escuro - Perfeito e Altamente Contrastante */
+/* Modo Escuro - Preservado para manter a versatilidade de alta qualidade */
 [data-theme="dark"] {
   --primary: #524fff;                /* Azul Elétrico de Destaque */
   --primary-hover: #3d3aff;
   --bg-primary: #01002e;             /* Fundo Noturno Azul Marinho Escuro */
   --bg-secondary: #030274;           /* Card no Azul Marinho Intenso */
+  --bg-tertiary: #070554;            /* Seções alternadas mais escuras */
   --accent: #ff334b;                 /* Vermelho Vivo Glow */
   --accent-gold: #ffb715;            /* Amarelo Ouro Glow */
   
@@ -87,18 +93,20 @@ a {
 /* --- Efeitos Premium / Gradientes & Glassmorphism --- */
 
 .gradient-text {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 50%, var(--accent-gold) 100%);
+  /* Gradiente profissional dominado pelo azul principal transitando para o vermelho e dourado de forma sutil */
+  background: linear-gradient(135deg, var(--primary) 0%, #1e1bff 60%, var(--accent-gold) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .gradient-bg {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  /* Fundo gradiente profissional composto pelo azul marinho principal com uma transição energética de azul */
+  background: linear-gradient(135deg, var(--primary) 0%, #1d4ed8 100%);
 }
 
 .gradient-bg-hover:hover {
-  background: linear-gradient(135deg, var(--accent) 0%, var(--primary-hover) 100%);
+  background: linear-gradient(135deg, #1d4ed8 0%, var(--primary-hover) 100%);
 }
 
 .glass-nav {
@@ -168,7 +176,7 @@ a {
   animation: pulse-soft 3s ease-in-out infinite;
 }
 
-/* Bolhas no Fundo com as Novas Cores do Tema */
+/* Bolhas de Fundo usando a elegante combinação de azul marinho com branco */
 .bubble-container {
   position: absolute;
   width: 100%;
@@ -183,7 +191,7 @@ a {
 .bubble {
   position: absolute;
   bottom: 0;
-  background: radial-gradient(circle, rgba(3, 2, 116, 0.1) 0%, rgba(214, 20, 44, 0.02) 70%);
+  background: radial-gradient(circle, rgba(3, 2, 116, 0.05) 0%, rgba(255, 255, 255, 0) 70%);
   border-radius: 50%;
   animation: bubble-up 12s linear infinite;
 }
@@ -204,7 +212,7 @@ a {
 .input-premium:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(3, 2, 116, 0.15);
+  box-shadow: 0 0 0 4px rgba(3, 2, 116, 0.12);
   background: var(--bg-secondary);
 }
 
@@ -223,7 +231,7 @@ a {
 }
 
 .theme-toggle-btn:hover {
-  background-color: rgba(3, 2, 116, 0.1);
+  background-color: rgba(3, 2, 116, 0.08);
   transform: rotate(15deg);
 }
 
