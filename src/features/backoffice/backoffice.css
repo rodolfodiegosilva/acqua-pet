@@ -656,6 +656,161 @@
   align-self: flex-start;
 }
 
+.backoffice-admin-overview-list,
+.backoffice-admin-client-list,
+.backoffice-admin-pet-list,
+.backoffice-admin-inventory-list,
+.backoffice-admin-order-list,
+.backoffice-admin-client-detail__pet-list {
+  align-items: start;
+}
+
+.backoffice-admin-alert-card,
+.backoffice-admin-client-card,
+.backoffice-admin-pet-card,
+.backoffice-admin-inventory-card,
+.backoffice-admin-order-card,
+.backoffice-admin-client-pet-card {
+  display: grid;
+  gap: 14px;
+}
+
+.backoffice-admin-alert-card,
+.backoffice-admin-client-card,
+.backoffice-admin-pet-card,
+.backoffice-admin-order-card,
+.backoffice-admin-client-pet-card {
+  background:
+    linear-gradient(140deg, color-mix(in srgb, var(--backoffice-accent-strong) 6%, transparent) 0%, transparent 50%),
+    linear-gradient(180deg, color-mix(in srgb, var(--backoffice-accent) 4%, transparent) 0%, transparent 74%),
+    var(--backoffice-soft) !important;
+}
+
+.backoffice-admin-inventory-card {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--backoffice-accent-strong) 7%, transparent) 0%, transparent 42%),
+    linear-gradient(180deg, color-mix(in srgb, var(--backoffice-success) 4%, transparent) 0%, transparent 74%),
+    var(--backoffice-soft) !important;
+}
+
+.backoffice-admin-alert-card__title,
+.backoffice-admin-client-card__title,
+.backoffice-admin-pet-card__title,
+.backoffice-admin-inventory-card__title,
+.backoffice-admin-order-card__title,
+.backoffice-admin-client-pet-card__title {
+  letter-spacing: -0.02em;
+}
+
+.backoffice-admin-alert-card__copy,
+.backoffice-admin-client-card__subtitle,
+.backoffice-admin-pet-card__subtitle,
+.backoffice-admin-pet-card__observation,
+.backoffice-admin-inventory-card__subtitle,
+.backoffice-admin-order-card__subtitle,
+.backoffice-admin-order-card__notes,
+.backoffice-admin-client-pet-card__subtitle {
+  overflow-wrap: anywhere;
+}
+
+.backoffice-admin-client-card__content,
+.backoffice-admin-pet-card__content,
+.backoffice-admin-inventory-card__content,
+.backoffice-admin-order-card__content,
+.backoffice-admin-client-pet-card__content {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.backoffice-admin-client-card__head,
+.backoffice-admin-pet-card__head,
+.backoffice-admin-inventory-card__head,
+.backoffice-admin-order-card__head,
+.backoffice-admin-client-pet-card__head {
+  align-items: flex-start;
+}
+
+.backoffice-admin-client-card__status,
+.backoffice-admin-pet-card__status,
+.backoffice-admin-inventory-card__status,
+.backoffice-admin-order-card__status,
+.backoffice-admin-client-pet-card__status,
+.backoffice-admin-alert-card__status {
+  align-self: flex-start;
+}
+
+.backoffice-admin-client-card__meta-item,
+.backoffice-admin-pet-card__meta-item,
+.backoffice-admin-inventory-card__meta-item,
+.backoffice-admin-client-pet-card__meta-item {
+  display: grid;
+  gap: 6px;
+  min-height: 100%;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--backoffice-border);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--backoffice-accent-strong) 5%, transparent) 0%, transparent 66%),
+    color-mix(in srgb, var(--backoffice-surface) 88%, transparent);
+}
+
+.backoffice-admin-client-card__meta-item strong,
+.backoffice-admin-pet-card__meta-item strong,
+.backoffice-admin-inventory-card__meta-item strong,
+.backoffice-admin-client-pet-card__meta-item strong {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.backoffice-admin-pet-card__actions,
+.backoffice-admin-inventory-card__actions {
+  padding-top: 2px;
+}
+
+.backoffice-admin-pet-card__actions .backoffice-primary-btn {
+  min-width: 180px;
+}
+
+.backoffice-admin-inventory-card__identity,
+.backoffice-admin-client-pet-card__identity {
+  align-items: center;
+}
+
+.backoffice-admin-inventory-card__media,
+.backoffice-admin-client-pet-card__avatar {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--backoffice-accent-strong) 18%, var(--backoffice-border));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.backoffice-admin-inventory-card__media::after,
+.backoffice-admin-client-pet-card__avatar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 48%);
+  pointer-events: none;
+}
+
+.backoffice-admin-order-card__meta > div {
+  display: grid;
+  gap: 6px;
+  min-height: 100%;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--backoffice-border);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--backoffice-accent-strong) 5%, transparent) 0%, transparent 66%),
+    color-mix(in srgb, var(--backoffice-surface) 88%, transparent);
+}
+
+.backoffice-admin-order-card__meta strong {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
 .backoffice-auth-screen,
 .backoffice-auth-shell,
 .backoffice-auth-card,
@@ -702,6 +857,15 @@
   }
 
   .backoffice-vet-agenda-card__head {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .backoffice-admin-client-card__head,
+  .backoffice-admin-pet-card__head,
+  .backoffice-admin-inventory-card__head,
+  .backoffice-admin-order-card__head,
+  .backoffice-admin-client-pet-card__head {
     flex-direction: column !important;
     align-items: stretch !important;
   }
@@ -808,6 +972,16 @@
 
   .backoffice-vet-agenda-card__chips,
   .backoffice-vet-overview-card__status {
+    width: 100%;
+  }
+
+  .backoffice-admin-client-card__status,
+  .backoffice-admin-pet-card__status,
+  .backoffice-admin-inventory-card__status,
+  .backoffice-admin-order-card__status,
+  .backoffice-admin-client-pet-card__status,
+  .backoffice-admin-alert-card__status,
+  .backoffice-admin-pet-card__actions .backoffice-primary-btn {
     width: 100%;
   }
 
@@ -951,14 +1125,37 @@
   .backoffice-patient-detail__summary-card,
   .backoffice-patient-record-card__note-block,
   .backoffice-patient-record-card__detail-box,
-  .backoffice-vet-agenda-card__meta-item {
+  .backoffice-vet-agenda-card__meta-item,
+  .backoffice-admin-client-card__meta-item,
+  .backoffice-admin-pet-card__meta-item,
+  .backoffice-admin-inventory-card__meta-item,
+  .backoffice-admin-client-pet-card__meta-item,
+  .backoffice-admin-order-card__meta > div {
     padding: 12px 14px;
     border-radius: 16px;
   }
 
   .backoffice-vet-agenda-card__title,
-  .backoffice-vet-overview-card__title {
+  .backoffice-vet-overview-card__title,
+  .backoffice-admin-client-card__title,
+  .backoffice-admin-pet-card__title,
+  .backoffice-admin-inventory-card__title,
+  .backoffice-admin-order-card__title,
+  .backoffice-admin-client-pet-card__title {
     font-size: 17px !important;
+  }
+
+  .backoffice-admin-inventory-card__media {
+    width: 64px !important;
+    height: 64px !important;
+    border-radius: 16px !important;
+  }
+
+  .backoffice-admin-client-pet-card__avatar {
+    width: 54px !important;
+    height: 54px !important;
+    border-radius: 16px !important;
+    font-size: 24px !important;
   }
 
   .backoffice-product-modal {

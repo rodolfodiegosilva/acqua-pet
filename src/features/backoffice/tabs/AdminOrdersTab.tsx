@@ -110,28 +110,28 @@ export const AdminOrdersTab: React.FC<AdminOrdersTabProps> = ({
         </select>
       </div>
 
-      <div style={{ display: 'grid', gap: '14px' }}>
+      <div className="backoffice-admin-order-list" style={{ display: 'grid', gap: '14px' }}>
         {paginatedOrders.map((order) => {
           const client = clients.find((item) => item.id === order.clientId);
           return (
             <button
               key={order.id}
               type="button"
-              className="backoffice-card backoffice-inventory-item"
+              className="backoffice-card backoffice-inventory-item backoffice-admin-order-card"
               onClick={() => openOrderModal(order)}
               style={{ padding: '18px', background: 'var(--backoffice-soft)', textAlign: 'left', cursor: 'pointer' }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                <div>
-                  <strong style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '18px', marginBottom: '6px' }}>{order.number}</strong>
-                  <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{client?.name} · {order.createdAt} · {order.fulfillment}</p>
+              <div className="backoffice-admin-order-card__head" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '12px' }}>
+                <div className="backoffice-admin-order-card__content">
+                  <strong className="backoffice-admin-order-card__title" style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '18px', marginBottom: '6px' }}>{order.number}</strong>
+                  <p className="backoffice-admin-order-card__subtitle" style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{client?.name} · {order.createdAt} · {order.fulfillment}</p>
                 </div>
-                <span className={`backoffice-pill ${order.status === 'Entregue' ? 'backoffice-status-success' : order.status === 'Cancelado' ? 'backoffice-status-critical' : order.status === 'Enviado' ? 'backoffice-status-info' : 'backoffice-status-attention'}`}>
+                <span className={`backoffice-pill backoffice-admin-order-card__status ${order.status === 'Entregue' ? 'backoffice-status-success' : order.status === 'Cancelado' ? 'backoffice-status-critical' : order.status === 'Enviado' ? 'backoffice-status-info' : 'backoffice-status-attention'}`}>
                   {order.status}
                 </span>
               </div>
 
-              <div className="backoffice-mini-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '12px', marginBottom: '14px' }}>
+              <div className="backoffice-mini-grid backoffice-admin-order-card__meta" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '12px', marginBottom: '14px' }}>
                 <div>
                   <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Itens</span>
                   <strong style={{ color: 'var(--backoffice-text)' }}>{order.items.length}</strong>
@@ -146,7 +146,7 @@ export const AdminOrdersTab: React.FC<AdminOrdersTabProps> = ({
                 </div>
               </div>
 
-              <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6, fontSize: '14px' }}>
+              <p className="backoffice-admin-order-card__notes" style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6, fontSize: '14px' }}>
                 {order.notes}
               </p>
             </button>

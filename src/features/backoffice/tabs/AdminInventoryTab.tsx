@@ -209,36 +209,36 @@ export const AdminInventoryTab: React.FC<AdminInventoryTabProps> = ({ inventory,
         </select>
       </div>
 
-      <div style={{ display: 'grid', gap: '14px' }}>
+      <div className="backoffice-admin-inventory-list" style={{ display: 'grid', gap: '14px' }}>
         {paginatedInventory.map((item) => (
-          <div key={item.id} className="backoffice-card backoffice-inventory-item" style={{ padding: '18px', background: 'var(--backoffice-soft)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '12px' }}>
-              <div style={{ display: 'flex', gap: '14px', alignItems: 'center', minWidth: 0 }}>
-                <div style={{ width: '76px', height: '76px', borderRadius: '18px', overflow: 'hidden', flexShrink: 0, background: item.imageBg }}>
+          <div key={item.id} className="backoffice-card backoffice-inventory-item backoffice-admin-inventory-card" style={{ padding: '18px', background: 'var(--backoffice-soft)' }}>
+            <div className="backoffice-admin-inventory-card__head" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '12px' }}>
+              <div className="backoffice-admin-inventory-card__identity" style={{ display: 'flex', gap: '14px', alignItems: 'center', minWidth: 0 }}>
+                <div className="backoffice-admin-inventory-card__media" style={{ width: '76px', height: '76px', borderRadius: '18px', overflow: 'hidden', flexShrink: 0, background: item.imageBg }}>
                   {item.imageSource ? (
                     <img src={item.imageSource} alt={item.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                   ) : (
                     <div style={{ width: '100%', height: '100%', display: 'grid', placeItems: 'center', fontSize: '34px' }}>{item.imageEmoji}</div>
                   )}
                 </div>
-                <div style={{ minWidth: 0 }}>
-                <strong style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '18px', marginBottom: '6px' }}>{item.name}</strong>
-                <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{item.category} · {item.sku} · {item.supplier}</p>
+                <div className="backoffice-admin-inventory-card__content" style={{ minWidth: 0 }}>
+                <strong className="backoffice-admin-inventory-card__title" style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '18px', marginBottom: '6px' }}>{item.name}</strong>
+                <p className="backoffice-admin-inventory-card__subtitle" style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{item.category} · {item.sku} · {item.supplier}</p>
                 </div>
               </div>
-              <span className={`backoffice-pill ${item.status === 'Saudável' ? 'backoffice-status-success' : item.status === 'Baixo' ? 'backoffice-status-attention' : 'backoffice-status-critical'}`}>
+              <span className={`backoffice-pill backoffice-admin-inventory-card__status ${item.status === 'Saudável' ? 'backoffice-status-success' : item.status === 'Baixo' ? 'backoffice-status-attention' : 'backoffice-status-critical'}`}>
                 {item.status}
               </span>
             </div>
 
-            <div className="backoffice-mini-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '12px', marginBottom: '14px' }}>
-              <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Estoque</span><strong style={{ color: 'var(--backoffice-text)' }}>{item.stock}</strong></div>
-              <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Reservado</span><strong style={{ color: 'var(--backoffice-text)' }}>{item.reserved}</strong></div>
-              <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Mínimo</span><strong style={{ color: 'var(--backoffice-text)' }}>{item.minStock}</strong></div>
-              <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Preço</span><strong style={{ color: 'var(--backoffice-text)' }}>R$ {item.price.toFixed(2)}</strong></div>
+            <div className="backoffice-mini-grid backoffice-admin-inventory-card__meta" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '12px', marginBottom: '14px' }}>
+              <div className="backoffice-admin-inventory-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Estoque</span><strong style={{ color: 'var(--backoffice-text)' }}>{item.stock}</strong></div>
+              <div className="backoffice-admin-inventory-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Reservado</span><strong style={{ color: 'var(--backoffice-text)' }}>{item.reserved}</strong></div>
+              <div className="backoffice-admin-inventory-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Mínimo</span><strong style={{ color: 'var(--backoffice-text)' }}>{item.minStock}</strong></div>
+              <div className="backoffice-admin-inventory-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Preço</span><strong style={{ color: 'var(--backoffice-text)' }}>R$ {item.price.toFixed(2)}</strong></div>
             </div>
 
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            <div className="backoffice-admin-inventory-card__actions" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               <button className="backoffice-ghost-btn" onClick={() => onAdjustStock(item.id, Math.max(0, item.stock - 1))} disabled={isSubmitting}>-1 estoque</button>
               <button className="backoffice-ghost-btn" onClick={() => onAdjustStock(item.id, item.stock + 1)} disabled={isSubmitting}>+1 estoque</button>
               <button className="backoffice-primary-btn" onClick={() => onAdjustStock(item.id, item.stock + 5)} disabled={isSubmitting}>Repor +5</button>

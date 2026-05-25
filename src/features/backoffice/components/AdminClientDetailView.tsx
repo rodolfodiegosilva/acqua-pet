@@ -16,7 +16,7 @@ interface AdminClientDetailViewProps {
 
 export const AdminClientDetailView: React.FC<AdminClientDetailViewProps> = ({ client, pets, onBack }) => {
   return (
-    <div style={{ display: 'grid', gap: '20px' }}>
+    <div className="backoffice-admin-client-detail" style={{ display: 'grid', gap: '20px' }}>
       <div className="backoffice-card backoffice-detail-hero" style={{ padding: '24px', display: 'grid', gap: '18px', background: 'var(--backoffice-hero)' }}>
         <div className="backoffice-section-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', alignItems: 'flex-start' }}>
           <div style={{ display: 'flex', gap: '16px', minWidth: 0 }}>
@@ -97,39 +97,39 @@ export const AdminClientDetailView: React.FC<AdminClientDetailViewProps> = ({ cl
         </BackofficeSectionCard>
 
         <BackofficeSectionCard title="Pets vinculados" eyebrow="Base animal">
-          <div style={{ display: 'grid', gap: '14px' }}>
+          <div className="backoffice-admin-client-detail__pet-list" style={{ display: 'grid', gap: '14px' }}>
             {pets.length > 0 ? pets.map((pet) => (
-              <article key={pet.id} className="backoffice-card backoffice-entity-card" style={{ padding: '18px', background: 'var(--backoffice-soft)', display: 'grid', gap: '14px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
-                  <div style={{ display: 'flex', gap: '14px', minWidth: 0 }}>
-                    <div style={{ width: '60px', height: '60px', borderRadius: '18px', background: 'var(--backoffice-surface)', display: 'grid', placeItems: 'center', fontSize: '28px', flexShrink: 0 }}>
+              <article key={pet.id} className="backoffice-card backoffice-entity-card backoffice-admin-client-pet-card" style={{ padding: '18px', background: 'var(--backoffice-soft)', display: 'grid', gap: '14px' }}>
+                <div className="backoffice-admin-client-pet-card__head" style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
+                  <div className="backoffice-admin-client-pet-card__identity" style={{ display: 'flex', gap: '14px', minWidth: 0 }}>
+                    <div className="backoffice-admin-client-pet-card__avatar" style={{ width: '60px', height: '60px', borderRadius: '18px', background: 'var(--backoffice-surface)', display: 'grid', placeItems: 'center', fontSize: '28px', flexShrink: 0 }}>
                       {pet.avatar}
                     </div>
-                    <div style={{ minWidth: 0 }}>
-                      <strong style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '18px', marginBottom: '6px' }}>{pet.name}</strong>
-                      <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>
+                    <div className="backoffice-admin-client-pet-card__content" style={{ minWidth: 0 }}>
+                      <strong className="backoffice-admin-client-pet-card__title" style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '18px', marginBottom: '6px' }}>{pet.name}</strong>
+                      <p className="backoffice-admin-client-pet-card__subtitle" style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>
                         {pet.species} · {pet.sex} · {pet.breed}
                       </p>
-                      <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>
+                      <p className="backoffice-admin-client-pet-card__subtitle" style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>
                         {pet.age} · {pet.weight}
                       </p>
                     </div>
                   </div>
-                  <span className={`backoffice-pill ${pet.status === 'Ativo' ? 'backoffice-status-success' : pet.status === 'Em acompanhamento' ? 'backoffice-status-attention' : 'backoffice-status-info'}`}>
+                  <span className={`backoffice-pill backoffice-admin-client-pet-card__status ${pet.status === 'Ativo' ? 'backoffice-status-success' : pet.status === 'Em acompanhamento' ? 'backoffice-status-attention' : 'backoffice-status-info'}`}>
                     {pet.status}
                   </span>
                 </div>
 
-                <div className="backoffice-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '12px' }}>
-                  <div>
+                <div className="backoffice-grid backoffice-admin-client-pet-card__meta" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '12px' }}>
+                  <div className="backoffice-admin-client-pet-card__meta-item">
                     <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Última visita</span>
                     <strong style={{ color: 'var(--backoffice-text)' }}>{pet.lastVisit}</strong>
                   </div>
-                  <div>
+                  <div className="backoffice-admin-client-pet-card__meta-item">
                     <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Próxima ação</span>
                     <strong style={{ color: 'var(--backoffice-text)' }}>{pet.nextAction}</strong>
                   </div>
-                  <div>
+                  <div className="backoffice-admin-client-pet-card__meta-item">
                     <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Vacinas</span>
                     <strong style={{ color: 'var(--backoffice-text)' }}>{pet.vaccines.length > 0 ? pet.vaccines.join(', ') : 'Sem registro'}</strong>
                   </div>
