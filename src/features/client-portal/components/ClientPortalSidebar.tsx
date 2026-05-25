@@ -1,8 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React from 'react';
 import CloseRounded from '@mui/icons-material/CloseRounded';
 import DarkModeRounded from '@mui/icons-material/DarkModeRounded';
 import LightModeRounded from '@mui/icons-material/LightModeRounded';
 import LogoutRounded from '@mui/icons-material/LogoutRounded';
+import Drawer from '@mui/material/Drawer';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import type { ClientUser } from '@/services/clientPortal';
 import type { PortalTab, PortalTabItem, PortalTheme } from '../types';
 
@@ -29,30 +31,21 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
   portalTheme,
   setPortalTheme
 }) => {
-  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
-
-  useEffect(() => {
-    if (isOpen) {
-      closeButtonRef.current?.focus();
-    } else if (document.activeElement instanceof HTMLElement) {
-      (document.activeElement as HTMLElement | null)?.blur();
-    }
-  }, [isOpen]);
+  const isMobile = useMediaQuery('(max-width: 980px)');
 
   const handleClose = () => {
     onClose();
   };
 
-  return (
+  const sidebarContent = (
     <>
-      <div className={`portal-sidebar-backdrop ${isOpen ? 'is-open' : ''}`} onClick={handleClose} aria-hidden="true" />
-      <aside className={`glass-card portal-sidebar ${isOpen ? 'is-open' : ''}`} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px', alignSelf: 'start', position: 'sticky', top: '24px' }}>
-      <div className="portal-sidebar-mobile-head" style={{ display: 'none', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
+      <div className="portal-sidebar-mobile-head" style={{ display: isMobile ? 'flex' : 'none', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
         <strong style={{ color: 'var(--portal-text)' }}>Menu do cliente</strong>
-        <button ref={closeButtonRef} type="button" className="portal-sidebar-close" onClick={handleClose} aria-label="Fechar menu lateral" style={{ lineHeight: 0 }}>
+        <button type="button" className="portal-sidebar-close" onClick={handleClose} aria-label="Fechar menu lateral" style={{ lineHeight: 0 }}>
           <CloseRounded sx={{ fontSize: 22, color: 'currentColor' }} />
         </button>
       </div>
+      
       <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
         <div style={{ width: '54px', height: '54px', borderRadius: '18px', background: 'linear-gradient(135deg, var(--portal-accent) 0%, #1d4ed8 100%)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 800 }}>
           {currentUser.name.split(' ').map((name) => name[0]).slice(0, 2).join('')}
@@ -91,7 +84,7 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
               key={item.id}
               onClick={() => {
                 setActiveTab(item.id);
-                onClose();
+                handleClose();
               }}
               style={{
                 display: 'flex',
@@ -126,6 +119,7 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
         <button
           onClick={() => {
             onLogout();
+            handleClose();
           }}
           style={{
             padding: '14px 16px',
@@ -145,7 +139,43 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
           Sair
         </button>
       </div>
-    </aside>
     </>
+  );
+
+  if (isMobile) {
+    return (
+      <Drawer
+        anchor="left"
+        open={isOpen}
+        onClose={handleClose}
+        slotProps={{
+          paper: {
+            sx: {
+              width: 'min(320px, 88vw)',
+              maxWidth: 320,
+              background: portalTheme === 'dark' ? '#091322' : '#ffffff',
+              color: 'var(--portal-text)',
+              padding: '24px',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '24px',
+              borderRight: '1px solid var(--portal-border)',
+              boxShadow: '0 8px 32px 0 rgba(0, 0, 0, 0.4)',
+              backgroundImage: 'none',
+              boxSizing: 'border-box',
+              borderRadius: '0 24px 24px 0',
+            }
+          }
+        }}
+      >
+        {sidebarContent}
+      </Drawer>
+    );
+  }
+
+  return (
+    <aside className="glass-card portal-sidebar" style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px', alignSelf: 'start', position: 'sticky', top: '24px' }}>
+      {sidebarContent}
+    </aside>
   );
 };

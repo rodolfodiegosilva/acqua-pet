@@ -1,5 +1,5 @@
 import React from 'react';
-import MenuRounded from '@mui/icons-material/MenuRounded';
+import ArrowForwardRounded from '@mui/icons-material/ArrowForwardRounded';
 
 interface ClientPortalTopbarProps {
   onOpenSidebar: () => void;
@@ -12,7 +12,7 @@ export const ClientPortalTopbar: React.FC<ClientPortalTopbarProps> = ({ onOpenSi
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
         {!isSidebarOpen && (
           <button type="button" className="portal-sidebar-toggle" onClick={onOpenSidebar} aria-label="Abrir menu lateral" style={{ lineHeight: 0 }}>
-            <MenuRounded sx={{ fontSize: 22, color: 'currentColor' }} />
+            <ArrowForwardRounded sx={{ fontSize: 22, color: 'currentColor' }} />
           </button>
         )}
         <div>
