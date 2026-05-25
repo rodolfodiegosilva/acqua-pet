@@ -1,17 +1,12 @@
 import React from 'react';
 import MenuRounded from '@mui/icons-material/MenuRounded';
-import { Moon, Sun } from 'lucide-react';
-import type { PortalTheme } from '../types';
 
 interface ClientPortalTopbarProps {
-  portalTheme: PortalTheme;
-  setPortalTheme: React.Dispatch<React.SetStateAction<PortalTheme>>;
-  setView: (view: 'landing' | 'store' | 'client') => void;
   onOpenSidebar: () => void;
   isSidebarOpen: boolean;
 }
 
-export const ClientPortalTopbar: React.FC<ClientPortalTopbarProps> = ({ portalTheme, setPortalTheme, setView, onOpenSidebar, isSidebarOpen }) => {
+export const ClientPortalTopbar: React.FC<ClientPortalTopbarProps> = ({ onOpenSidebar, isSidebarOpen }) => {
   return (
     <div className="portal-app-topbar" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px', marginBottom: '20px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -27,14 +22,7 @@ export const ClientPortalTopbar: React.FC<ClientPortalTopbarProps> = ({ portalTh
         <strong style={{ fontSize: '22px', color: 'var(--portal-text)' }}>Ambiente privado do cliente</strong>
         </div>
       </div>
-      <div className="portal-topbar-actions" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-        <button onClick={() => setPortalTheme((current) => (current === 'dark' ? 'light' : 'dark'))} className="portal-ghost-btn">
-          {portalTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-          {portalTheme === 'dark' ? 'Modo claro' : 'Modo escuro'}
-        </button>
-        <button onClick={() => setView('store')} className="portal-ghost-btn">Loja pública</button>
-        <button onClick={() => setView('landing')} className="portal-ghost-btn">Site institucional</button>
-      </div>
+      <div />
     </div>
   );
 };

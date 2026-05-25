@@ -8,6 +8,7 @@ import type { BackofficeNavItem, BackofficeTheme } from '../types';
 interface BackofficeShellProps<TTab extends string> {
   theme: BackofficeTheme;
   setTheme: React.Dispatch<React.SetStateAction<BackofficeTheme>>;
+  setView: (view: 'landing' | 'store' | 'client' | 'admin' | 'veterinary') => void;
   user: BackofficeSessionUser;
   title: string;
   description: string;
@@ -21,6 +22,7 @@ interface BackofficeShellProps<TTab extends string> {
 export const BackofficeShell = <TTab extends string>({
   theme,
   setTheme,
+  setView,
   user,
   title,
   description,
@@ -68,16 +70,7 @@ export const BackofficeShell = <TTab extends string>({
             </div>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-            <button className="backoffice-ghost-btn" onClick={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}>
-              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
-              {theme === 'dark' ? 'Modo claro' : 'Modo escuro'}
-            </button>
-            <button className="backoffice-ghost-btn" onClick={onLogout}>
-              <LogOut size={16} />
-              Sair
-            </button>
-          </div>
+          <div />
         </div>
 
         <div className="backoffice-shell" style={{ display: 'grid', gridTemplateColumns: '280px minmax(0, 1fr)', gap: '22px' }}>
@@ -109,6 +102,23 @@ export const BackofficeShell = <TTab extends string>({
                 );
               })}
             </nav>
+
+            <div style={{ display: 'grid', gap: '10px', marginTop: '18px', paddingTop: '18px', borderTop: '1px solid var(--backoffice-border)' }}>
+              <button className="backoffice-ghost-btn" onClick={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}>
+                {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                {theme === 'dark' ? 'Modo claro' : 'Modo escuro'}
+              </button>
+              <button className="backoffice-ghost-btn" onClick={() => setView('store')}>
+                Loja pública
+              </button>
+              <button className="backoffice-ghost-btn" onClick={() => setView('landing')}>
+                Site institucional
+              </button>
+              <button className="backoffice-ghost-btn" onClick={onLogout}>
+                <LogOut size={16} />
+                Sair
+              </button>
+            </div>
           </aside>
 
           <div style={{ display: 'grid', gap: '22px', minWidth: 0 }}>

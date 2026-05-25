@@ -158,10 +158,6 @@
   display: none;
 }
 
-.portal-sidebar-mobile-actions {
-  display: none;
-}
-
 .portal-sidebar-toggle,
 .portal-sidebar-close {
   display: none;
@@ -235,14 +231,6 @@
   .portal-sidebar-close,
   .portal-sidebar-mobile-head {
     display: inline-flex !important;
-  }
-
-  .portal-topbar-actions {
-    display: none !important;
-  }
-
-  .portal-sidebar-mobile-actions {
-    display: flex !important;
   }
 
   .portal-sidebar-backdrop {

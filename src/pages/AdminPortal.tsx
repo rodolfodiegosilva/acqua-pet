@@ -128,6 +128,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
       <BackofficeShell
         theme={theme}
         setTheme={setTheme}
+        setView={setView}
         user={sessionUser}
         title="Central administrativa"
         description="Painel operacional para gerenciar carteira de clientes, pets, riscos e rotina comercial do ecossistema."
@@ -148,6 +149,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
     <BackofficeShell
       theme={theme}
       setTheme={setTheme}
+      setView={setView}
       user={sessionUser}
       title="Central administrativa"
       description="Painel operacional para gerenciar carteira de clientes, pets, riscos e rotina comercial do ecossistema."

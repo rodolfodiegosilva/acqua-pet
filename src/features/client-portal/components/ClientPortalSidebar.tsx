@@ -115,7 +115,7 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
         })}
       </nav>
 
-      <div className="portal-sidebar-mobile-actions" style={{ display: 'none', flexDirection: 'column', gap: '10px' }}>
+      <div className="portal-sidebar-actions" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <button onClick={() => setPortalTheme((current) => (current === 'dark' ? 'light' : 'dark'))} className="portal-ghost-btn">
           {portalTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
           {portalTheme === 'dark' ? 'Modo claro' : 'Modo escuro'}
@@ -141,23 +141,6 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
       </div>
 
       <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-        <button
-          onClick={() => {
-            setView('landing');
-            onClose();
-          }}
-          style={{
-            padding: '14px 16px',
-            borderRadius: 'var(--radius-md)',
-            border: '1px solid var(--portal-border)',
-            background: 'var(--portal-soft-surface)',
-            color: 'var(--portal-text)',
-            fontWeight: 700,
-            cursor: 'pointer'
-          }}
-        >
-          Voltar ao site
-        </button>
         <button
           onClick={() => {
             onLogout();

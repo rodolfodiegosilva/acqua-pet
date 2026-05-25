@@ -605,6 +605,18 @@ export const updateClientPet = async (
   return nextPets.map<ClientPet>(({ clientId, status, lastVisit, nextAction, ...pet }) => pet);
 };
 
+export const updateClientProfile = async (
+  updates: Partial<Pick<ClientUser, 'name' | 'email' | 'phone' | 'city'>>
+): Promise<ClientUser> => {
+  const currentProfile = readClientProfile();
+  const nextProfile = upsertSharedClientFromUser({
+    ...currentProfile,
+    ...updates
+  });
+
+  return simulateApiDelay(nextProfile);
+};
+
 export const getStoredClientAuthSession = (): ClientAuthSession | null => {
   const raw = localStorage.getItem(CLIENT_AUTH_STORAGE_KEY);
   if (!raw) return null;

@@ -10,6 +10,7 @@ import {
   mockAuthLogin,
   mockAuthRegister,
   saveClientAuthSession,
+  updateClientProfile,
   updateClientPet,
   type ClientAppointment,
   type ClientOrder,
@@ -55,7 +56,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
   });
   const [currentUser, setCurrentUser] = useState<ClientUser | null>(() => getStoredClientAuthSession()?.user ?? null);
   const [portalLoading, setPortalLoading] = useState(false);
-  const [actionLoading, setActionLoading] = useState<'pet' | 'appointment' | null>(null);
+  const [actionLoading, setActionLoading] = useState<'pet' | 'appointment' | 'profile' | null>(null);
   const [pets, setPets] = useState<ClientPet[]>([]);
   const [appointments, setAppointments] = useState<ClientAppointment[]>([]);
   const [records, setRecords] = useState<MedicalRecord[]>([]);
@@ -271,6 +272,26 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
     setActionLoading(null);
   };
 
+  const handleUpdateProfile = async (updates: Pick<ClientUser, 'name' | 'email' | 'phone' | 'city'>) => {
+    setActionLoading('profile');
+    const nextUser = await updateClientProfile(updates);
+    setCurrentUser(nextUser);
+
+    const storedSession = getStoredClientAuthSession();
+    if (storedSession) {
+      saveClientAuthSession({
+        ...storedSession,
+        user: {
+          ...storedSession.user,
+          ...nextUser
+        }
+      });
+    }
+
+    setPets((current) => current.map((pet) => ({ ...pet, tutorName: nextUser.name })));
+    setActionLoading(null);
+  };
+
   const handleLogout = () => {
     clearStoredClientAuthSession();
     setCurrentUser(null);
@@ -310,7 +331,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
   return (
     <div className="portal-app" data-portal-theme={portalTheme} style={{ minHeight: '100vh', paddingTop: '32px', paddingBottom: '32px', background: 'var(--portal-bg)' }}>
       <div className="container">
-        <ClientPortalTopbar portalTheme={portalTheme} setPortalTheme={setPortalTheme} setView={setView} onOpenSidebar={() => setIsSidebarOpen(true)} isSidebarOpen={isSidebarOpen} />
+        <ClientPortalTopbar onOpenSidebar={() => setIsSidebarOpen(true)} isSidebarOpen={isSidebarOpen} />
         
 
         <div className="portal-shell" style={{ display: 'grid', gridTemplateColumns: '280px minmax(0, 1fr)', gap: '24px' }}>
@@ -354,6 +375,8 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
                 orders={orders}
                 ordersCount={orders.length}
                 currentUser={currentUser}
+                onUpdateProfile={handleUpdateProfile}
+                isSubmittingProfile={actionLoading === 'profile'}
                 onOpenAppointments={() => setActiveTab('appointments')}
               />
             )}
