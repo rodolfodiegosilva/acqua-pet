@@ -95,28 +95,6 @@ export const VeterinaryPortal: React.FC<VeterinaryPortalProps> = ({ setView }) =
     );
   }
 
-  if (panelLoading) {
-    return (
-      <BackofficeShell
-        theme={theme}
-        setTheme={setTheme}
-        setView={setView}
-        user={sessionUser}
-        title="Central veterinária"
-        description="Ambiente clínico desacoplado da operação geral, focado em agenda, pacientes, histórico e decisões de atendimento."
-        navItems={navItems}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        onLogout={handleLogout}
-      >
-        <div className="backoffice-card" style={{ padding: '28px', textAlign: 'center' }}>
-          <strong style={{ display: 'block', color: 'var(--backoffice-text)', marginBottom: '8px', fontSize: '20px' }}>Carregando base clínica</strong>
-          <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.7 }}>Buscando agenda, pacientes e prontuários no mock persistido da sessão.</p>
-        </div>
-      </BackofficeShell>
-    );
-  }
-
   return (
     <BackofficeShell
       theme={theme}
@@ -130,15 +108,27 @@ export const VeterinaryPortal: React.FC<VeterinaryPortalProps> = ({ setView }) =
       setActiveTab={setActiveTab}
       onLogout={handleLogout}
     >
-      {activeTab === 'overview' && (
+      {panelLoading ? (
+        <div style={{ display: 'grid', gap: '20px' }}>
+          <div className="backoffice-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '16px' }}>
+            {Array.from({ length: 4 }, (_, index) => (
+              <div key={index} className="backoffice-card" style={{ minHeight: '170px', background: 'var(--backoffice-soft)', opacity: 0.7 }} />
+            ))}
+          </div>
+          <div className="backoffice-two-cols" style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '20px' }}>
+            <div className="backoffice-card" style={{ minHeight: '320px', background: 'var(--backoffice-soft)', opacity: 0.7 }} />
+            <div className="backoffice-card" style={{ minHeight: '320px', background: 'var(--backoffice-soft)', opacity: 0.7 }} />
+          </div>
+        </div>
+      ) : activeTab === 'overview' && (
         <VetOverviewTab
           appointments={appointments}
           records={records}
           pets={pets}
         />
       )}
-      {activeTab === 'agenda' && <VetAgendaTab appointments={appointments} pets={pets} />}
-      {activeTab === 'patients' && (
+      {!panelLoading && activeTab === 'agenda' && <VetAgendaTab appointments={appointments} pets={pets} />}
+      {!panelLoading && activeTab === 'patients' && (
         <VetPatientsTab
           pets={pets}
           records={records}

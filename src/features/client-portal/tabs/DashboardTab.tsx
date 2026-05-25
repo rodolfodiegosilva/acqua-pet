@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CalendarDays, HeartPulse, MapPin, PawPrint, ShoppingBag, Sparkles } from 'lucide-react';
 import type { ClientAppointment, ClientOrder, ClientPet, ClientUser } from '../../../services/clientPortal';
 import { PortalSectionCard } from '../../../components/client/PortalSectionCard';
@@ -12,7 +12,7 @@ interface DashboardTabProps {
   orders: ClientOrder[];
   ordersCount: number;
   currentUser: ClientUser;
-  onUpdateProfile: (updates: Pick<ClientUser, 'name' | 'email' | 'phone' | 'city'>) => void;
+  onUpdateProfile: (updates: Pick<ClientUser, 'name' | 'email' | 'cpf' | 'phone' | 'city' | 'neighborhood'>) => void;
   isSubmittingProfile?: boolean;
   onOpenAppointments: () => void;
 }
@@ -31,20 +31,45 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
 }) => {
   const nextAppointment = appointments[0];
   const latestOrder = orders[0];
+  const [isEditingPersonal, setIsEditingPersonal] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
-  const [profileForm, setProfileForm] = useState({
+  const [personalForm, setPersonalForm] = useState({
     name: currentUser.name,
     email: currentUser.email,
-    phone: currentUser.phone,
-    city: currentUser.city
+    cpf: currentUser.cpf,
+    phone: currentUser.phone
   });
+  const [profileForm, setProfileForm] = useState({
+    city: currentUser.city,
+    neighborhood: currentUser.neighborhood
+  });
+
+  useEffect(() => {
+    setPersonalForm({
+      name: currentUser.name,
+      email: currentUser.email,
+      cpf: currentUser.cpf,
+      phone: currentUser.phone
+    });
+    setProfileForm({
+      city: currentUser.city,
+      neighborhood: currentUser.neighborhood
+    });
+  }, [currentUser]);
+
+  const resetPersonalForm = () => {
+    setPersonalForm({
+      name: currentUser.name,
+      email: currentUser.email,
+      cpf: currentUser.cpf,
+      phone: currentUser.phone
+    });
+  };
 
   const resetProfileForm = () => {
     setProfileForm({
-      name: currentUser.name,
-      email: currentUser.email,
-      phone: currentUser.phone,
-      city: currentUser.city
+      city: currentUser.city,
+      neighborhood: currentUser.neighborhood
     });
   };
 
@@ -165,8 +190,79 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
           </PortalSectionCard>
 
           <PortalSectionCard
-            title="Conta e pedidos"
+            title="Dados pessoais"
             eyebrow="Conta"
+            action={
+              <button
+                type="button"
+                className="portal-link-btn"
+                onClick={() => {
+                  resetPersonalForm();
+                  setIsEditingPersonal((current) => !current);
+                  setIsEditingProfile(false);
+                }}
+              >
+                {isEditingPersonal ? 'Fechar edição' : 'Editar dados'}
+              </button>
+            }
+          >
+            {isEditingPersonal ? (
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  onUpdateProfile({
+                    name: personalForm.name,
+                    email: personalForm.email,
+                    cpf: personalForm.cpf,
+                    phone: personalForm.phone,
+                    city: currentUser.city,
+                    neighborhood: currentUser.neighborhood
+                  });
+                  setIsEditingPersonal(false);
+                }}
+                style={{ display: 'grid', gap: '12px' }}
+              >
+                <input className="portal-input" type="text" placeholder="Nome completo" value={personalForm.name} onChange={(event) => setPersonalForm((current) => ({ ...current, name: event.target.value }))} />
+                <input className="portal-input" type="email" placeholder="E-mail" value={personalForm.email} onChange={(event) => setPersonalForm((current) => ({ ...current, email: event.target.value }))} />
+                <input className="portal-input" type="text" placeholder="CPF" value={personalForm.cpf} onChange={(event) => setPersonalForm((current) => ({ ...current, cpf: event.target.value }))} />
+                <input className="portal-input" type="text" placeholder="Telefone" value={personalForm.phone} onChange={(event) => setPersonalForm((current) => ({ ...current, phone: event.target.value }))} />
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                  <button type="submit" className="portal-ghost-btn" disabled={isSubmittingProfile}>
+                    {isSubmittingProfile ? 'Salvando dados...' : 'Salvar dados pessoais'}
+                  </button>
+                  <button
+                    type="button"
+                    className="portal-link-btn"
+                    onClick={() => {
+                      resetPersonalForm();
+                      setIsEditingPersonal(false);
+                    }}
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div style={{ display: 'grid', gap: '14px' }}>
+                {[
+                  ['Nome', currentUser.name],
+                  ['E-mail', currentUser.email],
+                  ['CPF', currentUser.cpf],
+                  ['Telefone', currentUser.phone],
+                  ['Último pedido', latestOrder ? `${latestOrder.number} · ${latestOrder.status}` : 'Nenhum pedido recente']
+                ].map(([label, value]) => (
+                  <div key={label} style={{ paddingBottom: '12px', borderBottom: '1px solid var(--portal-border)' }}>
+                    <span style={{ display: 'block', fontSize: '12px', color: 'var(--portal-muted)', marginBottom: '4px' }}>{label}</span>
+                    <strong style={{ fontSize: '15px', color: 'var(--portal-text)', overflowWrap: 'anywhere' }}>{value}</strong>
+                  </div>
+                ))}
+              </div>
+            )}
+          </PortalSectionCard>
+
+          <PortalSectionCard
+            title="Dados de perfil"
+            eyebrow="Perfil"
             action={
               <button
                 type="button"
@@ -174,6 +270,7 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
                 onClick={() => {
                   resetProfileForm();
                   setIsEditingProfile((current) => !current);
+                  setIsEditingPersonal(false);
                 }}
               >
                 {isEditingProfile ? 'Fechar edição' : 'Editar perfil'}
@@ -184,18 +281,32 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
               <form
                 onSubmit={(event) => {
                   event.preventDefault();
-                  onUpdateProfile(profileForm);
+                  onUpdateProfile({
+                    name: currentUser.name,
+                    email: currentUser.email,
+                    cpf: currentUser.cpf,
+                    phone: currentUser.phone,
+                    city: profileForm.city,
+                    neighborhood: profileForm.neighborhood
+                  });
                   setIsEditingProfile(false);
                 }}
                 style={{ display: 'grid', gap: '12px' }}
               >
-                <input className="portal-input" type="text" placeholder="Nome completo" value={profileForm.name} onChange={(event) => setProfileForm((current) => ({ ...current, name: event.target.value }))} />
-                <input className="portal-input" type="email" placeholder="E-mail" value={profileForm.email} onChange={(event) => setProfileForm((current) => ({ ...current, email: event.target.value }))} />
-                <input className="portal-input" type="text" placeholder="Telefone" value={profileForm.phone} onChange={(event) => setProfileForm((current) => ({ ...current, phone: event.target.value }))} />
                 <input className="portal-input" type="text" placeholder="Cidade base" value={profileForm.city} onChange={(event) => setProfileForm((current) => ({ ...current, city: event.target.value }))} />
+                <input className="portal-input" type="text" placeholder="Bairro" value={profileForm.neighborhood} onChange={(event) => setProfileForm((current) => ({ ...current, neighborhood: event.target.value }))} />
+                <div className="portal-surface" style={{ padding: '16px', display: 'grid', gap: '8px' }}>
+                  <span className="portal-mini-label">Plano atual</span>
+                  <strong style={{ color: 'var(--portal-text)' }}>{currentUser.plan}</strong>
+                  <span style={{ color: 'var(--portal-muted)', fontSize: '13px', lineHeight: 1.6 }}>Gerenciado pela operação da AcquaPet.</span>
+                </div>
+                <div className="portal-surface" style={{ padding: '16px', display: 'grid', gap: '8px' }}>
+                  <span className="portal-mini-label">Cliente desde</span>
+                  <strong style={{ color: 'var(--portal-text)' }}>{currentUser.memberSince}</strong>
+                </div>
                 <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                   <button type="submit" className="portal-ghost-btn" disabled={isSubmittingProfile}>
-                    {isSubmittingProfile ? 'Salvando perfil...' : 'Salvar dados pessoais'}
+                    {isSubmittingProfile ? 'Salvando perfil...' : 'Salvar dados de perfil'}
                   </button>
                   <button
                     type="button"
@@ -212,12 +323,10 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
             ) : (
               <div style={{ display: 'grid', gap: '14px' }}>
                 {[
-                  ['Nome', currentUser.name],
-                  ['E-mail', currentUser.email],
                   ['Plano', currentUser.plan],
-                  ['Telefone', currentUser.phone],
                   ['Cidade', currentUser.city],
-                  ['Último pedido', latestOrder ? `${latestOrder.number} · ${latestOrder.status}` : 'Nenhum pedido recente']
+                  ['Bairro', currentUser.neighborhood],
+                  ['Cliente desde', currentUser.memberSince]
                 ].map(([label, value]) => (
                   <div key={label} style={{ paddingBottom: '12px', borderBottom: '1px solid var(--portal-border)' }}>
                     <span style={{ display: 'block', fontSize: '12px', color: 'var(--portal-muted)', marginBottom: '4px' }}>{label}</span>

@@ -123,28 +123,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
     );
   }
 
-  if (panelLoading || !snapshot) {
-    return (
-      <BackofficeShell
-        theme={theme}
-        setTheme={setTheme}
-        setView={setView}
-        user={sessionUser}
-        title="Central administrativa"
-        description="Painel operacional para gerenciar carteira de clientes, pets, riscos e rotina comercial do ecossistema."
-        navItems={navItems}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        onLogout={handleLogout}
-      >
-        <div className="backoffice-card" style={{ padding: '28px', textAlign: 'center' }}>
-          <strong style={{ display: 'block', color: 'var(--backoffice-text)', marginBottom: '8px', fontSize: '20px' }}>Carregando operação administrativa</strong>
-          <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.7 }}>Listando base de clientes, estoque, alertas e pedidos a partir do mock persistido na sessão.</p>
-        </div>
-      </BackofficeShell>
-    );
-  }
-
   return (
     <BackofficeShell
       theme={theme}
@@ -158,7 +136,19 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
       setActiveTab={setActiveTab}
       onLogout={handleLogout}
     >
-      {activeTab === 'overview' && (
+      {panelLoading || !snapshot ? (
+        <div style={{ display: 'grid', gap: '20px' }}>
+          <div className="backoffice-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '16px' }}>
+            {Array.from({ length: 4 }, (_, index) => (
+              <div key={index} className="backoffice-card" style={{ minHeight: '170px', background: 'var(--backoffice-soft)', opacity: 0.7 }} />
+            ))}
+          </div>
+          <div className="backoffice-two-cols" style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '20px' }}>
+            <div className="backoffice-card" style={{ minHeight: '320px', background: 'var(--backoffice-soft)', opacity: 0.7 }} />
+            <div className="backoffice-card" style={{ minHeight: '320px', background: 'var(--backoffice-soft)', opacity: 0.7 }} />
+          </div>
+        </div>
+      ) : activeTab === 'overview' && (
         <AdminOverviewTab
           clients={snapshot.clients}
           pets={snapshot.pets}
@@ -167,10 +157,10 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
           orders={snapshot.orders}
         />
       )}
-      {activeTab === 'clients' && <AdminClientsTab clients={snapshot.clients} />}
-      {activeTab === 'pets' && <AdminPetsTab pets={snapshot.pets} clients={snapshot.clients} onUpdatePet={handleUpdatePet} isSubmitting={actionLoading} />}
-      {activeTab === 'inventory' && <AdminInventoryTab inventory={snapshot.inventory} onAdjustStock={handleAdjustStock} onCreateProduct={handleCreateProduct} isSubmitting={actionLoading} />}
-      {activeTab === 'orders' && <AdminOrdersTab orders={snapshot.orders} clients={snapshot.clients} onUpdateOrderStatus={handleUpdateOrderStatus} onCancelOrder={handleCancelOrder} />}
+      {!panelLoading && snapshot && activeTab === 'clients' && <AdminClientsTab clients={snapshot.clients} />}
+      {!panelLoading && snapshot && activeTab === 'pets' && <AdminPetsTab pets={snapshot.pets} clients={snapshot.clients} onUpdatePet={handleUpdatePet} isSubmitting={actionLoading} />}
+      {!panelLoading && snapshot && activeTab === 'inventory' && <AdminInventoryTab inventory={snapshot.inventory} onAdjustStock={handleAdjustStock} onCreateProduct={handleCreateProduct} isSubmitting={actionLoading} />}
+      {!panelLoading && snapshot && activeTab === 'orders' && <AdminOrdersTab orders={snapshot.orders} clients={snapshot.clients} onUpdateOrderStatus={handleUpdateOrderStatus} onCancelOrder={handleCancelOrder} />}
     </BackofficeShell>
   );
 };

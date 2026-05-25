@@ -28,6 +28,7 @@ export interface ClientUser {
   email: string;
   cpf: string;
   phone: string;
+  neighborhood: string;
   plan: 'Essential' | 'Care+' | 'Prime';
   memberSince: string;
   city: string;
@@ -132,6 +133,7 @@ export const MOCK_CLIENT_PORTAL: ClientPortalSnapshot = {
     email: 'marina@cliente.mock',
     cpf: '123.456.789-10',
     phone: '(92) 99999-1001',
+    neighborhood: 'Vieiralves',
     plan: 'Prime',
     memberSince: 'Março de 2024',
     city: 'Manaus - AM'
@@ -468,6 +470,7 @@ const upsertSharedClientFromUser = (user: ClientUser): ClientUser => {
         email: syncedUser.email,
         phone: syncedUser.phone,
         city: syncedUser.city,
+        neighborhood: syncedUser.neighborhood,
         plan: syncedUser.plan,
         joinedAt: syncedUser.memberSince
       }
@@ -477,7 +480,7 @@ const upsertSharedClientFromUser = (user: ClientUser): ClientUser => {
         email: syncedUser.email,
         phone: syncedUser.phone,
         city: syncedUser.city,
-        neighborhood: 'A definir',
+        neighborhood: syncedUser.neighborhood || 'A definir',
         plan: syncedUser.plan,
         status: 'Novo',
         joinedAt: syncedUser.memberSince,
@@ -529,7 +532,8 @@ const deriveClientSnapshotFromBackoffice = (fallbackUser?: ClientUser): ClientPo
     phone: matchingClient?.phone ?? baseUser.phone,
     plan: matchingClient?.plan ?? baseUser.plan,
     memberSince: matchingClient?.joinedAt ?? baseUser.memberSince,
-    city: matchingClient?.city ?? baseUser.city
+    city: matchingClient?.city ?? baseUser.city,
+    neighborhood: matchingClient?.neighborhood ?? baseUser.neighborhood
   };
 
   const pets = backofficeSnapshot.pets.filter((pet) => pet.clientId === hydratedUser.id).map<ClientPet>(({ clientId, status, lastVisit, nextAction, ...pet }) => pet);
@@ -606,7 +610,7 @@ export const updateClientPet = async (
 };
 
 export const updateClientProfile = async (
-  updates: Partial<Pick<ClientUser, 'name' | 'email' | 'phone' | 'city'>>
+  updates: Partial<Pick<ClientUser, 'name' | 'email' | 'cpf' | 'phone' | 'city' | 'neighborhood'>>
 ): Promise<ClientUser> => {
   const currentProfile = readClientProfile();
   const nextProfile = upsertSharedClientFromUser({
@@ -624,7 +628,16 @@ export const getStoredClientAuthSession = (): ClientAuthSession | null => {
   try {
     const parsed = JSON.parse(raw) as ClientAuthSession;
     if (!parsed?.user?.email || !parsed?.accessToken) return null;
-    return parsed;
+    const fallbackProfile = readClientProfile();
+    return {
+      ...parsed,
+      user: {
+        ...fallbackProfile,
+        ...parsed.user,
+        cpf: parsed.user.cpf ?? fallbackProfile.cpf,
+        neighborhood: parsed.user.neighborhood ?? fallbackProfile.neighborhood
+      }
+    };
   } catch {
     return null;
   }

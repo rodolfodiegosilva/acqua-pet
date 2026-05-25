@@ -272,7 +272,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
     setActionLoading(null);
   };
 
-  const handleUpdateProfile = async (updates: Pick<ClientUser, 'name' | 'email' | 'phone' | 'city'>) => {
+  const handleUpdateProfile = async (updates: Pick<ClientUser, 'name' | 'email' | 'cpf' | 'phone' | 'city' | 'neighborhood'>) => {
     setActionLoading('profile');
     const nextUser = await updateClientProfile(updates);
     setCurrentUser(nextUser);
@@ -315,125 +315,125 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
     );
   }
 
-  if (portalLoading) {
-    return (
-      <div className="portal-app" data-portal-theme={portalTheme} style={{ minHeight: '100vh', paddingTop: '32px', paddingBottom: '32px', background: 'var(--portal-bg)' }}>
-        <div className="container">
-          <div className="glass-card" style={{ padding: '36px', textAlign: 'center' }}>
-            <strong style={{ color: 'var(--portal-text)', fontSize: '20px', display: 'block', marginBottom: '8px' }}>Carregando sua área do cliente</strong>
-            <p style={{ color: 'var(--portal-muted)', lineHeight: 1.7 }}>Sincronizando pets, agendamentos, prontuários e recomendações com o mock da sessão.</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="portal-app" data-portal-theme={portalTheme} style={{ minHeight: '100vh', paddingTop: '32px', paddingBottom: '32px', background: 'var(--portal-bg)' }}>
       <div className="container">
-        <ClientPortalTopbar onOpenSidebar={() => setIsSidebarOpen(true)} isSidebarOpen={isSidebarOpen} />
-        
+        <div className="portal-frame">
+          <ClientPortalTopbar onOpenSidebar={() => setIsSidebarOpen(true)} isSidebarOpen={isSidebarOpen} />
 
-        <div className="portal-shell" style={{ display: 'grid', gridTemplateColumns: '280px minmax(0, 1fr)', gap: '24px' }}>
-          <ClientPortalSidebar
-            currentUser={currentUser}
-            activeTab={activeTab}
-            tabItems={tabItems}
-            setActiveTab={setActiveTab}
-            setView={setView}
-            onLogout={handleLogout}
-            isOpen={isSidebarOpen}
-            onClose={() => setIsSidebarOpen(false)}
-            portalTheme={portalTheme}
-            setPortalTheme={setPortalTheme}
-          />
+          <div className="portal-shell" style={{ display: 'grid', gridTemplateColumns: '280px minmax(0, 1fr)', gap: '24px' }}>
+            <ClientPortalSidebar
+              currentUser={currentUser}
+              activeTab={activeTab}
+              tabItems={tabItems}
+              setActiveTab={setActiveTab}
+              setView={setView}
+              onLogout={handleLogout}
+              isOpen={isSidebarOpen}
+              onClose={() => setIsSidebarOpen(false)}
+              portalTheme={portalTheme}
+              setPortalTheme={setPortalTheme}
+            />
 
-          <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: '24px', minWidth: 0 }}>
-            <div className="glass-card" style={{ padding: '30px', background: 'var(--portal-hero-surface)' }}>
-              <span style={{ display: 'block', fontSize: '12px', fontWeight: 800, color: 'var(--portal-danger-text)', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '10px' }}>
-                Área do Cliente
-              </span>
-              <h1 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, lineHeight: 1.08, marginBottom: '10px', color: 'var(--portal-text)' }}>
-                {activeTab === 'dashboard' && 'Resumo operacional do cuidado do seu pet'}
-                {activeTab === 'pets' && 'Cadastro e gestão de perfis dos seus pets'}
-                {activeTab === 'appointments' && 'Agendamentos de serviços e consultas'}
-                {activeTab === 'medical' && 'Histórico médico individual por pet'}
-                {activeTab === 'vets' && 'Disponibilidade da equipe veterinária'}
-                {activeTab === 'store' && 'Loja com recomendações personalizadas'}
-              </h1>
-              <p style={{ fontSize: '15px', color: 'var(--portal-muted)', maxWidth: '760px', lineHeight: 1.7 }}>
-                Ambiente privado com tema e navegação próprios, separado do site público e estruturado em módulos de produto.
-              </p>
+            <div className="portal-content" style={{ display: 'flex', flexDirection: 'column', gap: '24px', minWidth: 0 }}>
+              <div className="glass-card" style={{ padding: '30px', background: 'var(--portal-hero-surface)' }}>
+                <span style={{ display: 'block', fontSize: '12px', fontWeight: 800, color: 'var(--portal-danger-text)', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '10px' }}>
+                  Área do Cliente
+                </span>
+                <h1 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, lineHeight: 1.08, marginBottom: '10px', color: 'var(--portal-text)' }}>
+                  {activeTab === 'dashboard' && 'Resumo operacional do cuidado do seu pet'}
+                  {activeTab === 'pets' && 'Cadastro e gestão de perfis dos seus pets'}
+                  {activeTab === 'appointments' && 'Agendamentos de serviços e consultas'}
+                  {activeTab === 'medical' && 'Histórico médico individual por pet'}
+                  {activeTab === 'vets' && 'Disponibilidade da equipe veterinária'}
+                  {activeTab === 'store' && 'Loja com recomendações personalizadas'}
+                </h1>
+                <p style={{ fontSize: '15px', color: 'var(--portal-muted)', maxWidth: '760px', lineHeight: 1.7 }}>
+                  Ambiente privado com tema e navegação próprios, separado do site público e estruturado em módulos de produto.
+                </p>
+              </div>
+
+              {portalLoading ? (
+                <div style={{ display: 'grid', gap: '20px' }}>
+                  <div className="portal-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '16px' }}>
+                    {Array.from({ length: 4 }, (_, index) => (
+                      <div key={index} className="glass-card" style={{ minHeight: '168px', background: 'var(--portal-card)', opacity: 0.7 }} />
+                    ))}
+                  </div>
+                  <div className="portal-overview-grid" style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '20px' }}>
+                    <div className="glass-card" style={{ minHeight: '320px', background: 'var(--portal-card)', opacity: 0.7 }} />
+                    <div className="glass-card" style={{ minHeight: '320px', background: 'var(--portal-card)', opacity: 0.7 }} />
+                  </div>
+                </div>
+              ) : activeTab === 'dashboard' && (
+                <DashboardTab
+                  pets={pets}
+                  petsCount={pets.length}
+                  appointments={upcomingAppointments}
+                  medicalRecordsCount={records.length}
+                  orders={orders}
+                  ordersCount={orders.length}
+                  currentUser={currentUser}
+                  onUpdateProfile={handleUpdateProfile}
+                  isSubmittingProfile={actionLoading === 'profile'}
+                  onOpenAppointments={() => setActiveTab('appointments')}
+                />
+              )}
+
+              {!portalLoading && activeTab === 'pets' && (
+                <PetsTab
+                  pets={pets}
+                  petForm={petForm}
+                  setPetForm={setPetForm}
+                  onAddPet={handleAddPet}
+                  onUpdatePet={handleUpdatePet}
+                  isSubmitting={actionLoading === 'pet'}
+                  onOpenMedical={(petId) => {
+                    setSelectedMedicalPetId(petId);
+                    setActiveTab('medical');
+                  }}
+                />
+              )}
+
+              {!portalLoading && activeTab === 'appointments' && (
+                <AppointmentsTab
+                  pets={pets}
+                  appointments={appointments}
+                  veterinarians={veterinarians}
+                  appointmentForm={appointmentForm}
+                  setAppointmentForm={setAppointmentForm}
+                  onCreateAppointment={handleCreateAppointment}
+                  isSubmitting={actionLoading === 'appointment'}
+                  formatDateInput={formatPtBrDateInput}
+                />
+              )}
+
+              {!portalLoading && activeTab === 'medical' && (
+                <MedicalTab
+                  pets={pets}
+                  selectedMedicalPetId={selectedMedicalPetId}
+                  setSelectedMedicalPetId={setSelectedMedicalPetId}
+                  records={filteredRecords}
+                />
+              )}
+
+              {!portalLoading && activeTab === 'vets' && <VetsTab veterinarians={veterinarians} />}
+
+              {!portalLoading && activeTab === 'store' && (
+                <StoreTab
+                  pets={pets}
+                  products={products}
+                  orders={orders}
+                  addToCart={addToCart}
+                  setView={setView}
+                />
+              )}
+
+              <footer className="portal-panel-footer">
+                <span>AcquaPet Client Suite</span>
+                <span>Ambiente privado mockado com estrutura pronta para API e produção.</span>
+              </footer>
             </div>
-
-            {activeTab === 'dashboard' && (
-              <DashboardTab
-                pets={pets}
-                petsCount={pets.length}
-                appointments={upcomingAppointments}
-                medicalRecordsCount={records.length}
-                orders={orders}
-                ordersCount={orders.length}
-                currentUser={currentUser}
-                onUpdateProfile={handleUpdateProfile}
-                isSubmittingProfile={actionLoading === 'profile'}
-                onOpenAppointments={() => setActiveTab('appointments')}
-              />
-            )}
-
-            {activeTab === 'pets' && (
-              <PetsTab
-                pets={pets}
-                petForm={petForm}
-                setPetForm={setPetForm}
-                onAddPet={handleAddPet}
-                onUpdatePet={handleUpdatePet}
-                isSubmitting={actionLoading === 'pet'}
-                onOpenMedical={(petId) => {
-                  setSelectedMedicalPetId(petId);
-                  setActiveTab('medical');
-                }}
-              />
-            )}
-
-            {activeTab === 'appointments' && (
-              <AppointmentsTab
-                pets={pets}
-                appointments={appointments}
-                veterinarians={veterinarians}
-                appointmentForm={appointmentForm}
-                setAppointmentForm={setAppointmentForm}
-                onCreateAppointment={handleCreateAppointment}
-                isSubmitting={actionLoading === 'appointment'}
-                formatDateInput={formatPtBrDateInput}
-              />
-            )}
-
-            {activeTab === 'medical' && (
-              <MedicalTab
-                pets={pets}
-                selectedMedicalPetId={selectedMedicalPetId}
-                setSelectedMedicalPetId={setSelectedMedicalPetId}
-                records={filteredRecords}
-              />
-            )}
-
-            {activeTab === 'vets' && <VetsTab veterinarians={veterinarians} />}
-
-            {activeTab === 'store' && (
-              <StoreTab
-                pets={pets}
-                products={products}
-                orders={orders}
-                addToCart={addToCart}
-                setView={setView}
-              />
-            )}
-
-            <footer className="portal-panel-footer">
-              <span>AcquaPet Client Suite</span>
-              <span>Ambiente privado mockado com estrutura pronta para API e produção.</span>
-            </footer>
           </div>
         </div>
       </div>
