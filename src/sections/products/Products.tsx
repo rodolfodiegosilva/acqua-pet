@@ -1,6 +1,6 @@
 import React from 'react';
+import ArrowForwardRounded from '@mui/icons-material/ArrowForwardRounded';
 import { ProductCard } from '@/components/product-card/ProductCard';
-import { ArrowRight } from 'lucide-react';
 
 export const Products: React.FC = () => {
   const productsData = [
@@ -124,7 +124,7 @@ export const Products: React.FC = () => {
             }}
           >
             Ver catálogo completo
-            <ArrowRight size={16} />
+            <ArrowForwardRounded sx={{ fontSize: 16 }} />
           </a>
         </div>
 

@@ -1,5 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { ClipboardPlus, FileText, ShieldPlus, X } from 'lucide-react';
+import CloseRounded from '@mui/icons-material/CloseRounded';
+import DescriptionOutlined from '@mui/icons-material/DescriptionOutlined';
+import HealthAndSafetyRounded from '@mui/icons-material/HealthAndSafetyRounded';
+import NoteAddRounded from '@mui/icons-material/NoteAddRounded';
 import { AppPagination, getResponsiveDefaultPageSize } from '@/components/pagination/AppPagination';
 import { PortalSectionCard } from '@/components/client/portal-section-card/PortalSectionCard';
 import type { ClientPet, MedicalRecord } from '@/services/clientPortal';
@@ -208,7 +211,7 @@ export const MedicalTab: React.FC<MedicalTabProps> = ({ pets, selectedMedicalPet
                     flexShrink: 0
                   }}
                 >
-                  <X size={18} />
+                  <CloseRounded sx={{ fontSize: 18 }} />
                 </button>
               </div>
 
@@ -231,7 +234,7 @@ export const MedicalTab: React.FC<MedicalTabProps> = ({ pets, selectedMedicalPet
             <div style={{ display: 'grid', gap: '14px' }}>
               <div className="portal-surface" style={{ padding: '18px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                  <ClipboardPlus size={18} color="var(--portal-danger-text)" />
+                  <NoteAddRounded sx={{ fontSize: 18, color: 'var(--portal-danger-text)' }} />
                   <span className="portal-mini-label" style={{ marginBottom: 0 }}>Sintomas e queixa principal</span>
                 </div>
                 <p style={{ color: 'var(--portal-text)', lineHeight: 1.7 }}>{selectedRecord.symptoms}</p>
@@ -239,7 +242,7 @@ export const MedicalTab: React.FC<MedicalTabProps> = ({ pets, selectedMedicalPet
 
               <div className="portal-surface" style={{ padding: '18px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                  <ShieldPlus size={18} color="var(--portal-accent)" />
+                  <HealthAndSafetyRounded sx={{ fontSize: 18, color: 'var(--portal-accent)' }} />
                   <span className="portal-mini-label" style={{ marginBottom: 0 }}>Observações clínicas do veterinário</span>
                 </div>
                 <p style={{ color: 'var(--portal-text)', lineHeight: 1.7 }}>{selectedRecord.clinicalNotes}</p>
@@ -248,7 +251,7 @@ export const MedicalTab: React.FC<MedicalTabProps> = ({ pets, selectedMedicalPet
               <div className="portal-medical-modal-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '14px' }}>
                 <div className="portal-surface" style={{ padding: '18px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                    <FileText size={18} color="var(--portal-accent)" />
+                    <DescriptionOutlined sx={{ fontSize: 18, color: 'var(--portal-accent)' }} />
                     <span className="portal-mini-label" style={{ marginBottom: 0 }}>Receituário</span>
                   </div>
                   <p style={{ color: 'var(--portal-muted)', fontSize: '14px', marginBottom: '12px' }}>{selectedRecord.prescription}</p>

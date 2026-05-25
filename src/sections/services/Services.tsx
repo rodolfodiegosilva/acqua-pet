@@ -1,5 +1,8 @@
 import React from 'react';
-import { Droplet, Heart, Sparkles, ShieldAlert } from 'lucide-react';
+import AutoAwesomeRounded from '@mui/icons-material/AutoAwesomeRounded';
+import FavoriteRounded from '@mui/icons-material/FavoriteRounded';
+import WaterDropRounded from '@mui/icons-material/WaterDropRounded';
+import WarningAmberRounded from '@mui/icons-material/WarningAmberRounded';
 import { ServiceCard } from '@/components/service-card/ServiceCard';
 
 export const Services: React.FC = () => {
@@ -7,28 +10,28 @@ export const Services: React.FC = () => {
     {
       title: 'Consultório Veterinário Aquático',
       description: 'Atendimento clínico especializado em peixes ornamentais: biópsias branquiais, exames parasitológicos, raspados de pele e cirurgias de precisão com anestesia aquática.',
-      icon: <Heart size={32} strokeWidth={1.5} />,
+      icon: <FavoriteRounded sx={{ fontSize: 32 }} />,
       price: 'R$ 179,90',
       badge: 'Exclusivo'
     },
     {
       title: 'Design & Aquascaping',
       description: 'Planejamento, montagem e manutenção sob medida de aquários plantados, marinhos, lagoas ornamentais e ecossistemas complexos inspirados na Bacia Amazônica.',
-      icon: <Droplet size={32} strokeWidth={1.5} />,
+      icon: <WaterDropRounded sx={{ fontSize: 32 }} />,
       price: 'Sob Consulta',
       badge: 'Sob Medida'
     },
     {
       title: 'Análise de Água & Consultoria',
       description: 'Biorremediação completa e análise físico-química laboratorial precisa de pH, amônia total, nitrito, nitrato, GH e KH com prescrição de tratamento biológico ideal.',
-      icon: <Sparkles size={32} strokeWidth={1.5} />,
+      icon: <AutoAwesomeRounded sx={{ fontSize: 32 }} />,
       price: 'R$ 89,90',
       badge: 'Mais Procurado'
     },
     {
       title: 'Quarentena & Aclimatação',
       description: 'Hospedagem segura em sistemas individuais de quarentena biológica, tratamento preventivo contra patógenos e aclimatação gradual gota a gota de novos espécimes.',
-      icon: <ShieldAlert size={32} strokeWidth={1.5} />,
+      icon: <WarningAmberRounded sx={{ fontSize: 32 }} />,
       price: 'R$ 99,90',
       badge: 'Novidade'
     }

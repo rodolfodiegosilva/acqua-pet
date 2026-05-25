@@ -1,5 +1,8 @@
 import React from 'react';
-import { Clock, Mail, MapPin, Phone } from 'lucide-react';
+import AccessTimeRounded from '@mui/icons-material/AccessTimeRounded';
+import EmailOutlined from '@mui/icons-material/EmailOutlined';
+import LocationOnOutlined from '@mui/icons-material/LocationOnOutlined';
+import PhoneRounded from '@mui/icons-material/PhoneRounded';
 import acquaPetIcon from '@/assets/acqua_pet_icon.svg';
 import type { AppView } from '@/types/navigation';
 import './Footer.css';
@@ -161,21 +164,21 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
             </h4>
             <ul className="footer-hours-list">
               <li className="footer-hours-item">
-                <Clock size={15} className="footer-icon-primary" />
+                <AccessTimeRounded sx={{ fontSize: 15 }} className="footer-icon-primary" />
                 <div>
                   <strong>Seg a Sex:</strong>
                   <span className="footer-hours-value">08h às 19h</span>
                 </div>
               </li>
               <li className="footer-hours-item">
-                <Clock size={15} className="footer-icon-primary" />
+                <AccessTimeRounded sx={{ fontSize: 15 }} className="footer-icon-primary" />
                 <div>
                   <strong>Sábado:</strong>
                   <span className="footer-hours-value">08h às 17h</span>
                 </div>
               </li>
               <li className="footer-hours-item">
-                <Clock size={15} className="footer-icon-accent" />
+                <AccessTimeRounded sx={{ fontSize: 15 }} className="footer-icon-accent" />
                 <div>
                   <strong>Domingo:</strong>
                   <span className="footer-hours-value">Fechado</span>
@@ -191,15 +194,15 @@ export const Footer: React.FC<FooterProps> = ({ setView }) => {
             </h4>
             <ul className="footer-contact-list">
               <li className="footer-contact-item footer-contact-item-start">
-                <MapPin size={16} className="footer-icon-primary footer-map-icon" />
+                <LocationOnOutlined sx={{ fontSize: 16 }} className="footer-icon-primary footer-map-icon" />
                 <span>Rua da Legião, 56 - Coroado, Manaus - AM</span>
               </li>
               <li className="footer-contact-item footer-contact-item-center">
-                <Phone size={16} className="footer-icon-primary" />
+                <PhoneRounded sx={{ fontSize: 16 }} className="footer-icon-primary" />
                 <span>(92) 3344-9988</span>
               </li>
               <li className="footer-contact-item footer-contact-item-center">
-                <Mail size={16} className="footer-icon-primary" />
+                <EmailOutlined sx={{ fontSize: 16 }} className="footer-icon-primary" />
                 <span>contato@acquapetshop.com.br</span>
               </li>
             </ul>

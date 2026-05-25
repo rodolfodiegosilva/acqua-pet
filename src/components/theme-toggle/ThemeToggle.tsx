@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Sun, Moon } from 'lucide-react';
+import DarkModeRounded from '@mui/icons-material/DarkModeRounded';
+import LightModeRounded from '@mui/icons-material/LightModeRounded';
 
 export const ThemeToggle: React.FC = () => {
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
@@ -30,9 +31,9 @@ export const ThemeToggle: React.FC = () => {
       title={theme === 'light' ? 'Ativar modo escuro' : 'Ativar modo claro'}
     >
       {theme === 'light' ? (
-        <Moon size={22} className="text-muted" strokeWidth={2} />
+        <DarkModeRounded sx={{ fontSize: 22 }} className="text-muted" />
       ) : (
-        <Sun size={22} className="text-muted" strokeWidth={2} />
+        <LightModeRounded sx={{ fontSize: 22 }} className="text-muted" />
       )}
     </button>
   );

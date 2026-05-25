@@ -1,3 +1,5 @@
+import type { ElementType } from 'react';
+import type { SvgIconProps } from '@mui/material/SvgIcon';
 import type { Product } from '@/services/api';
 import type {
   ClientAppointment,
@@ -15,7 +17,7 @@ export type PortalTheme = 'light' | 'dark';
 export interface PortalTabItem {
   id: PortalTab;
   label: string;
-  icon: React.ComponentType<{ size?: number }>;
+  icon: ElementType<SvgIconProps>;
 }
 
 export interface ClientPortalState {

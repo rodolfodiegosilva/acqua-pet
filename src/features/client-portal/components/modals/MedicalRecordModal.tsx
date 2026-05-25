@@ -1,5 +1,7 @@
 import React from 'react';
-import { ClipboardPlus, FileText, ShieldPlus } from 'lucide-react';
+import DescriptionOutlined from '@mui/icons-material/DescriptionOutlined';
+import HealthAndSafetyRounded from '@mui/icons-material/HealthAndSafetyRounded';
+import NoteAddRounded from '@mui/icons-material/NoteAddRounded';
 import type { ClientPet, MedicalRecord } from '@/services/clientPortal';
 import { PortalModal } from './PortalModal';
 
@@ -38,7 +40,7 @@ export const MedicalRecordModal: React.FC<MedicalRecordModalProps> = ({ record, 
       <div style={{ display: 'grid', gap: '14px' }}>
         <div className="portal-surface" style={{ padding: '18px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-            <ClipboardPlus size={18} color="var(--portal-danger-text)" />
+            <NoteAddRounded sx={{ fontSize: 18, color: 'var(--portal-danger-text)' }} />
             <span className="portal-mini-label" style={{ marginBottom: 0 }}>Sintomas e queixa principal</span>
           </div>
           <p style={{ color: 'var(--portal-text)', lineHeight: 1.7 }}>{record.symptoms}</p>
@@ -46,7 +48,7 @@ export const MedicalRecordModal: React.FC<MedicalRecordModalProps> = ({ record, 
 
         <div className="portal-surface" style={{ padding: '18px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-            <ShieldPlus size={18} color="var(--portal-accent)" />
+            <HealthAndSafetyRounded sx={{ fontSize: 18, color: 'var(--portal-accent)' }} />
             <span className="portal-mini-label" style={{ marginBottom: 0 }}>Observações clínicas do veterinário</span>
           </div>
           <p style={{ color: 'var(--portal-text)', lineHeight: 1.7 }}>{record.clinicalNotes}</p>
@@ -55,7 +57,7 @@ export const MedicalRecordModal: React.FC<MedicalRecordModalProps> = ({ record, 
         <div className="portal-medical-modal-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '14px' }}>
           <div className="portal-surface" style={{ padding: '18px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-              <FileText size={18} color="var(--portal-accent)" />
+              <DescriptionOutlined sx={{ fontSize: 18, color: 'var(--portal-accent)' }} />
               <span className="portal-mini-label" style={{ marginBottom: 0 }}>Receituário</span>
             </div>
             <p style={{ color: 'var(--portal-muted)', fontSize: '14px', marginBottom: '12px' }}>{record.prescription}</p>

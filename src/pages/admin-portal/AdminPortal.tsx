@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Boxes, LayoutDashboard, PackageSearch, PawPrint, Users } from 'lucide-react';
+import DashboardRounded from '@mui/icons-material/DashboardRounded';
+import Inventory2Rounded from '@mui/icons-material/Inventory2Rounded';
+import ManageSearchRounded from '@mui/icons-material/ManageSearchRounded';
+import PetsRounded from '@mui/icons-material/PetsRounded';
+import PeopleAltRounded from '@mui/icons-material/PeopleAltRounded';
 import { Footer } from '@/components/footer/Footer';
 import { Header } from '@/components/header/Header';
 import {
@@ -21,6 +25,7 @@ import {
   updateBackofficeOrderStatus
 } from '@/services/backoffice';
 import { subscribeToAppSessionUpdates } from '@/services/mockStorage';
+import { ADMIN_PORTAL_ROUTES, getAdminTabFromPath } from '@/services/panelRoutes';
 import { BackofficeAuth } from '@/features/backoffice/components/BackofficeAuth';
 import { BackofficeShell } from '@/features/backoffice/components/BackofficeShell';
 import { AdminClientsTab } from '@/features/backoffice/tabs/AdminClientsTab';
@@ -44,7 +49,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
   const [authError, setAuthError] = useState<string | null>(null);
   const [panelLoading, setPanelLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<AdminTab>('overview');
+  const [activeTab, setActiveTab] = useState<AdminTab>(() => getAdminTabFromPath(window.location.pathname));
   const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
   const [selectedPetId, setSelectedPetId] = useState<number | null>(null);
   const [snapshot, setSnapshot] = useState<BackofficeSnapshot | null>(null);
@@ -54,6 +59,27 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
   useEffect(() => {
     localStorage.setItem('acqua-pet-admin-theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setActiveTab(getAdminTabFromPath(window.location.pathname));
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  useEffect(() => {
+    const nextPath = ADMIN_PORTAL_ROUTES[activeTab];
+    const currentPath = window.location.pathname;
+    if (currentPath !== nextPath) {
+      if (currentPath === '/area-admin') {
+        window.history.replaceState({}, '', nextPath);
+      } else {
+        window.history.pushState({}, '', nextPath);
+      }
+    }
+  }, [activeTab]);
 
   useEffect(() => {
     if (!sessionUser) return;
@@ -92,11 +118,11 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
   }, [activeTab]);
 
   const navItems: BackofficeNavItem<AdminTab>[] = [
-    { id: 'overview', label: 'Visão geral', icon: LayoutDashboard },
-    { id: 'clients', label: 'Clientes', icon: Users },
-    { id: 'pets', label: 'Pets', icon: PawPrint },
-    { id: 'inventory', label: 'Estoque', icon: Boxes },
-    { id: 'orders', label: 'Pedidos', icon: PackageSearch }
+    { id: 'overview', label: 'Visão geral', icon: DashboardRounded },
+    { id: 'clients', label: 'Clientes', icon: PeopleAltRounded },
+    { id: 'pets', label: 'Pets', icon: PetsRounded },
+    { id: 'inventory', label: 'Estoque', icon: Inventory2Rounded },
+    { id: 'orders', label: 'Pedidos', icon: ManageSearchRounded }
   ];
 
   const handleLogin = async (event: React.FormEvent) => {

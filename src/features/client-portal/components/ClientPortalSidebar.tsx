@@ -1,6 +1,8 @@
 import React, { useEffect, useRef } from 'react';
 import CloseRounded from '@mui/icons-material/CloseRounded';
-import { LogOut, Moon, Sun } from 'lucide-react';
+import DarkModeRounded from '@mui/icons-material/DarkModeRounded';
+import LightModeRounded from '@mui/icons-material/LightModeRounded';
+import LogoutRounded from '@mui/icons-material/LogoutRounded';
 import type { ClientUser } from '@/services/clientPortal';
 import type { PortalTab, PortalTabItem, PortalTheme } from '../types';
 
@@ -106,7 +108,7 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
                 textAlign: 'left'
               }}
             >
-              <Icon size={18} />
+              <Icon sx={{ fontSize: 18 }} />
               {item.label}
             </button>
           );
@@ -115,7 +117,7 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
 
       <div className="portal-sidebar-actions" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <button onClick={() => setPortalTheme((current) => (current === 'dark' ? 'light' : 'dark'))} className="portal-ghost-btn">
-          {portalTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+          {portalTheme === 'dark' ? <LightModeRounded sx={{ fontSize: 16 }} /> : <DarkModeRounded sx={{ fontSize: 16 }} />}
           {portalTheme === 'dark' ? 'Modo claro' : 'Modo escuro'}
         </button>
       </div>
@@ -139,7 +141,7 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
             gap: '8px'
           }}
         >
-          <LogOut size={16} />
+          <LogoutRounded sx={{ fontSize: 16 }} />
           Sair
         </button>
       </div>

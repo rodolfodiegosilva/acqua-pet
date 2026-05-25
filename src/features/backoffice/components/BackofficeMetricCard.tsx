@@ -1,8 +1,8 @@
 import React from 'react';
-import type { LucideIcon } from 'lucide-react';
+import type { SvgIconProps } from '@mui/material/SvgIcon';
 
 interface BackofficeMetricCardProps {
-  icon: LucideIcon;
+  icon: React.ElementType<SvgIconProps>;
   label: string;
   value: string;
   hint: string;
@@ -12,7 +12,7 @@ export const BackofficeMetricCard: React.FC<BackofficeMetricCardProps> = ({ icon
   return (
     <div className="backoffice-card" style={{ padding: '22px', display: 'grid', gap: '14px', minHeight: '170px' }}>
       <div style={{ width: '48px', height: '48px', borderRadius: '16px', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: 'color-mix(in srgb, var(--backoffice-accent-strong) 14%, var(--backoffice-soft))', color: 'var(--backoffice-accent-strong)' }}>
-        <Icon size={22} />
+        <Icon sx={{ fontSize: 22 }} />
       </div>
       <div>
         <span style={{ display: 'block', fontSize: '13px', color: 'var(--backoffice-muted)', marginBottom: '6px' }}>{label}</span>

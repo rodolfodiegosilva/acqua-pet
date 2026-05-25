@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Menu, X, ShoppingBag } from 'lucide-react';
+import CloseRounded from '@mui/icons-material/CloseRounded';
+import LocalMallRounded from '@mui/icons-material/LocalMallRounded';
+import MenuRounded from '@mui/icons-material/MenuRounded';
 import acquaPetIcon from '@/assets/acqua_pet_icon.svg';
 import { ThemeToggle } from '@/components/theme-toggle/ThemeToggle';
 import type { AppView } from '@/types/navigation';
@@ -188,7 +190,7 @@ export const Header: React.FC<HeaderProps> = ({
             }}
             aria-label="Abrir carrinho de compras"
           >
-            <ShoppingBag size={20} />
+            <LocalMallRounded sx={{ fontSize: 20 }} />
             {cartItemCount > 0 && (
               <span 
                 className="cart-badge-glow"
@@ -275,7 +277,7 @@ export const Header: React.FC<HeaderProps> = ({
             className="mobile-toggle"
             aria-label="Abrir menu de navegação"
           >
-            {isOpen ? <X size={26} /> : <Menu size={26} />}
+            {isOpen ? <CloseRounded sx={{ fontSize: 26 }} /> : <MenuRounded sx={{ fontSize: 26 }} />}
           </button>
         </div>
       </div>
@@ -370,7 +372,7 @@ export const Header: React.FC<HeaderProps> = ({
                   gap: '10px'
                 }}
               >
-                <ShoppingBag size={18} />
+                <LocalMallRounded sx={{ fontSize: 18 }} />
                 Carrinho
                 {cartItemCount > 0 ? `(${cartItemCount})` : ''}
               </button>

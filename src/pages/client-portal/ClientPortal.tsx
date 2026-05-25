@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { CalendarDays, HeartPulse, LayoutDashboard, PawPrint, ShoppingBag, Stethoscope } from 'lucide-react';
+import CalendarMonthRounded from '@mui/icons-material/CalendarMonthRounded';
+import DashboardRounded from '@mui/icons-material/DashboardRounded';
+import FavoriteRounded from '@mui/icons-material/FavoriteRounded';
+import LocalMallRounded from '@mui/icons-material/LocalMallRounded';
+import MedicalServicesRounded from '@mui/icons-material/MedicalServicesRounded';
+import PetsRounded from '@mui/icons-material/PetsRounded';
 import { Footer } from '@/components/footer/Footer';
 import { Header } from '@/components/header/Header';
 import { ClientPortalAuth } from '@/features/client-portal/components/ClientPortalAuth';
@@ -34,6 +39,7 @@ import {
   type VetAvailability
 } from '@/services/clientPortal';
 import { subscribeToAppSessionUpdates } from '@/services/mockStorage';
+import { CLIENT_PORTAL_ROUTES, getClientPortalTabFromPath } from '@/services/panelRoutes';
 import type { AppView } from '@/types/navigation';
 import '@/features/client-portal/clientPortal.css';
 
@@ -51,7 +57,7 @@ const formatPtBrDateInput = (value: string) => {
 
 export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }) => {
   const [authMode, setAuthMode] = useState<AuthMode>('login');
-  const [activeTab, setActiveTab] = useState<PortalTab>('dashboard');
+  const [activeTab, setActiveTab] = useState<PortalTab>(() => getClientPortalTabFromPath(window.location.pathname));
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -100,6 +106,27 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
   }, [portalTheme]);
 
   useEffect(() => {
+    const handlePopState = () => {
+      setActiveTab(getClientPortalTabFromPath(window.location.pathname));
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  useEffect(() => {
+    const nextPath = CLIENT_PORTAL_ROUTES[activeTab];
+    const currentPath = window.location.pathname;
+    if (currentPath !== nextPath) {
+      if (currentPath === '/area-cliente') {
+        window.history.replaceState({}, '', nextPath);
+      } else {
+        window.history.pushState({}, '', nextPath);
+      }
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
     if (!currentUser) return;
 
     let isMounted = true;
@@ -138,12 +165,12 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
   }, [currentUser]);
 
   const tabItems: PortalTabItem[] = [
-    { id: 'dashboard', label: 'Visão geral', icon: LayoutDashboard },
-    { id: 'pets', label: 'Meus pets', icon: PawPrint },
-    { id: 'appointments', label: 'Agendamentos', icon: CalendarDays },
-    { id: 'medical', label: 'Histórico médico', icon: HeartPulse },
-    { id: 'vets', label: 'Veterinários', icon: Stethoscope },
-    { id: 'store', label: 'Loja', icon: ShoppingBag }
+    { id: 'dashboard', label: 'Visão geral', icon: DashboardRounded },
+    { id: 'pets', label: 'Meus pets', icon: PetsRounded },
+    { id: 'appointments', label: 'Agendamentos', icon: CalendarMonthRounded },
+    { id: 'medical', label: 'Histórico médico', icon: FavoriteRounded },
+    { id: 'vets', label: 'Veterinários', icon: MedicalServicesRounded },
+    { id: 'store', label: 'Loja', icon: LocalMallRounded }
   ];
 
   const upcomingAppointments = appointments.filter((appointment) => appointment.status !== 'Concluído');

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Star, ShoppingBag } from 'lucide-react';
+import LocalMallRounded from '@mui/icons-material/LocalMallRounded';
+import StarRounded from '@mui/icons-material/StarRounded';
 
 interface ProductCardProps {
   name: string;
@@ -100,11 +101,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           marginBottom: '16px'
         }}>
           {Array.from({ length: 5 }).map((_, i) => (
-            <Star
+            <StarRounded
+              sx={{ fontSize: 14 }}
               key={i}
-              size={14}
-              fill={i < Math.floor(rating) ? '#f59e0b' : 'none'}
-              stroke={i < Math.floor(rating) ? '#f59e0b' : 'var(--text-muted)'}
+              htmlColor={i < Math.floor(rating) ? '#f59e0b' : 'var(--text-muted)'}
             />
           ))}
           <span style={{
@@ -168,7 +168,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           }}
           aria-label="Adicionar ao carrinho"
         >
-          <ShoppingBag size={18} />
+          <LocalMallRounded sx={{ fontSize: 18 }} />
         </button>
       </div>
 

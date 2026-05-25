@@ -1,5 +1,10 @@
 import React from 'react';
-import { AlertTriangle, Boxes, PackageSearch, PawPrint, UserRound, Wallet } from 'lucide-react';
+import Inventory2Rounded from '@mui/icons-material/Inventory2Rounded';
+import ManageSearchRounded from '@mui/icons-material/ManageSearchRounded';
+import PetsRounded from '@mui/icons-material/PetsRounded';
+import PersonRounded from '@mui/icons-material/PersonRounded';
+import PriorityHighRounded from '@mui/icons-material/PriorityHighRounded';
+import WalletRounded from '@mui/icons-material/WalletRounded';
 import type { BackofficeAlert, BackofficeClient, BackofficeInventoryItem, BackofficeOrder, BackofficePet } from '@/services/backoffice';
 import { BackofficeMetricCard } from '../components/BackofficeMetricCard';
 import { BackofficeSectionCard } from '../components/BackofficeSectionCard';
@@ -55,12 +60,12 @@ export const AdminOverviewTab: React.FC<AdminOverviewTabProps> = ({ clients, pet
   return (
     <>
       <div className="backoffice-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(6, minmax(0, 1fr))', gap: '16px' }}>
-        <BackofficeMetricCard icon={UserRound} label="Clientes na base" value={String(clients.length)} hint="Total de tutores monitorados pelo portal e operação." />
-        <BackofficeMetricCard icon={PawPrint} label="Pets ativos" value={String(pets.length)} hint="Todos os perfis sob gestão da clínica e da loja." />
-        <BackofficeMetricCard icon={AlertTriangle} label="Pets com atenção" value={String(attentionPets)} hint="Pacientes com retorno, observação ou cuidado ativo." />
-        <BackofficeMetricCard icon={Wallet} label="Clientes Prime" value={String(primeClients)} hint="Base premium com maior recorrência e ticket médio." />
-        <BackofficeMetricCard icon={Boxes} label="Estoque crítico" value={String(criticalStock)} hint="SKUs com ruptura próxima ou necessidade de reposição." />
-        <BackofficeMetricCard icon={PackageSearch} label="Pedidos abertos" value={String(openOrders)} hint="Pedidos em separação, pagos ou enviados aguardando conclusão." />
+        <BackofficeMetricCard icon={PersonRounded} label="Clientes na base" value={String(clients.length)} hint="Total de tutores monitorados pelo portal e operação." />
+        <BackofficeMetricCard icon={PetsRounded} label="Pets ativos" value={String(pets.length)} hint="Todos os perfis sob gestão da clínica e da loja." />
+        <BackofficeMetricCard icon={PriorityHighRounded} label="Pets com atenção" value={String(attentionPets)} hint="Pacientes com retorno, observação ou cuidado ativo." />
+        <BackofficeMetricCard icon={WalletRounded} label="Clientes Prime" value={String(primeClients)} hint="Base premium com maior recorrência e ticket médio." />
+        <BackofficeMetricCard icon={Inventory2Rounded} label="Estoque crítico" value={String(criticalStock)} hint="SKUs com ruptura próxima ou necessidade de reposição." />
+        <BackofficeMetricCard icon={ManageSearchRounded} label="Pedidos abertos" value={String(openOrders)} hint="Pedidos em separação, pagos ou enviados aguardando conclusão." />
       </div>
 
       <div className="backoffice-two-cols" style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '20px' }}>

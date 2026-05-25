@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Plus, X } from 'lucide-react';
+import AddRounded from '@mui/icons-material/AddRounded';
+import CloseRounded from '@mui/icons-material/CloseRounded';
 import { AppPagination, getResponsiveDefaultPageSize } from '@/components/pagination/AppPagination';
 import { PortalSectionCard } from '@/components/client/portal-section-card/PortalSectionCard';
 import type { ClientAppointment, ClientPet, VetAvailability } from '@/services/clientPortal';
@@ -187,7 +188,7 @@ export const AppointmentsTab: React.FC<AppointmentsTabProps> = ({
         eyebrow="Serviços"
         action={
           <button className="portal-ghost-btn portal-appointments-mobile-trigger" onClick={() => setIsCreateModalOpen(true)}>
-            <Plus size={16} />
+            <AddRounded sx={{ fontSize: 16 }} />
             Novo agendamento
           </button>
         }
@@ -348,7 +349,7 @@ export const AppointmentsTab: React.FC<AppointmentsTabProps> = ({
                   flexShrink: 0
                 }}
               >
-                <X size={18} />
+                <CloseRounded sx={{ fontSize: 18 }} />
               </button>
             </div>
             {renderAppointmentForm()}

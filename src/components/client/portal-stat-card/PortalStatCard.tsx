@@ -1,8 +1,8 @@
 import React from 'react';
-import type { LucideIcon } from 'lucide-react';
+import type { SvgIconProps } from '@mui/material/SvgIcon';
 
 interface PortalStatCardProps {
-  icon: LucideIcon;
+  icon: React.ElementType<SvgIconProps>;
   label: string;
   value: string;
   hint: string;
@@ -32,7 +32,7 @@ export const PortalStatCard: React.FC<PortalStatCardProps> = ({ icon: Icon, labe
           color: 'var(--primary)'
         }}
       >
-        <Icon size={22} />
+        <Icon sx={{ fontSize: 22 }} />
       </div>
 
       <div>

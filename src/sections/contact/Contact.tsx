@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
-import { Calendar, User, Smile, ShieldAlert, CheckCircle, MessageSquare } from 'lucide-react';
+import CalendarMonthRounded from '@mui/icons-material/CalendarMonthRounded';
+import CheckCircleRounded from '@mui/icons-material/CheckCircleRounded';
+import PersonRounded from '@mui/icons-material/PersonRounded';
+import ReportProblemRounded from '@mui/icons-material/ReportProblemRounded';
+import SentimentSatisfiedRounded from '@mui/icons-material/SentimentSatisfiedRounded';
+import TextsmsRounded from '@mui/icons-material/TextsmsRounded';
 
 export const Contact: React.FC = () => {
   const [form, setForm] = useState({
@@ -106,7 +111,7 @@ export const Contact: React.FC = () => {
                 justifyContent: 'center',
                 flexShrink: 0
               }}>
-                <MessageSquare size={24} fill="#22c55e" />
+                <TextsmsRounded sx={{ fontSize: 24, color: '#22c55e' }} />
               </div>
               <div>
                 <h4 style={{ fontSize: '16px', fontWeight: 700, marginBottom: '4px' }}>
@@ -141,7 +146,7 @@ export const Contact: React.FC = () => {
               color: 'var(--text-muted)',
               lineHeight: 1.4
             }}>
-              <ShieldAlert size={18} style={{ color: 'var(--primary)', flexShrink: 0 }} />
+              <ReportProblemRounded sx={{ fontSize: 18, color: 'var(--primary)', flexShrink: 0 }} />
               <span>
                 Fique tranquilo! Suas informações estão seguras conosco e serão usadas exclusivamente para a comunicação do agendamento.
               </span>
@@ -163,7 +168,7 @@ export const Contact: React.FC = () => {
                     justifyContent: 'center',
                     marginBottom: '20px'
                   }}>
-                    <CheckCircle size={64} fill="rgba(34, 197, 94, 0.1)" />
+                    <CheckCircleRounded sx={{ fontSize: 64, color: '#22c55e' }} />
                   </div>
                   <h3 style={{ fontSize: '24px', fontWeight: 800, marginBottom: '12px' }}>
                     Solicitação Recebida!
@@ -207,7 +212,7 @@ export const Contact: React.FC = () => {
                     alignItems: 'center',
                     gap: '10px'
                   }}>
-                    <Calendar size={22} style={{ color: 'var(--accent-gold)' }} />
+                    <CalendarMonthRounded sx={{ fontSize: 22, color: 'var(--accent-gold)' }} />
                     Dados do Agendamento
                   </h3>
 
@@ -226,7 +231,7 @@ export const Contact: React.FC = () => {
                         className="input-premium"
                         style={{ paddingLeft: '44px' }}
                       />
-                      <User size={18} style={{ position: 'absolute', left: '16px', top: '16px', color: 'rgba(255, 255, 255, 0.6)' }} />
+                      <PersonRounded sx={{ fontSize: 18, position: 'absolute', left: '16px', top: '16px', color: 'rgba(255, 255, 255, 0.6)' }} />
                     </div>
                   </div>
 
@@ -261,7 +266,7 @@ export const Contact: React.FC = () => {
                           className="input-premium"
                           style={{ paddingLeft: '44px' }}
                         />
-                        <Smile size={18} style={{ position: 'absolute', left: '16px', top: '16px', color: 'rgba(255, 255, 255, 0.6)' }} />
+                        <SentimentSatisfiedRounded sx={{ fontSize: 18, position: 'absolute', left: '16px', top: '16px', color: 'rgba(255, 255, 255, 0.6)' }} />
                       </div>
                     </div>
 

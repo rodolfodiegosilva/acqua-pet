@@ -11,19 +11,11 @@ import { Essence } from '@/sections/essence/Essence';
 import { Hero } from '@/sections/hero/Hero';
 import { Services } from '@/sections/services/Services';
 import type { Product } from '@/services/api';
+import { getAppViewFromPath } from '@/types/navigation';
 import type { AppView } from '@/types/navigation';
 
 function App() {
-  const resolveViewFromPath = useCallback((pathname: string): AppView => {
-    const normalizedPath = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
-    if (normalizedPath === '/area-admin') return 'admin';
-    if (normalizedPath === '/area-veterinario') return 'veterinary';
-    if (normalizedPath === '/area-cliente') return 'client';
-    if (normalizedPath === '/loja') return 'store';
-    return 'landing';
-  }, []);
-
-  const [view, setViewState] = useState<AppView>(() => resolveViewFromPath(window.location.pathname));
+  const [view, setViewState] = useState<AppView>(() => getAppViewFromPath(window.location.pathname));
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState<boolean>(false);
 
@@ -74,12 +66,12 @@ function App() {
 
   useEffect(() => {
     const handlePopState = () => {
-      setViewState(resolveViewFromPath(window.location.pathname));
+      setViewState(getAppViewFromPath(window.location.pathname));
     };
 
     window.addEventListener('popstate', handlePopState);
     return () => window.removeEventListener('popstate', handlePopState);
-  }, [resolveViewFromPath]);
+  }, []);
 
   const handleCartClick = useCallback(() => {
     if (view !== 'store') {

@@ -1,5 +1,8 @@
 import React from 'react';
-import { CalendarClock, HeartPulse, Syringe, TriangleAlert } from 'lucide-react';
+import CalendarMonthRounded from '@mui/icons-material/CalendarMonthRounded';
+import FavoriteRounded from '@mui/icons-material/FavoriteRounded';
+import MedicationRounded from '@mui/icons-material/MedicationRounded';
+import WarningAmberRounded from '@mui/icons-material/WarningAmberRounded';
 import type { BackofficePet } from '@/services/backoffice';
 import type { ClientAppointment, MedicalRecord } from '@/services/clientPortal';
 import { BackofficeMetricCard } from '../components/BackofficeMetricCard';
@@ -15,10 +18,10 @@ export const VetOverviewTab: React.FC<VetOverviewTabProps> = ({ appointments, re
   return (
     <>
       <div className="backoffice-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '16px' }}>
-        <BackofficeMetricCard icon={CalendarClock} label="Agenda ativa" value={String(appointments.length)} hint="Atendimentos e rotas em acompanhamento hoje." />
-        <BackofficeMetricCard icon={HeartPulse} label="Prontuários relevantes" value={String(records.length)} hint="Históricos disponíveis para decisão clínica." />
-        <BackofficeMetricCard icon={TriangleAlert} label="Pacientes críticos" value={String(records.filter((record) => record.status !== 'Estável').length)} hint="Casos que exigem retorno, revisão ou observação." />
-        <BackofficeMetricCard icon={Syringe} label="Pets com ação próxima" value={String(pets.filter((pet) => pet.nextAction.toLowerCase().includes('vac')).length)} hint="Base com vacina, reforço ou revisão preventiva." />
+        <BackofficeMetricCard icon={CalendarMonthRounded} label="Agenda ativa" value={String(appointments.length)} hint="Atendimentos e rotas em acompanhamento hoje." />
+        <BackofficeMetricCard icon={FavoriteRounded} label="Prontuários relevantes" value={String(records.length)} hint="Históricos disponíveis para decisão clínica." />
+        <BackofficeMetricCard icon={WarningAmberRounded} label="Pacientes críticos" value={String(records.filter((record) => record.status !== 'Estável').length)} hint="Casos que exigem retorno, revisão ou observação." />
+        <BackofficeMetricCard icon={MedicationRounded} label="Pets com ação próxima" value={String(pets.filter((pet) => pet.nextAction.toLowerCase().includes('vac')).length)} hint="Base com vacina, reforço ou revisão preventiva." />
       </div>
 
       <div className="backoffice-two-cols" style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '20px' }}>

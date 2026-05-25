@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import InventoryRounded from '@mui/icons-material/InventoryRounded';
+import LocalShippingRounded from '@mui/icons-material/LocalShippingRounded';
+import WalletRounded from '@mui/icons-material/WalletRounded';
 import { AppPagination, getResponsiveDefaultPageSize } from '@/components/pagination/AppPagination';
-import { PackageSearch, Truck, Wallet } from 'lucide-react';
 import type { BackofficeClient, BackofficeOrder } from '@/services/backoffice';
 import { BackofficeSectionCard } from '../components/BackofficeSectionCard';
 
@@ -252,21 +254,21 @@ export const AdminOrdersTab: React.FC<AdminOrdersTabProps> = ({
                   <div className="backoffice-card" style={{ padding: '14px', background: 'var(--backoffice-surface)' }}>
                     <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Total</span>
                     <strong style={{ color: 'var(--backoffice-text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Wallet size={15} />
+                      <WalletRounded sx={{ fontSize: 15 }} />
                       R$ {selectedOrder.total.toFixed(2)}
                     </strong>
                   </div>
                   <div className="backoffice-card" style={{ padding: '14px', background: 'var(--backoffice-surface)' }}>
                     <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Entrega</span>
                     <strong style={{ color: 'var(--backoffice-text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Truck size={15} />
+                      <LocalShippingRounded sx={{ fontSize: 15 }} />
                       {selectedOrder.fulfillment}
                     </strong>
                   </div>
                   <div className="backoffice-card" style={{ padding: '14px', background: 'var(--backoffice-surface)' }}>
                     <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Itens</span>
                     <strong style={{ color: 'var(--backoffice-text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <PackageSearch size={15} />
+                      <InventoryRounded sx={{ fontSize: 15 }} />
                       {selectedOrder.items.length}
                     </strong>
                   </div>

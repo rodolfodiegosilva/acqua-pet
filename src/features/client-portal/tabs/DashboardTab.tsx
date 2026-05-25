@@ -1,5 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { CalendarDays, HeartPulse, MapPin, PawPrint, ShoppingBag, Sparkles } from 'lucide-react';
+import AutoAwesomeRounded from '@mui/icons-material/AutoAwesomeRounded';
+import CalendarMonthRounded from '@mui/icons-material/CalendarMonthRounded';
+import FavoriteRounded from '@mui/icons-material/FavoriteRounded';
+import LocalMallRounded from '@mui/icons-material/LocalMallRounded';
+import LocationOnOutlined from '@mui/icons-material/LocationOnOutlined';
+import PetsRounded from '@mui/icons-material/PetsRounded';
 import { PortalSectionCard } from '@/components/client/portal-section-card/PortalSectionCard';
 import { PortalStatCard } from '@/components/client/portal-stat-card/PortalStatCard';
 import type { ClientAppointment, ClientOrder, ClientPet, ClientUser } from '@/services/clientPortal';
@@ -88,7 +93,7 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
         <div style={{ display: 'grid', gap: '14px' }}>
           <div>
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '8px 12px', borderRadius: '999px', background: 'var(--portal-pill-info-bg)', color: 'var(--portal-pill-info-text)', fontSize: '12px', fontWeight: 800, marginBottom: '12px' }}>
-              <Sparkles size={14} />
+              <AutoAwesomeRounded sx={{ fontSize: 14 }} />
               Painel do tutor
             </span>
             <h2 style={{ fontSize: 'clamp(24px, 3vw, 34px)', lineHeight: 1.08, color: 'var(--portal-text)', marginBottom: '10px' }}>
@@ -117,7 +122,7 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
 
         <div className="portal-surface" style={{ padding: '18px', display: 'grid', gap: '14px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <MapPin size={18} color="var(--portal-accent)" />
+            <LocationOnOutlined sx={{ fontSize: 18, color: 'var(--portal-accent)' }} />
             <strong style={{ color: 'var(--portal-text)' }}>Próxima prioridade</strong>
           </div>
           {nextAppointment ? (
@@ -141,10 +146,10 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
       </div>
 
       <div className="portal-stats-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '16px' }}>
-        <PortalStatCard icon={PawPrint} label="Pets cadastrados" value={String(petsCount)} hint="Perfis individuais com observações, vacinas e histórico clínico." />
-        <PortalStatCard icon={CalendarDays} label="Próximos agendamentos" value={String(appointments.length)} hint="Consultas e serviços já em acompanhamento." />
-        <PortalStatCard icon={HeartPulse} label="Prontuários ativos" value={String(medicalRecordsCount)} hint="Registros clínicos vinculados por pet." />
-        <PortalStatCard icon={ShoppingBag} label="Pedidos no portal" value={String(ordersCount)} hint="Pedidos da loja com status e valor total." />
+        <PortalStatCard icon={PetsRounded} label="Pets cadastrados" value={String(petsCount)} hint="Perfis individuais com observações, vacinas e histórico clínico." />
+        <PortalStatCard icon={CalendarMonthRounded} label="Próximos agendamentos" value={String(appointments.length)} hint="Consultas e serviços já em acompanhamento." />
+        <PortalStatCard icon={FavoriteRounded} label="Prontuários ativos" value={String(medicalRecordsCount)} hint="Registros clínicos vinculados por pet." />
+        <PortalStatCard icon={LocalMallRounded} label="Pedidos no portal" value={String(ordersCount)} hint="Pedidos da loja com status e valor total." />
       </div>
 
       <div className="portal-dashboard-grid" style={{ display: 'grid', gridTemplateColumns: '1.15fr 0.85fr', gap: '20px' }}>

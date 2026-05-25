@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Plus, X } from 'lucide-react';
+import AddRounded from '@mui/icons-material/AddRounded';
+import CloseRounded from '@mui/icons-material/CloseRounded';
 import { PortalSectionCard } from '@/components/client/portal-section-card/PortalSectionCard';
 import { CLIENT_PET_SEXES, CLIENT_PET_SPECIES, type ClientPet, type ClientPetSex, type ClientPetSpecies } from '@/services/clientPortal';
 
@@ -94,7 +95,7 @@ export const PetsTab: React.FC<PetsTabProps> = ({ pets, petForm, setPetForm, onA
             resetForm();
             setIsCreatePetModalOpen(true);
           }}>
-            <Plus size={16} />
+            <AddRounded sx={{ fontSize: 16 }} />
             Cadastrar novo pet
           </button>
         }
@@ -197,7 +198,7 @@ export const PetsTab: React.FC<PetsTabProps> = ({ pets, petForm, setPetForm, onA
                   flexShrink: 0
                 }}
               >
-                <X size={18} />
+                <CloseRounded sx={{ fontSize: 18 }} />
               </button>
             </div>
             {renderPetForm()}

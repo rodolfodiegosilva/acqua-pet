@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { CalendarClock, HeartPulse, LayoutDashboard } from 'lucide-react';
+import CalendarMonthRounded from '@mui/icons-material/CalendarMonthRounded';
+import DashboardRounded from '@mui/icons-material/DashboardRounded';
+import FavoriteRounded from '@mui/icons-material/FavoriteRounded';
 import { Footer } from '@/components/footer/Footer';
 import { Header } from '@/components/header/Header';
 import { BackofficeAuth } from '@/features/backoffice/components/BackofficeAuth';
@@ -19,6 +21,7 @@ import {
 } from '@/services/backoffice';
 import type { ClientAppointment, MedicalRecord } from '@/services/clientPortal';
 import { subscribeToAppSessionUpdates } from '@/services/mockStorage';
+import { getVeterinaryTabFromPath, VETERINARY_PORTAL_ROUTES } from '@/services/panelRoutes';
 import type { AppView } from '@/types/navigation';
 import '@/features/backoffice/backoffice.css';
 
@@ -33,7 +36,7 @@ export const VeterinaryPortal: React.FC<VeterinaryPortalProps> = ({ setView }) =
   const [loading, setLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [panelLoading, setPanelLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<VetTab>('overview');
+  const [activeTab, setActiveTab] = useState<VetTab>(() => getVeterinaryTabFromPath(window.location.pathname));
   const [selectedPetId, setSelectedPetId] = useState<number | null>(null);
   const [pets, setPets] = useState<BackofficePet[]>([]);
   const [records, setRecords] = useState<MedicalRecord[]>([]);
@@ -44,6 +47,27 @@ export const VeterinaryPortal: React.FC<VeterinaryPortalProps> = ({ setView }) =
   useEffect(() => {
     localStorage.setItem('acqua-pet-veterinary-theme', theme);
   }, [theme]);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      setActiveTab(getVeterinaryTabFromPath(window.location.pathname));
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  useEffect(() => {
+    const nextPath = VETERINARY_PORTAL_ROUTES[activeTab];
+    const currentPath = window.location.pathname;
+    if (currentPath !== nextPath) {
+      if (currentPath === '/area-veterinario') {
+        window.history.replaceState({}, '', nextPath);
+      } else {
+        window.history.pushState({}, '', nextPath);
+      }
+    }
+  }, [activeTab]);
 
   useEffect(() => {
     if (activeTab !== 'patients') {
@@ -81,9 +105,9 @@ export const VeterinaryPortal: React.FC<VeterinaryPortalProps> = ({ setView }) =
   }, [sessionUser]);
 
   const navItems: BackofficeNavItem<VetTab>[] = [
-    { id: 'overview', label: 'Visão clínica', icon: LayoutDashboard },
-    { id: 'agenda', label: 'Agenda', icon: CalendarClock },
-    { id: 'patients', label: 'Pacientes', icon: HeartPulse }
+    { id: 'overview', label: 'Visão clínica', icon: DashboardRounded },
+    { id: 'agenda', label: 'Agenda', icon: CalendarMonthRounded },
+    { id: 'patients', label: 'Pacientes', icon: FavoriteRounded }
   ];
 
   const handleLogin = async (event: React.FormEvent) => {

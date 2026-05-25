@@ -1,5 +1,10 @@
 import React from 'react';
-import { ArrowLeft, PawPrint, ShieldCheck, Smartphone, MapPinHouse, Tags } from 'lucide-react';
+import ArrowBackRounded from '@mui/icons-material/ArrowBackRounded';
+import HomeWorkRounded from '@mui/icons-material/HomeWorkRounded';
+import PetsRounded from '@mui/icons-material/PetsRounded';
+import SellRounded from '@mui/icons-material/SellRounded';
+import SmartphoneRounded from '@mui/icons-material/SmartphoneRounded';
+import VerifiedRounded from '@mui/icons-material/VerifiedRounded';
 import type { BackofficeClient, BackofficePet } from '@/services/backoffice';
 import { BackofficeSectionCard } from './BackofficeSectionCard';
 
@@ -16,7 +21,7 @@ export const AdminClientDetailView: React.FC<AdminClientDetailViewProps> = ({ cl
         <div className="backoffice-section-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', alignItems: 'flex-start' }}>
           <div style={{ display: 'flex', gap: '16px', minWidth: 0 }}>
             <button className="backoffice-ghost-btn" type="button" onClick={onBack} style={{ alignSelf: 'flex-start' }}>
-              <ArrowLeft size={16} />
+              <ArrowBackRounded sx={{ fontSize: 16 }} />
               Voltar
             </button>
             <div style={{ minWidth: 0 }}>
@@ -33,8 +38,8 @@ export const AdminClientDetailView: React.FC<AdminClientDetailViewProps> = ({ cl
             </div>
           </div>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            <span className="backoffice-pill backoffice-status-info"><PawPrint size={14} /> {pets.length} pets vinculados</span>
-            <span className="backoffice-pill backoffice-status-success"><ShieldCheck size={14} /> Plano {client.plan}</span>
+            <span className="backoffice-pill backoffice-status-info"><PetsRounded sx={{ fontSize: 14 }} /> {pets.length} pets vinculados</span>
+            <span className="backoffice-pill backoffice-status-success"><VerifiedRounded sx={{ fontSize: 14 }} /> Plano {client.plan}</span>
           </div>
         </div>
 
@@ -42,14 +47,14 @@ export const AdminClientDetailView: React.FC<AdminClientDetailViewProps> = ({ cl
           <div className="backoffice-card" style={{ padding: '16px', background: 'rgba(255,255,255,0.08)' }}>
             <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Canal principal</span>
             <strong style={{ color: 'var(--backoffice-text)', lineHeight: 1.6, display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Smartphone size={15} />
+              <SmartphoneRounded sx={{ fontSize: 15 }} />
               {client.phone}
             </strong>
           </div>
           <div className="backoffice-card" style={{ padding: '16px', background: 'rgba(255,255,255,0.08)' }}>
             <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Localização</span>
             <strong style={{ color: 'var(--backoffice-text)', lineHeight: 1.6, display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <MapPinHouse size={15} />
+              <HomeWorkRounded sx={{ fontSize: 15 }} />
               {client.neighborhood}
             </strong>
           </div>
@@ -60,7 +65,7 @@ export const AdminClientDetailView: React.FC<AdminClientDetailViewProps> = ({ cl
           <div className="backoffice-card" style={{ padding: '16px', background: 'rgba(255,255,255,0.08)' }}>
             <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Marcadores</span>
             <strong style={{ color: 'var(--backoffice-text)', lineHeight: 1.6, display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Tags size={15} />
+              <SellRounded sx={{ fontSize: 15 }} />
               {client.tags.length}
             </strong>
           </div>

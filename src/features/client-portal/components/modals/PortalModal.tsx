@@ -1,5 +1,5 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import CloseRounded from '@mui/icons-material/CloseRounded';
 
 interface PortalModalProps {
   eyebrow: string;
@@ -64,7 +64,7 @@ export const PortalModal: React.FC<PortalModalProps> = ({ eyebrow, title, onClos
               flexShrink: 0
             }}
           >
-            <X size={18} />
+            <CloseRounded sx={{ fontSize: 18 }} />
           </button>
         </div>
         {children}

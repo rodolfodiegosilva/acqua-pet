@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { Search, ShoppingBag, X, Plus, Minus, Trash2, Check, ArrowRight, CreditCard, ChevronRight, CheckCircle } from 'lucide-react';
+import AddRounded from '@mui/icons-material/AddRounded';
+import ArrowForwardRounded from '@mui/icons-material/ArrowForwardRounded';
+import CheckCircleRounded from '@mui/icons-material/CheckCircleRounded';
+import CheckRounded from '@mui/icons-material/CheckRounded';
+import ChevronRightRounded from '@mui/icons-material/ChevronRightRounded';
+import CloseRounded from '@mui/icons-material/CloseRounded';
+import CreditCardRounded from '@mui/icons-material/CreditCardRounded';
+import DeleteOutlineRounded from '@mui/icons-material/DeleteOutlineRounded';
+import LocalMallRounded from '@mui/icons-material/LocalMallRounded';
+import RemoveRounded from '@mui/icons-material/RemoveRounded';
+import SearchRounded from '@mui/icons-material/SearchRounded';
 import { AppPagination, getResponsiveDefaultPageSize } from '@/components/pagination/AppPagination';
 import { fetchProducts } from '@/services/api';
 import type { Product } from '@/services/api';
@@ -272,7 +282,8 @@ export const Store: React.FC<StoreProps> = ({
                 }}
                 className="search-input-premium"
               />
-              <Search size={18} style={{
+              <SearchRounded sx={{
+                fontSize: 18,
                 position: 'absolute',
                 left: '18px',
                 top: '16px',
@@ -667,7 +678,7 @@ export const Store: React.FC<StoreProps> = ({
                             justifyContent: 'center'
                           }}
                         >
-                          <Minus size={14} />
+                          <RemoveRounded sx={{ fontSize: 14 }} />
                         </button>
                         <span style={{ fontSize: '14px', fontWeight: 700, padding: '0 4px', minWidth: '16px', textAlign: 'center' }}>
                           {qty}
@@ -687,7 +698,7 @@ export const Store: React.FC<StoreProps> = ({
                             justifyContent: 'center'
                           }}
                         >
-                          <Plus size={14} />
+                          <AddRounded sx={{ fontSize: 14 }} />
                         </button>
                       </div>
                     ) : (
@@ -708,7 +719,7 @@ export const Store: React.FC<StoreProps> = ({
                           boxShadow: '0 4px 10px rgba(0, 180, 216, 0.2)'
                         }}
                       >
-                        <ShoppingBag size={18} />
+                        <LocalMallRounded sx={{ fontSize: 18 }} />
                       </button>
                     )}
                   </div>
@@ -762,7 +773,7 @@ export const Store: React.FC<StoreProps> = ({
               justifyContent: 'space-between'
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <ShoppingBag size={22} style={{ color: 'var(--primary)' }} />
+                <LocalMallRounded sx={{ fontSize: 22, color: 'var(--primary)' }} />
                 <h2 style={{ fontSize: '20px', fontWeight: 800, fontFamily: 'var(--font-heading)' }}>
                   Meu Carrinho ({cart.reduce((a, b) => a + b.quantity, 0)})
                 </h2>
@@ -778,7 +789,7 @@ export const Store: React.FC<StoreProps> = ({
                   borderRadius: '50%'
                 }}
               >
-                <X size={22} />
+                <CloseRounded sx={{ fontSize: 22 }} />
               </button>
             </div>
 
@@ -831,7 +842,7 @@ export const Store: React.FC<StoreProps> = ({
                   margin: 'auto 0',
                   color: 'var(--text-muted)'
                 }}>
-                  <ShoppingBag size={48} style={{ opacity: 0.3, marginBottom: '16px' }} />
+                  <LocalMallRounded sx={{ fontSize: 48, opacity: 0.3, marginBottom: '16px' }} />
                   <p style={{ fontSize: '16px', fontWeight: 600 }}>Seu carrinho está vazio.</p>
                   <p style={{ fontSize: '14px', marginTop: '4px' }}>Adicione produtos premium abaixo!</p>
                 </div>
@@ -898,7 +909,7 @@ export const Store: React.FC<StoreProps> = ({
                               justifyContent: 'center'
                             }}
                           >
-                            <Minus size={10} />
+                            <RemoveRounded sx={{ fontSize: 10 }} />
                           </button>
                           <span style={{ fontSize: '13px', fontWeight: 700, minWidth: '14px', textAlign: 'center' }}>
                             {item.quantity}
@@ -918,7 +929,7 @@ export const Store: React.FC<StoreProps> = ({
                               justifyContent: 'center'
                             }}
                           >
-                            <Plus size={10} />
+                            <AddRounded sx={{ fontSize: 10 }} />
                           </button>
                         </div>
 
@@ -936,7 +947,7 @@ export const Store: React.FC<StoreProps> = ({
                             padding: '4px'
                           }}
                         >
-                          <Trash2 size={16} />
+                          <DeleteOutlineRounded sx={{ fontSize: 16 }} />
                         </button>
                       </div>
                     </div>
@@ -1040,7 +1051,7 @@ export const Store: React.FC<StoreProps> = ({
                   }}
                 >
                   Finalizar Compra
-                  <ArrowRight size={16} />
+                  <ArrowForwardRounded sx={{ fontSize: 16 }} />
                 </button>
               </div>
             )}
@@ -1100,7 +1111,7 @@ export const Store: React.FC<StoreProps> = ({
                     padding: '4px'
                   }}
                 >
-                  <X size={22} />
+                  <CloseRounded sx={{ fontSize: 22 }} />
                 </button>
               )}
             </div>
@@ -1119,9 +1130,9 @@ export const Store: React.FC<StoreProps> = ({
                 color: 'var(--text-muted)'
               }}>
                 <span style={{ color: checkoutStep === 1 ? 'var(--primary)' : 'inherit' }}>1. Método de Envio</span>
-                <ChevronRight size={14} />
+                <ChevronRightRounded sx={{ fontSize: 14 }} />
                 <span style={{ color: checkoutStep === 2 ? 'var(--primary)' : 'inherit' }}>2. Pagamento</span>
-                <ChevronRight size={14} />
+                <ChevronRightRounded sx={{ fontSize: 14 }} />
                 <span>3. Sucesso</span>
               </div>
             )}
@@ -1304,7 +1315,7 @@ export const Store: React.FC<StoreProps> = ({
                     }}
                   >
                     Seguir para o Pagamento
-                    <ArrowRight size={16} />
+                    <ArrowForwardRounded sx={{ fontSize: 16 }} />
                   </button>
                 </div>
               )}
@@ -1428,7 +1439,7 @@ export const Store: React.FC<StoreProps> = ({
                           gap: '6px'
                         }}
                       >
-                        <Check size={14} />
+                        <CheckRounded sx={{ fontSize: 14 }} />
                         Copiar Chave Copia e Cola
                       </button>
                     </div>
@@ -1546,7 +1557,7 @@ export const Store: React.FC<StoreProps> = ({
                         gap: '6px'
                       }}
                     >
-                      <CreditCard size={16} />
+                      <CreditCardRounded sx={{ fontSize: 16 }} />
                       Confirmar e Pagar
                     </button>
                   </div>
@@ -1569,7 +1580,7 @@ export const Store: React.FC<StoreProps> = ({
                     justifyContent: 'center',
                     marginBottom: '10px'
                   }}>
-                    <CheckCircle size={72} fill="rgba(34, 197, 94, 0.1)" />
+                    <CheckCircleRounded sx={{ fontSize: 72, color: '#22c55e' }} />
                   </div>
                   
                   <h3 style={{ fontSize: '26px', fontWeight: 800, color: 'var(--text-main)' }}>

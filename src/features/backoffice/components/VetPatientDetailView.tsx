@@ -1,5 +1,7 @@
 import React, { useMemo } from 'react';
-import { ArrowLeft, FilePlus2, Stethoscope } from 'lucide-react';
+import ArrowBackRounded from '@mui/icons-material/ArrowBackRounded';
+import MedicalServicesRounded from '@mui/icons-material/MedicalServicesRounded';
+import NoteAddRounded from '@mui/icons-material/NoteAddRounded';
 import type { BackofficePet } from '@/services/backoffice';
 import type { MedicalRecord } from '@/services/clientPortal';
 import type { VetRecordDraft } from '../types';
@@ -28,7 +30,7 @@ export const VetPatientDetailView: React.FC<VetPatientDetailViewProps> = ({ pet,
         <div className="backoffice-section-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', alignItems: 'flex-start' }}>
           <div style={{ display: 'flex', gap: '16px', minWidth: 0 }}>
             <button className="backoffice-ghost-btn" type="button" onClick={onBack} style={{ alignSelf: 'flex-start' }}>
-              <ArrowLeft size={16} />
+              <ArrowBackRounded sx={{ fontSize: 16 }} />
               Voltar
             </button>
             <div className="backoffice-patient-avatar" style={{ width: '88px', height: '88px', borderRadius: '28px', background: 'rgba(255,255,255,0.18)', display: 'grid', placeItems: 'center', fontSize: '42px', flexShrink: 0 }}>
@@ -48,8 +50,8 @@ export const VetPatientDetailView: React.FC<VetPatientDetailViewProps> = ({ pet,
             </div>
           </div>
           <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-            <span className="backoffice-pill backoffice-status-info"><Stethoscope size={14} /> Ficha clínica completa</span>
-            <span className="backoffice-pill backoffice-status-success"><FilePlus2 size={14} /> {sortedRecords.length} registros</span>
+            <span className="backoffice-pill backoffice-status-info"><MedicalServicesRounded sx={{ fontSize: 14 }} /> Ficha clínica completa</span>
+            <span className="backoffice-pill backoffice-status-success"><NoteAddRounded sx={{ fontSize: 14 }} /> {sortedRecords.length} registros</span>
           </div>
         </div>
 

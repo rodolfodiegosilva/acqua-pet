@@ -1,5 +1,10 @@
 import React from 'react';
-import { ArrowLeft, CalendarClock, MapPinHouse, ShieldCheck, Smartphone, UserRound } from 'lucide-react';
+import ArrowBackRounded from '@mui/icons-material/ArrowBackRounded';
+import EventRounded from '@mui/icons-material/EventRounded';
+import HomeWorkRounded from '@mui/icons-material/HomeWorkRounded';
+import PersonRounded from '@mui/icons-material/PersonRounded';
+import SmartphoneRounded from '@mui/icons-material/SmartphoneRounded';
+import VerifiedRounded from '@mui/icons-material/VerifiedRounded';
 import type { BackofficeClient, BackofficePet } from '@/services/backoffice';
 import { BackofficeSectionCard } from './BackofficeSectionCard';
 
@@ -17,7 +22,7 @@ export const AdminPetDetailView: React.FC<AdminPetDetailViewProps> = ({ pet, tut
         <div className="backoffice-section-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', alignItems: 'flex-start' }}>
           <div style={{ display: 'flex', gap: '16px', minWidth: 0 }}>
             <button className="backoffice-ghost-btn" type="button" onClick={onBack} style={{ alignSelf: 'flex-start' }}>
-              <ArrowLeft size={16} />
+              <ArrowBackRounded sx={{ fontSize: 16 }} />
               Voltar
             </button>
             <div style={{ width: '88px', height: '88px', borderRadius: '28px', background: 'rgba(255,255,255,0.18)', display: 'grid', placeItems: 'center', fontSize: '42px', flexShrink: 0 }}>
@@ -45,21 +50,21 @@ export const AdminPetDetailView: React.FC<AdminPetDetailViewProps> = ({ pet, tut
           <div className="backoffice-card" style={{ padding: '16px', background: 'rgba(255,255,255,0.08)' }}>
             <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Tutor responsável</span>
             <strong style={{ color: 'var(--backoffice-text)', lineHeight: 1.6, display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <UserRound size={15} />
+              <PersonRounded sx={{ fontSize: 15 }} />
               {tutor?.name ?? pet.tutorName}
             </strong>
           </div>
           <div className="backoffice-card" style={{ padding: '16px', background: 'rgba(255,255,255,0.08)' }}>
             <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Vacinas registradas</span>
             <strong style={{ color: 'var(--backoffice-text)', lineHeight: 1.6, display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <ShieldCheck size={15} />
+              <VerifiedRounded sx={{ fontSize: 15 }} />
               {pet.vaccines.length}
             </strong>
           </div>
           <div className="backoffice-card" style={{ padding: '16px', background: 'rgba(255,255,255,0.08)' }}>
             <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Último atendimento</span>
             <strong style={{ color: 'var(--backoffice-text)', lineHeight: 1.6, display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <CalendarClock size={15} />
+              <EventRounded sx={{ fontSize: 15 }} />
               {pet.lastVisit}
             </strong>
           </div>
@@ -118,11 +123,11 @@ export const AdminPetDetailView: React.FC<AdminPetDetailViewProps> = ({ pet, tut
                 ))}
                 <div className="backoffice-card" style={{ padding: '16px', background: 'var(--backoffice-soft)', display: 'grid', gap: '8px' }}>
                   <strong style={{ color: 'var(--backoffice-text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <Smartphone size={15} />
+                    <SmartphoneRounded sx={{ fontSize: 15 }} />
                     {tutor.phone}
                   </strong>
                   <span style={{ color: 'var(--backoffice-muted)', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <MapPinHouse size={15} />
+                    <HomeWorkRounded sx={{ fontSize: 15 }} />
                     {tutor.city} · {tutor.neighborhood}
                   </span>
                 </div>

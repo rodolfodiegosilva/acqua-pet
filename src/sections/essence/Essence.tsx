@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Droplet, Sparkles, Activity, Heart } from 'lucide-react';
+import AutoAwesomeRounded from '@mui/icons-material/AutoAwesomeRounded';
+import FavoriteRounded from '@mui/icons-material/FavoriteRounded';
+import MonitorHeartRounded from '@mui/icons-material/MonitorHeartRounded';
+import WaterDropRounded from '@mui/icons-material/WaterDropRounded';
 
 export const Essence: React.FC = () => {
   const [petStatus, setPetStatus] = useState({ name: 'Aquário Hospital A', status: 'dosando regenerador biológico 🫧', progress: 45 });
@@ -95,7 +98,7 @@ export const Essence: React.FC = () => {
                 marginBottom: '16px'
               }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Activity size={18} style={{ color: 'var(--primary)' }} />
+                  <MonitorHeartRounded sx={{ fontSize: 18, color: 'var(--primary)' }} />
                   <span style={{ fontSize: '13px', fontWeight: 700, textTransform: 'uppercase', color: 'var(--text-muted)' }}>
                     Parâmetros e Quarentena ao Vivo
                   </span>
@@ -180,7 +183,7 @@ export const Essence: React.FC = () => {
             {/* Pilar 1: Água Filtrada */}
             <div className="glass-card" style={{ padding: '24px', background: 'var(--bg-secondary)' }}>
               <div style={{ color: 'var(--primary)', marginBottom: '16px' }}>
-                <Droplet size={26} fill="rgba(3, 2, 116, 0.1)" />
+                <WaterDropRounded sx={{ fontSize: 26, color: 'var(--primary)' }} />
               </div>
               <h4 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '8px', color: 'var(--text-main)' }}>
                 Filtragem Industrial & UV/Ozônio
@@ -193,7 +196,7 @@ export const Essence: React.FC = () => {
             {/* Pilar 2: Veterinário Aquático */}
             <div className="glass-card" style={{ padding: '24px', background: 'var(--bg-secondary)' }}>
               <div style={{ color: 'var(--primary)', marginBottom: '16px' }}>
-                <Heart size={26} fill="rgba(3, 2, 116, 0.1)" />
+                <FavoriteRounded sx={{ fontSize: 26, color: 'var(--primary)' }} />
               </div>
               <h4 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '8px', color: 'var(--text-main)' }}>
                 Clínica Especializada
@@ -206,7 +209,7 @@ export const Essence: React.FC = () => {
             {/* Pilar 3: Aquascaping Autoral */}
             <div className="glass-card" style={{ padding: '24px', background: 'var(--bg-secondary)' }}>
               <div style={{ color: 'var(--primary)', marginBottom: '16px' }}>
-                <Sparkles size={26} />
+                <AutoAwesomeRounded sx={{ fontSize: 26 }} />
               </div>
               <h4 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '8px', color: 'var(--text-main)' }}>
                 Aquascaping Autoral
@@ -219,7 +222,7 @@ export const Essence: React.FC = () => {
             {/* Pilar 4: Aclimatação Lenta */}
             <div className="glass-card" style={{ padding: '24px', background: 'var(--bg-secondary)' }}>
               <div style={{ color: 'var(--primary)', marginBottom: '16px' }}>
-                <Activity size={26} />
+                <MonitorHeartRounded sx={{ fontSize: 26 }} />
               </div>
               <h4 style={{ fontSize: '18px', fontWeight: 700, marginBottom: '8px', color: 'var(--text-main)' }}>
                 Aclimatação Choque Zero

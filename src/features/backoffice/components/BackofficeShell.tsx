@@ -1,7 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import CloseRounded from '@mui/icons-material/CloseRounded';
+import DarkModeRounded from '@mui/icons-material/DarkModeRounded';
+import LightModeRounded from '@mui/icons-material/LightModeRounded';
+import LogoutRounded from '@mui/icons-material/LogoutRounded';
 import MenuRounded from '@mui/icons-material/MenuRounded';
-import { LogOut, Moon, Sun } from 'lucide-react';
 import type { BackofficeSessionUser } from '@/services/backoffice';
 import type { BackofficeNavItem, BackofficeTheme } from '../types';
 
@@ -95,7 +97,7 @@ export const BackofficeShell = <TTab extends string>({
                       setActiveTab(item.id);
                       setIsSidebarOpen(false);
                     }}>
-                      <Icon size={18} />
+                      <Icon sx={{ fontSize: 18 }} />
                       {item.label}
                     </button>
                   );
@@ -104,11 +106,11 @@ export const BackofficeShell = <TTab extends string>({
 
               <div style={{ display: 'grid', gap: '10px', marginTop: '18px', paddingTop: '18px', borderTop: '1px solid var(--backoffice-border)' }}>
                 <button className="backoffice-ghost-btn" onClick={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}>
-                  {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                  {theme === 'dark' ? <LightModeRounded sx={{ fontSize: 16 }} /> : <DarkModeRounded sx={{ fontSize: 16 }} />}
                   {theme === 'dark' ? 'Modo claro' : 'Modo escuro'}
                 </button>
                 <button className="backoffice-ghost-btn" onClick={onLogout}>
-                  <LogOut size={16} />
+                  <LogoutRounded sx={{ fontSize: 16 }} />
                   Sair
                 </button>
               </div>
