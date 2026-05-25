@@ -10,6 +10,7 @@ import {
   mockAuthLogin,
   mockAuthRegister,
   saveClientAuthSession,
+  updateClientPet,
   type ClientAppointment,
   type ClientOrder,
   type ClientPet,
@@ -184,6 +185,54 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
     setActionLoading(null);
   };
 
+  const handleUpdatePet = async (petId: number) => {
+    if (!petForm.name || !petForm.species || !petForm.breed) return;
+    setActionLoading('pet');
+
+    await updateClientPet(petId, {
+      name: petForm.name,
+      species: petForm.species as ClientPetSpecies,
+      sex: petForm.sex || 'Não informado',
+      breed: petForm.breed,
+      age: petForm.age || 'Idade não informada',
+      weight: petForm.weight || 'Peso não informado',
+      observation: petForm.observation || 'Cadastro atualizado pelo portal do cliente.',
+      avatar: petForm.species.toLowerCase().includes('gato')
+        ? '🐱'
+        : petForm.species.toLowerCase().includes('peixe')
+          ? '🐠'
+          : petForm.species.toLowerCase().includes('ave')
+            ? '🦜'
+            : '🐾'
+    });
+
+    setPets((current) =>
+      current.map((pet) =>
+        pet.id === petId
+          ? {
+              ...pet,
+              name: petForm.name,
+              species: petForm.species as ClientPetSpecies,
+              sex: petForm.sex || 'Não informado',
+              breed: petForm.breed,
+              age: petForm.age || 'Idade não informada',
+              weight: petForm.weight || 'Peso não informado',
+              observation: petForm.observation || 'Cadastro atualizado pelo portal do cliente.',
+              avatar: petForm.species.toLowerCase().includes('gato')
+                ? '🐱'
+                : petForm.species.toLowerCase().includes('peixe')
+                  ? '🐠'
+                  : petForm.species.toLowerCase().includes('ave')
+                    ? '🦜'
+                    : '🐾'
+            }
+          : pet
+      )
+    );
+    setPetForm({ name: '', species: '', sex: '', breed: '', age: '', weight: '', observation: '' });
+    setActionLoading(null);
+  };
+
   const handleCreateAppointment = async (event: React.FormEvent) => {
     event.preventDefault();
     if (appointmentForm.type === 'Táxi Pet' && !appointmentForm.pickupAddress.trim()) return;
@@ -315,6 +364,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
                 petForm={petForm}
                 setPetForm={setPetForm}
                 onAddPet={handleAddPet}
+                onUpdatePet={handleUpdatePet}
                 isSubmitting={actionLoading === 'pet'}
                 onOpenMedical={(petId) => {
                   setSelectedMedicalPetId(petId);

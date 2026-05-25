@@ -186,6 +186,9 @@
   flex-shrink: 0;
   position: relative;
   z-index: 141;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .backoffice-sidebar-toggle svg,

@@ -29,34 +29,24 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
   portalTheme,
   setPortalTheme
 }) => {
-  const sidebarRef = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
-    const sidebarElement = sidebarRef.current;
-    if (!sidebarElement) return;
-
     if (isOpen) {
-      sidebarElement.removeAttribute('inert');
       closeButtonRef.current?.focus();
-      return;
-    }
-
-    if (sidebarElement.contains(document.activeElement)) {
+    } else if (document.activeElement instanceof HTMLElement) {
       (document.activeElement as HTMLElement | null)?.blur();
     }
-    sidebarElement.setAttribute('inert', '');
   }, [isOpen]);
 
   const handleClose = () => {
-    (document.activeElement as HTMLElement | null)?.blur();
     onClose();
   };
 
   return (
     <>
       <div className={`portal-sidebar-backdrop ${isOpen ? 'is-open' : ''}`} onClick={handleClose} aria-hidden="true" />
-      <aside ref={sidebarRef} className={`glass-card portal-sidebar ${isOpen ? 'is-open' : ''}`} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px', alignSelf: 'start', position: 'sticky', top: '24px' }}>
+      <aside className={`glass-card portal-sidebar ${isOpen ? 'is-open' : ''}`} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '24px', alignSelf: 'start', position: 'sticky', top: '24px' }}>
       <div className="portal-sidebar-mobile-head" style={{ display: 'none', justifyContent: 'space-between', alignItems: 'center', gap: '12px' }}>
         <strong style={{ color: 'var(--portal-text)' }}>Menu do cliente</strong>
         <button ref={closeButtonRef} type="button" className="portal-sidebar-close" onClick={handleClose} aria-label="Fechar menu lateral" style={{ lineHeight: 0 }}>
@@ -100,7 +90,6 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
             <button
               key={item.id}
               onClick={() => {
-                (document.activeElement as HTMLElement | null)?.blur();
                 setActiveTab(item.id);
                 onClose();
               }}
@@ -133,7 +122,6 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
         </button>
         <button
           onClick={() => {
-            (document.activeElement as HTMLElement | null)?.blur();
             setView('store');
             onClose();
           }}
@@ -143,7 +131,6 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
         </button>
         <button
           onClick={() => {
-            (document.activeElement as HTMLElement | null)?.blur();
             setView('landing');
             onClose();
           }}
@@ -156,7 +143,6 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
       <div style={{ marginTop: 'auto', display: 'flex', flexDirection: 'column', gap: '10px' }}>
         <button
           onClick={() => {
-            (document.activeElement as HTMLElement | null)?.blur();
             setView('landing');
             onClose();
           }}
@@ -174,7 +160,6 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
         </button>
         <button
           onClick={() => {
-            (document.activeElement as HTMLElement | null)?.blur();
             onLogout();
           }}
           style={{

@@ -15,10 +15,11 @@ import type { AppView } from './types/navigation';
 
 function App() {
   const resolveViewFromPath = useCallback((pathname: string): AppView => {
-    if (pathname === '/area-admin') return 'admin';
-    if (pathname === '/area-veterinario') return 'veterinary';
-    if (pathname === '/area-cliente') return 'client';
-    if (pathname === '/loja') return 'store';
+    const normalizedPath = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname;
+    if (normalizedPath === '/area-admin') return 'admin';
+    if (normalizedPath === '/area-veterinario') return 'veterinary';
+    if (normalizedPath === '/area-cliente') return 'client';
+    if (normalizedPath === '/loja') return 'store';
     return 'landing';
   }, []);
 

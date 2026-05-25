@@ -1,5 +1,5 @@
 import { getStoredProductsCatalog, type Product } from './api';
-import type { BackofficeClient, BackofficePet, BackofficeSnapshot, BackofficeVet, BackofficeOrder } from './backoffice';
+import { MOCK_BACKOFFICE, updateBackofficePet, type BackofficeClient, type BackofficePet, type BackofficeSnapshot, type BackofficeVet, type BackofficeOrder } from './backoffice';
 import { readSeededAppSessionSlice, simulateApiDelay, writeAppSessionSlice } from './mockStorage';
 
 export const CLIENT_PET_SPECIES = [
@@ -451,15 +451,57 @@ const buildFallbackClientSnapshot = (): ClientPortalSnapshot => ({
   recommendedProducts: getStoredProductsCatalog().slice(0, 8)
 });
 
+const upsertSharedClientFromUser = (user: ClientUser): ClientUser => {
+  const clients = readSeededAppSessionSlice<BackofficeClient[]>(CLIENTS_SLICE, [...MOCK_BACKOFFICE.clients]);
+  const existingClient = clients.find((client) => client.email === user.email || client.id === user.id);
+  const nextClientId = clients.reduce((highestId, client) => Math.max(highestId, client.id), 0) + 1;
+
+  const syncedUser: ClientUser = {
+    ...user,
+    id: existingClient?.id ?? nextClientId
+  };
+
+  const mirroredClient: BackofficeClient = existingClient
+    ? {
+        ...existingClient,
+        name: syncedUser.name,
+        email: syncedUser.email,
+        phone: syncedUser.phone,
+        city: syncedUser.city,
+        plan: syncedUser.plan,
+        joinedAt: syncedUser.memberSince
+      }
+    : {
+        id: syncedUser.id,
+        name: syncedUser.name,
+        email: syncedUser.email,
+        phone: syncedUser.phone,
+        city: syncedUser.city,
+        neighborhood: 'A definir',
+        plan: syncedUser.plan,
+        status: 'Novo',
+        joinedAt: syncedUser.memberSince,
+        tags: ['cadastro portal']
+      };
+
+  writeAppSessionSlice(
+    CLIENTS_SLICE,
+    existingClient ? clients.map((client) => (client.id === existingClient.id ? mirroredClient : client)) : [...clients, mirroredClient]
+  );
+
+  writeClientProfile(syncedUser);
+  return syncedUser;
+};
+
 const readBackofficeSnapshot = (): BackofficeSnapshot => ({
-  clients: readSeededAppSessionSlice<BackofficeClient[]>(CLIENTS_SLICE, []),
-  pets: readSeededAppSessionSlice<BackofficePet[]>(PETS_SLICE, []),
-  appointments: readSeededAppSessionSlice<ClientAppointment[]>(APPOINTMENTS_SLICE, []),
-  records: readSeededAppSessionSlice<MedicalRecord[]>(RECORDS_SLICE, []),
-  veterinarians: readSeededAppSessionSlice<BackofficeVet[]>(VETERINARIANS_SLICE, []),
+  clients: readSeededAppSessionSlice<BackofficeClient[]>(CLIENTS_SLICE, [...MOCK_BACKOFFICE.clients]),
+  pets: readSeededAppSessionSlice<BackofficePet[]>(PETS_SLICE, [...MOCK_BACKOFFICE.pets]),
+  appointments: readSeededAppSessionSlice<ClientAppointment[]>(APPOINTMENTS_SLICE, [...MOCK_BACKOFFICE.appointments]),
+  records: readSeededAppSessionSlice<MedicalRecord[]>(RECORDS_SLICE, [...MOCK_BACKOFFICE.records]),
+  veterinarians: readSeededAppSessionSlice<BackofficeVet[]>(VETERINARIANS_SLICE, [...MOCK_BACKOFFICE.veterinarians]),
   alerts: [],
   inventory: [],
-  orders: readSeededAppSessionSlice<BackofficeOrder[]>(ORDERS_SLICE, [])
+  orders: readSeededAppSessionSlice<BackofficeOrder[]>(ORDERS_SLICE, [...MOCK_BACKOFFICE.orders])
 });
 
 const mapBackofficeVetToAvailability = (vet: BackofficeVet): VetAvailability => ({
@@ -514,12 +556,14 @@ const deriveClientSnapshotFromBackoffice = (fallbackUser?: ClientUser): ClientPo
 };
 
 export const fetchClientPortalSnapshot = async (): Promise<ClientPortalSnapshot> => {
+  upsertSharedClientFromUser(readClientProfile());
   const derived = deriveClientSnapshotFromBackoffice();
   return simulateApiDelay(derived ?? buildFallbackClientSnapshot());
 };
 
 export const createClientPet = async (pet: Omit<ClientPet, 'id'>): Promise<ClientPet> => {
-  const snapshot = deriveClientSnapshotFromBackoffice() ?? buildFallbackClientSnapshot();
+  const syncedUser = upsertSharedClientFromUser(readClientProfile());
+  const snapshot = deriveClientSnapshotFromBackoffice(syncedUser) ?? buildFallbackClientSnapshot();
   const nextPet: ClientPet = {
     ...pet,
     id: snapshot.pets.reduce((highestId, item) => Math.max(highestId, item.id), 0) + 1
@@ -528,7 +572,7 @@ export const createClientPet = async (pet: Omit<ClientPet, 'id'>): Promise<Clien
   const backofficeSnapshot = readBackofficeSnapshot();
   const mirroredPet: BackofficePet = {
     ...nextPet,
-    clientId: snapshot.user.id,
+    clientId: syncedUser.id,
     status: 'Ativo',
     lastVisit: 'Ainda sem consulta',
     nextAction: 'Aguardando primeiro atendimento'
@@ -540,7 +584,8 @@ export const createClientPet = async (pet: Omit<ClientPet, 'id'>): Promise<Clien
 };
 
 export const createClientAppointment = async (appointment: Omit<ClientAppointment, 'id'>): Promise<ClientAppointment> => {
-  const snapshot = deriveClientSnapshotFromBackoffice() ?? buildFallbackClientSnapshot();
+  const syncedUser = upsertSharedClientFromUser(readClientProfile());
+  const snapshot = deriveClientSnapshotFromBackoffice(syncedUser) ?? buildFallbackClientSnapshot();
   const nextAppointment: ClientAppointment = {
     ...appointment,
     id: snapshot.appointments.reduce((highestId, item) => Math.max(highestId, item.id), 0) + 1
@@ -550,6 +595,14 @@ export const createClientAppointment = async (appointment: Omit<ClientAppointmen
   writeAppSessionSlice(APPOINTMENTS_SLICE, [nextAppointment, ...backofficeSnapshot.appointments]);
 
   return simulateApiDelay(nextAppointment);
+};
+
+export const updateClientPet = async (
+  petId: number,
+  updates: Partial<Omit<ClientPet, 'id' | 'tutorName' | 'vaccines'>>
+): Promise<ClientPet[]> => {
+  const nextPets = await updateBackofficePet(petId, updates);
+  return nextPets.map<ClientPet>(({ clientId, status, lastVisit, nextAction, ...pet }) => pet);
 };
 
 export const getStoredClientAuthSession = (): ClientAuthSession | null => {
@@ -574,52 +627,20 @@ export const clearStoredClientAuthSession = () => {
 };
 
 export const mockAuthLogin = (email: string): Promise<ClientAuthSession> => {
-  const user = {
+  const user = upsertSharedClientFromUser({
     ...readClientProfile(),
     email: email || readClientProfile().email
-  };
+  });
 
   return simulateApiDelay(buildMockSession(user));
 };
 
 export const mockAuthRegister = (name: string, email: string): Promise<ClientAuthSession> => {
-  const user = {
+  const user = upsertSharedClientFromUser({
     ...readClientProfile(),
     name: name || readClientProfile().name,
     email: email || readClientProfile().email
-  };
-
-  writeClientProfile(user);
-
-  const backofficeSnapshot = readBackofficeSnapshot();
-  const existingClient = backofficeSnapshot.clients.find((client) => client.email === user.email);
-  const nextClientId = backofficeSnapshot.clients.reduce((highestId, client) => Math.max(highestId, client.id), 0) + 1;
-  const mirroredClient: BackofficeClient = existingClient
-    ? {
-        ...existingClient,
-        name: user.name,
-        email: user.email,
-        phone: user.phone
-      }
-    : {
-        id: nextClientId,
-        name: user.name,
-        email: user.email,
-        phone: user.phone,
-        city: user.city,
-        neighborhood: 'A definir',
-        plan: user.plan,
-        status: 'Novo',
-        joinedAt: user.memberSince,
-        tags: ['cadastro portal']
-      };
-
-  writeAppSessionSlice(
-    CLIENTS_SLICE,
-    existingClient
-      ? backofficeSnapshot.clients.map((client) => (client.email === user.email ? mirroredClient : client))
-      : [...backofficeSnapshot.clients, mirroredClient]
-  );
+  });
 
   return simulateApiDelay(buildMockSession(user));
 };

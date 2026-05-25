@@ -31,7 +31,6 @@ export const BackofficeShell = <TTab extends string>({
   children
 }: BackofficeShellProps<TTab>) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const sidebarRef = useRef<HTMLElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
@@ -39,23 +38,14 @@ export const BackofficeShell = <TTab extends string>({
   }, [activeTab]);
 
   useEffect(() => {
-    const sidebarElement = sidebarRef.current;
-    if (!sidebarElement) return;
-
     if (isSidebarOpen) {
-      sidebarElement.removeAttribute('inert');
       closeButtonRef.current?.focus();
-      return;
-    }
-
-    if (sidebarElement.contains(document.activeElement)) {
+    } else if (document.activeElement instanceof HTMLElement) {
       (document.activeElement as HTMLElement | null)?.blur();
     }
-    sidebarElement.setAttribute('inert', '');
   }, [isSidebarOpen]);
 
   const handleCloseSidebar = () => {
-    (document.activeElement as HTMLElement | null)?.blur();
     setIsSidebarOpen(false);
   };
 
@@ -92,7 +82,7 @@ export const BackofficeShell = <TTab extends string>({
 
         <div className="backoffice-shell" style={{ display: 'grid', gridTemplateColumns: '280px minmax(0, 1fr)', gap: '22px' }}>
           <div className={`backoffice-sidebar-backdrop ${isSidebarOpen ? 'is-open' : ''}`} onClick={handleCloseSidebar} aria-hidden="true" />
-          <aside ref={sidebarRef} className={`backoffice-card backoffice-sidebar ${isSidebarOpen ? 'is-open' : ''}`} style={{ padding: '20px', position: 'sticky', top: '24px', height: 'fit-content' }}>
+          <aside className={`backoffice-card backoffice-sidebar ${isSidebarOpen ? 'is-open' : ''}`} style={{ padding: '20px', position: 'sticky', top: '24px', height: 'fit-content' }}>
             <div className="backoffice-sidebar-mobile-head" style={{ display: 'none', justifyContent: 'space-between', alignItems: 'center', gap: '12px', marginBottom: '18px' }}>
               <strong style={{ color: 'var(--backoffice-text)' }}>Menu interno</strong>
               <button ref={closeButtonRef} type="button" className="backoffice-sidebar-close" onClick={handleCloseSidebar} aria-label="Fechar menu lateral" style={{ lineHeight: 0 }}>
@@ -110,7 +100,6 @@ export const BackofficeShell = <TTab extends string>({
                 const Icon = item.icon;
                 return (
                   <button key={item.id} className={`backoffice-nav-btn ${activeTab === item.id ? 'is-active' : ''}`} onClick={() => {
-                    (document.activeElement as HTMLElement | null)?.blur();
                     setActiveTab(item.id);
                     setIsSidebarOpen(false);
                   }}>

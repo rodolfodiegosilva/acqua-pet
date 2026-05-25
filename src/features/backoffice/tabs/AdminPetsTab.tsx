@@ -5,13 +5,28 @@ import { BackofficeSectionCard } from '../components/BackofficeSectionCard';
 interface AdminPetsTabProps {
   pets: BackofficePet[];
   clients: BackofficeClient[];
+  onUpdatePet: (petId: number, updates: Partial<Omit<BackofficePet, 'id' | 'clientId' | 'tutorName' | 'vaccines'>>) => void;
+  isSubmitting?: boolean;
 }
 
-export const AdminPetsTab: React.FC<AdminPetsTabProps> = ({ pets, clients }) => {
+export const AdminPetsTab: React.FC<AdminPetsTabProps> = ({ pets, clients, onUpdatePet, isSubmitting = false }) => {
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'Todos' | BackofficePet['status']>('Todos');
   const [sortBy, setSortBy] = useState<'name' | 'lastVisit' | 'species'>('lastVisit');
   const [page, setPage] = useState(1);
+  const [editingPet, setEditingPet] = useState<BackofficePet | null>(null);
+  const [form, setForm] = useState({
+    name: '',
+    species: '',
+    sex: '',
+    breed: '',
+    age: '',
+    weight: '',
+    observation: '',
+    status: 'Ativo' as BackofficePet['status'],
+    lastVisit: '',
+    nextAction: ''
+  });
 
   const filteredPets = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -43,6 +58,22 @@ export const AdminPetsTab: React.FC<AdminPetsTabProps> = ({ pets, clients }) => 
   const perPage = 4;
   const totalPages = Math.max(1, Math.ceil(sortedPets.length / perPage));
   const paginatedPets = sortedPets.slice((page - 1) * perPage, page * perPage);
+
+  const startEditingPet = (pet: BackofficePet) => {
+    setEditingPet(pet);
+    setForm({
+      name: pet.name,
+      species: pet.species,
+      sex: pet.sex,
+      breed: pet.breed,
+      age: pet.age,
+      weight: pet.weight,
+      observation: pet.observation,
+      status: pet.status,
+      lastVisit: pet.lastVisit,
+      nextAction: pet.nextAction
+    });
+  };
 
   return (
     <BackofficeSectionCard title="Base de pets" eyebrow="Perfis clínicos">
@@ -84,6 +115,9 @@ export const AdminPetsTab: React.FC<AdminPetsTabProps> = ({ pets, clients }) => 
               </div>
 
               <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6, fontSize: '14px', marginTop: '14px' }}>{pet.observation}</p>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '14px' }}>
+                <button type="button" className="backoffice-primary-btn" onClick={() => startEditingPet(pet)}>Editar cadastro</button>
+              </div>
             </div>
           );
         })}
@@ -101,6 +135,73 @@ export const AdminPetsTab: React.FC<AdminPetsTabProps> = ({ pets, clients }) => 
             );
           })}
           <button className="backoffice-ghost-btn" onClick={() => setPage((current) => Math.min(totalPages, current + 1))} disabled={page === totalPages}>Próxima</button>
+        </div>
+      )}
+
+      {editingPet && (
+        <div
+          onClick={() => setEditingPet(null)}
+          style={{ position: 'fixed', inset: 0, background: 'rgba(2, 6, 23, 0.68)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', zIndex: 160 }}
+        >
+          <div
+            className="backoffice-card"
+            onClick={(event) => event.stopPropagation()}
+            style={{ width: 'min(760px, 100%)', maxHeight: '88vh', overflowY: 'auto', padding: '24px', display: 'grid', gap: '16px' }}
+          >
+            <div className="backoffice-section-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px' }}>
+              <div>
+                <span style={{ display: 'block', fontSize: '12px', fontWeight: 800, letterSpacing: '1.4px', textTransform: 'uppercase', color: 'var(--backoffice-accent-strong)', marginBottom: '8px' }}>
+                  Edição de pet
+                </span>
+                <h3 style={{ fontSize: '24px', color: 'var(--backoffice-text)' }}>Editar cadastro de {editingPet.name}</h3>
+              </div>
+              <button type="button" className="backoffice-ghost-btn" onClick={() => setEditingPet(null)}>Fechar</button>
+            </div>
+
+            <div className="backoffice-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '12px' }}>
+              <input className="backoffice-input" type="text" placeholder="Nome do pet" value={form.name} onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))} />
+              <input className="backoffice-input" type="text" placeholder="Espécie" value={form.species} onChange={(event) => setForm((current) => ({ ...current, species: event.target.value }))} />
+              <input className="backoffice-input" type="text" placeholder="Sexo" value={form.sex} onChange={(event) => setForm((current) => ({ ...current, sex: event.target.value }))} />
+              <input className="backoffice-input" type="text" placeholder="Raça" value={form.breed} onChange={(event) => setForm((current) => ({ ...current, breed: event.target.value }))} />
+              <input className="backoffice-input" type="text" placeholder="Idade" value={form.age} onChange={(event) => setForm((current) => ({ ...current, age: event.target.value }))} />
+              <input className="backoffice-input" type="text" placeholder="Peso" value={form.weight} onChange={(event) => setForm((current) => ({ ...current, weight: event.target.value }))} />
+              <select className="backoffice-select" value={form.status} onChange={(event) => setForm((current) => ({ ...current, status: event.target.value as BackofficePet['status'] }))}>
+                <option value="Ativo">Ativo</option>
+                <option value="Em acompanhamento">Em acompanhamento</option>
+                <option value="Observação">Observação</option>
+              </select>
+              <input className="backoffice-input" type="text" placeholder="Última visita" value={form.lastVisit} onChange={(event) => setForm((current) => ({ ...current, lastVisit: event.target.value }))} />
+            </div>
+
+            <input className="backoffice-input" type="text" placeholder="Próxima ação" value={form.nextAction} onChange={(event) => setForm((current) => ({ ...current, nextAction: event.target.value }))} />
+            <textarea className="backoffice-input backoffice-textarea" rows={4} placeholder="Observação" value={form.observation} onChange={(event) => setForm((current) => ({ ...current, observation: event.target.value }))} />
+
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                className="backoffice-primary-btn"
+                disabled={isSubmitting}
+                onClick={() => {
+                  onUpdatePet(editingPet.id, {
+                    name: form.name,
+                    species: form.species as BackofficePet['species'],
+                    sex: form.sex as BackofficePet['sex'],
+                    breed: form.breed,
+                    age: form.age,
+                    weight: form.weight,
+                    observation: form.observation,
+                    status: form.status,
+                    lastVisit: form.lastVisit,
+                    nextAction: form.nextAction
+                  });
+                  setEditingPet(null);
+                }}
+              >
+                {isSubmitting ? 'Salvando...' : 'Salvar alterações'}
+              </button>
+              <button type="button" className="backoffice-ghost-btn" onClick={() => setEditingPet(null)}>Cancelar</button>
+            </div>
+          </div>
         </div>
       )}
     </BackofficeSectionCard>

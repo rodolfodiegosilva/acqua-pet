@@ -6,12 +6,14 @@ import {
   fetchBackofficeSnapshot,
   type BackofficeInventoryItem,
   type BackofficeOrder,
+  type BackofficePet,
   type BackofficeSnapshot,
   clearBackofficeSession,
   getStoredBackofficeSession,
   mockBackofficeLogin,
   saveBackofficeSession,
   updateBackofficeInventoryStock,
+  updateBackofficePet,
   updateBackofficeOrderStatus
 } from '../services/backoffice';
 import { BackofficeAuth } from '../features/backoffice/components/BackofficeAuth';
@@ -101,6 +103,13 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
     setActionLoading(false);
   };
 
+  const handleUpdatePet = async (petId: number, updates: Partial<Omit<BackofficePet, 'id' | 'clientId' | 'tutorName' | 'vaccines'>>) => {
+    setActionLoading(true);
+    const nextPets = await updateBackofficePet(petId, updates);
+    setSnapshot((current) => (current ? { ...current, pets: nextPets } : current));
+    setActionLoading(false);
+  };
+
   if (!sessionUser) {
     return (
       <BackofficeAuth
@@ -157,7 +166,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
         />
       )}
       {activeTab === 'clients' && <AdminClientsTab clients={snapshot.clients} />}
-      {activeTab === 'pets' && <AdminPetsTab pets={snapshot.pets} clients={snapshot.clients} />}
+      {activeTab === 'pets' && <AdminPetsTab pets={snapshot.pets} clients={snapshot.clients} onUpdatePet={handleUpdatePet} isSubmitting={actionLoading} />}
       {activeTab === 'inventory' && <AdminInventoryTab inventory={snapshot.inventory} onAdjustStock={handleAdjustStock} onCreateProduct={handleCreateProduct} isSubmitting={actionLoading} />}
       {activeTab === 'orders' && <AdminOrdersTab orders={snapshot.orders} clients={snapshot.clients} onUpdateOrderStatus={handleUpdateOrderStatus} onCancelOrder={handleCancelOrder} />}
     </BackofficeShell>

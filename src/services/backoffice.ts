@@ -595,6 +595,28 @@ export const createVeterinaryRecord = async (
   return simulateApiDelay(nextSnapshot);
 };
 
+export const updateBackofficePet = async (
+  petId: number,
+  updates: Partial<Omit<BackofficePet, 'id' | 'clientId' | 'tutorName' | 'vaccines'>>
+): Promise<BackofficePet[]> => {
+  const snapshot = readBackofficeSnapshot();
+  const nextPets: BackofficePet[] = snapshot.pets.map((pet) =>
+    pet.id === petId
+      ? {
+          ...pet,
+          ...updates
+        }
+      : pet
+  );
+
+  writeBackofficeSnapshot({
+    ...snapshot,
+    pets: nextPets
+  });
+
+  return simulateApiDelay(nextPets);
+};
+
 const ADMIN_USER: BackofficeSessionUser = {
   id: 1,
   name: 'Paula Nascimento',

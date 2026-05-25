@@ -8,15 +8,49 @@ interface PetsTabProps {
   petForm: { name: string; species: ClientPetSpecies | ''; sex: ClientPetSex | ''; breed: string; age: string; weight: string; observation: string };
   setPetForm: React.Dispatch<React.SetStateAction<{ name: string; species: ClientPetSpecies | ''; sex: ClientPetSex | ''; breed: string; age: string; weight: string; observation: string }>>;
   onAddPet: (event: React.FormEvent) => void;
+  onUpdatePet: (petId: number) => void;
   isSubmitting?: boolean;
   onOpenMedical: (petId: number) => void;
 }
 
-export const PetsTab: React.FC<PetsTabProps> = ({ pets, petForm, setPetForm, onAddPet, isSubmitting = false, onOpenMedical }) => {
+export const PetsTab: React.FC<PetsTabProps> = ({ pets, petForm, setPetForm, onAddPet, onUpdatePet, isSubmitting = false, onOpenMedical }) => {
   const [isCreatePetModalOpen, setIsCreatePetModalOpen] = useState(false);
+  const [editingPetId, setEditingPetId] = useState<number | null>(null);
+
+  const resetForm = () => {
+    setPetForm({ name: '', species: '', sex: '', breed: '', age: '', weight: '', observation: '' });
+    setEditingPetId(null);
+  };
+
+  const startEditingPet = (pet: ClientPet) => {
+    setPetForm({
+      name: pet.name,
+      species: pet.species,
+      sex: pet.sex,
+      breed: pet.breed,
+      age: pet.age,
+      weight: pet.weight,
+      observation: pet.observation
+    });
+    setEditingPetId(pet.id);
+    setIsCreatePetModalOpen(true);
+  };
 
   const renderPetForm = () => (
-    <form onSubmit={onAddPet} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+    <form
+      onSubmit={(event) => {
+        if (editingPetId) {
+          event.preventDefault();
+          onUpdatePet(editingPetId);
+          setIsCreatePetModalOpen(false);
+          resetForm();
+          return;
+        }
+
+        onAddPet(event);
+      }}
+      style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}
+    >
       <input className="portal-input" type="text" placeholder="Nome do pet" value={petForm.name} onChange={(event) => setPetForm({ ...petForm, name: event.target.value })} />
       <select className="portal-input" value={petForm.species} onChange={(event) => setPetForm({ ...petForm, species: event.target.value as ClientPetSpecies | '' })}>
         <option value="">Selecione a espécie</option>
@@ -39,10 +73,14 @@ export const PetsTab: React.FC<PetsTabProps> = ({ pets, petForm, setPetForm, onA
         disabled={isSubmitting}
         className="gradient-bg gradient-bg-hover"
         style={{ padding: '15px', borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', fontWeight: 700, cursor: 'pointer' }}
-        onClick={() => setIsCreatePetModalOpen(false)}
       >
-        {isSubmitting ? 'Salvando pet...' : 'Adicionar pet ao portal'}
+        {isSubmitting ? 'Salvando pet...' : editingPetId ? 'Salvar alterações do pet' : 'Adicionar pet ao portal'}
       </button>
+      {editingPetId && (
+        <button type="button" className="portal-ghost-btn" onClick={resetForm}>
+          Cancelar edição
+        </button>
+      )}
     </form>
   );
 
@@ -52,7 +90,10 @@ export const PetsTab: React.FC<PetsTabProps> = ({ pets, petForm, setPetForm, onA
         title="Pets cadastrados"
         eyebrow="Perfis"
         action={
-          <button className="portal-ghost-btn portal-pets-mobile-trigger" onClick={() => setIsCreatePetModalOpen(true)}>
+          <button className="portal-ghost-btn portal-pets-mobile-trigger" onClick={() => {
+            resetForm();
+            setIsCreatePetModalOpen(true);
+          }}>
             <Plus size={16} />
             Cadastrar novo pet
           </button>
@@ -70,7 +111,10 @@ export const PetsTab: React.FC<PetsTabProps> = ({ pets, petForm, setPetForm, onA
                     <strong style={{ display: 'block', fontSize: '18px', color: 'var(--portal-text)' }}>{pet.name}</strong>
                     <span style={{ fontSize: '14px', color: 'var(--portal-muted)' }}>{pet.species} · {pet.sex} · {pet.breed}</span>
                   </div>
-                  <button onClick={() => onOpenMedical(pet.id)} className="portal-link-btn">Ver prontuário</button>
+                  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                    <button type="button" onClick={() => startEditingPet(pet)} className="portal-link-btn">Editar cadastro</button>
+                    <button type="button" onClick={() => onOpenMedical(pet.id)} className="portal-link-btn">Ver prontuário</button>
+                  </div>
                 </div>
                 <div className="portal-mini-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '10px', marginBottom: '10px' }}>
                   <div><span className="portal-mini-label">Idade</span><strong style={{ color: 'var(--portal-text)' }}>{pet.age}</strong></div>
@@ -93,7 +137,7 @@ export const PetsTab: React.FC<PetsTabProps> = ({ pets, petForm, setPetForm, onA
         </div>
       </PortalSectionCard>
 
-      <PortalSectionCard title="Cadastrar novo pet" eyebrow="Ação rápida">
+      <PortalSectionCard title={editingPetId ? 'Editar cadastro do pet' : 'Cadastrar novo pet'} eyebrow="Ação rápida">
         <div className="portal-pets-desktop-form">
           {renderPetForm()}
         </div>
@@ -133,7 +177,7 @@ export const PetsTab: React.FC<PetsTabProps> = ({ pets, petForm, setPetForm, onA
                 <span style={{ display: 'block', fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '1.4px', color: 'var(--portal-danger-text)', marginBottom: '8px' }}>
                   Cadastro de pet
                 </span>
-                <h3 style={{ fontSize: '24px', color: 'var(--portal-text)' }}>Cadastrar novo pet</h3>
+                <h3 style={{ fontSize: '24px', color: 'var(--portal-text)' }}>{editingPetId ? 'Editar cadastro do pet' : 'Cadastrar novo pet'}</h3>
               </div>
               <button
                 type="button"
