@@ -10,6 +10,7 @@ const resolveTabFromPath = <TTab extends string>(pathname: string, routes: Recor
 
 export const CLIENT_PORTAL_ROUTES: Record<PortalTab, string> = {
   dashboard: '/area-cliente/visao-geral',
+  profile: '/area-cliente/perfil',
   pets: '/area-cliente/meus-pets',
   appointments: '/area-cliente/agendamentos',
   medical: '/area-cliente/historico-medico',

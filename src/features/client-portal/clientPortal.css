@@ -384,6 +384,7 @@
 .portal-frame,
 .portal-content,
 .portal-two-cols,
+.portal-profile-layout,
 .portal-stats-grid,
 .portal-vets-grid,
 .portal-store-grid,
@@ -416,6 +417,12 @@
 .portal-appointments-summary,
 .portal-medical-summary {
   overflow-wrap: anywhere;
+}
+
+.portal-profile-info-card {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--portal-accent) 4%, transparent) 0%, transparent 62%),
+    var(--portal-soft-surface);
 }
 
 .portal-appointments-mobile-trigger,
@@ -498,6 +505,7 @@
 @media (max-width: 1120px) {
   .portal-shell,
   .portal-two-cols,
+  .portal-profile-layout,
   .portal-dashboard-grid,
   .portal-dashboard-hero {
     grid-template-columns: 1fr !important;
@@ -794,6 +802,7 @@
   .portal-shell,
   .portal-content,
   .portal-two-cols,
+  .portal-profile-layout,
   .portal-dashboard-grid,
   .portal-overview-grid {
     gap: 14px !important;

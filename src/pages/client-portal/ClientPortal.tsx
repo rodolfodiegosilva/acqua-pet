@@ -4,6 +4,7 @@ import DashboardRounded from '@mui/icons-material/DashboardRounded';
 import FavoriteRounded from '@mui/icons-material/FavoriteRounded';
 import LocalMallRounded from '@mui/icons-material/LocalMallRounded';
 import MedicalServicesRounded from '@mui/icons-material/MedicalServicesRounded';
+import PersonRounded from '@mui/icons-material/PersonRounded';
 import PetsRounded from '@mui/icons-material/PetsRounded';
 import { Footer } from '@/components/footer/Footer';
 import { Header } from '@/components/header/Header';
@@ -14,6 +15,7 @@ import { AppointmentsTab } from '@/features/client-portal/tabs/AppointmentsTab';
 import { DashboardTab } from '@/features/client-portal/tabs/DashboardTab';
 import { MedicalTab } from '@/features/client-portal/tabs/MedicalTab';
 import { PetsTab } from '@/features/client-portal/tabs/PetsTab';
+import { ProfileTab } from '@/features/client-portal/tabs/ProfileTab';
 import { StoreTab } from '@/features/client-portal/tabs/StoreTab';
 import { VetsTab } from '@/features/client-portal/tabs/VetsTab';
 import type { AuthMode, PortalTab, PortalTabItem, PortalTheme } from '@/features/client-portal/types';
@@ -166,6 +168,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
 
   const tabItems: PortalTabItem[] = [
     { id: 'dashboard', label: 'Visão geral', icon: DashboardRounded },
+    { id: 'profile', label: 'Perfil', icon: PersonRounded },
     { id: 'pets', label: 'Meus pets', icon: PetsRounded },
     { id: 'appointments', label: 'Agendamentos', icon: CalendarMonthRounded },
     { id: 'medical', label: 'Histórico médico', icon: FavoriteRounded },
@@ -403,6 +406,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
                 </span>
                 <h1 style={{ fontSize: 'clamp(28px, 4vw, 42px)', fontWeight: 800, lineHeight: 1.08, marginBottom: '10px', color: 'var(--portal-text)' }}>
                   {activeTab === 'dashboard' && 'Resumo operacional do cuidado do seu pet'}
+                  {activeTab === 'profile' && 'Perfil, dados pessoais e base de atendimento'}
                   {activeTab === 'pets' && 'Cadastro e gestão de perfis dos seus pets'}
                   {activeTab === 'appointments' && 'Agendamentos de serviços e consultas'}
                   {activeTab === 'medical' && 'Histórico médico individual por pet'}
@@ -435,9 +439,15 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
                   orders={orders}
                   ordersCount={orders.length}
                   currentUser={currentUser}
+                  onOpenAppointments={() => setActiveTab('appointments')}
+                />
+              )}
+
+              {!portalLoading && activeTab === 'profile' && (
+                <ProfileTab
+                  currentUser={currentUser}
                   onUpdateProfile={handleUpdateProfile}
                   isSubmittingProfile={actionLoading === 'profile'}
-                  onOpenAppointments={() => setActiveTab('appointments')}
                 />
               )}
 

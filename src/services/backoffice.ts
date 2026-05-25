@@ -93,6 +93,11 @@ export interface BackofficeSnapshot {
   orders: BackofficeOrder[];
 }
 
+const mergeSeededById = <T extends { id: number }>(current: T[], seeded: T[]) => {
+  const existingIds = new Set(current.map((item) => item.id));
+  return [...current, ...seeded.filter((item) => !existingIds.has(item.id))];
+};
+
 const ADMIN_AUTH_STORAGE_KEY = 'acqua-pet-admin-auth-session';
 const VET_AUTH_STORAGE_KEY = 'acqua-pet-veterinary-auth-session';
 const CLIENTS_SLICE = 'clients';
@@ -208,6 +213,8 @@ export const MOCK_BACKOFFICE: BackofficeSnapshot = {
     buildPet(1, 1, 'Thor', 'Cão', 'Macho', 'Golden Retriever', '5 anos', '31 kg', '🐶', 'Marina Albuquerque', 'Sensível a shampoos com fragrância intensa.', ['V10', 'Antirrábica', 'Giárdia'], 'Em acompanhamento', '22/05/2026', 'Retorno dermatológico'),
     buildPet(2, 1, 'Mia', 'Gato', 'Fêmea', 'SRD', '3 anos', '4,2 kg', '🐱', 'Marina Albuquerque', 'Acompanhamento anual renal preventivo.', ['V4', 'Antirrábica'], 'Ativo', '11/05/2026', 'Check-up semestral'),
     buildPet(3, 1, 'Nemo', 'Peixe', 'Não informado', 'Acará Bandeira', '1 ano e 4 meses', 'Monitoramento em aquário', '🐠', 'Marina Albuquerque', 'Aquário plantado 180L com rotina de testes semanais.', [], 'Observação', '18/05/2026', 'Revisar parâmetros do aquário'),
+    buildPet(9, 1, 'Luna', 'Ave', 'Fêmea', 'Calopsita Pérola', '2 anos', '98 g', '🦜', 'Marina Albuquerque', 'Muito responsiva a enriquecimento alimentar e precisa de manejo com pouco ruído.', [], 'Ativo', '16/05/2026', 'Ajuste nutricional e manejo de bico'),
+    buildPet(10, 1, 'Gaia', 'Tartaruga', 'Não informado', 'Tigre d’água', '2 anos e 6 meses', '1,1 kg', '🐢', 'Marina Albuquerque', 'Terrário aquático com plataforma seca e controle rigoroso de iluminação UVB.', [], 'Observação', '10/05/2026', 'Revisar iluminação e rotina de cálcio'),
     buildPet(4, 2, 'Amora', 'Cão', 'Fêmea', 'Shih-tzu', '7 anos', '7,1 kg', '🐶', 'Rafael Monteiro', 'Histórico de sensibilidade digestiva e ansiedade em deslocamentos.', ['V8', 'Antirrábica'], 'Em acompanhamento', '20/05/2026', 'Ultrassom abdominal'),
     buildPet(5, 2, 'Juca', 'Ave', 'Macho', 'Calopsita', '2 anos', '95 g', '🦜', 'Rafael Monteiro', 'Necessita manejo com pouco ruído durante consulta.', [], 'Ativo', '14/04/2026', 'Revisão nutricional'),
     buildPet(6, 3, 'Kira', 'Réptil', 'Fêmea', 'Iguana verde', '4 anos', '2,8 kg', '🦎', 'Bianca Nogueira', 'Temperatura e umidade precisam ser conferidas em toda revisão.', [], 'Observação', '09/05/2026', 'Análise ambiental do terrário'),
@@ -264,6 +271,80 @@ export const MOCK_BACKOFFICE: BackofficeSnapshot = {
       location: 'Unidade Coroado'
     },
     {
+      id: 106,
+      petId: 9,
+      type: 'Serviço',
+      service: 'Avaliação de penas e correção nutricional',
+      veterinarian: 'Dra. Elisa Moraes',
+      date: '28/05/2026',
+      time: '15:40',
+      status: 'Confirmado',
+      location: 'Unidade Vieiralves'
+    },
+    {
+      id: 107,
+      petId: 10,
+      type: 'Serviço',
+      service: 'Check-up de quelônio e manejo ambiental',
+      veterinarian: 'Dr. Renato Braga',
+      date: '29/05/2026',
+      time: '10:20',
+      status: 'Em análise',
+      location: 'Unidade Exóticos'
+    },
+    {
+      id: 108,
+      petId: 1,
+      type: 'Táxi Pet',
+      service: 'Táxi Pet para retorno dermatológico',
+      veterinarian: 'Central de mobilidade pet',
+      date: '02/06/2026',
+      time: '14:10',
+      status: 'Confirmado',
+      location: 'Rota prevista · Unidade Coroado',
+      pickupAddress: 'Rua Rio Jutaí, 240 - Vieiralves',
+      destinationAddress: 'Unidade Coroado',
+      transportMode: 'Ida e volta',
+      companion: 'Tutor acompanha'
+    },
+    {
+      id: 109,
+      petId: 3,
+      type: 'Serviço',
+      service: 'Revisão de filtragem e fauna do aquário',
+      veterinarian: 'Dra. Helena Souto',
+      date: '03/06/2026',
+      time: '18:30',
+      status: 'Confirmado',
+      location: 'Consultoria técnica'
+    },
+    {
+      id: 110,
+      petId: 2,
+      type: 'Serviço',
+      service: 'Retorno felino preventivo',
+      veterinarian: 'Dr. Lucas Varella',
+      date: '05/06/2026',
+      time: '09:50',
+      status: 'Confirmado',
+      location: 'Unidade Coroado'
+    },
+    {
+      id: 111,
+      petId: 9,
+      type: 'Táxi Pet',
+      service: 'Táxi Pet para consulta de aves',
+      veterinarian: 'Central de mobilidade pet',
+      date: '06/06/2026',
+      time: '15:00',
+      status: 'Em análise',
+      location: 'Rota prevista · Unidade Vieiralves',
+      pickupAddress: 'Rua Rio Jutaí, 240 - Vieiralves',
+      destinationAddress: 'Unidade Vieiralves',
+      transportMode: 'Somente ida',
+      companion: 'Tutor acompanha'
+    },
+    {
       id: 105,
       petId: 8,
       type: 'Serviço',
@@ -291,6 +372,102 @@ export const MOCK_BACKOFFICE: BackofficeSnapshot = {
       examsRequested: ['Citologia cutânea de controle'],
       recommendations: ['Evitar shampoo perfumado', 'Secagem completa após banho'],
       prescriptionItems: ['Shampoo terapêutico semanal', 'Dieta hipoalergênica por 30 dias']
+    },
+    {
+      id: 205,
+      petId: 2,
+      date: '11/05/2026',
+      veterinarian: 'Dr. Lucas Varella',
+      specialty: 'Felinos',
+      diagnosis: 'Check-up anual sem alterações laboratoriais relevantes.',
+      prescription: 'Manter hidratação com fonte e sachê diário.',
+      returnWindow: 'Revisão em 6 meses',
+      status: 'Estável',
+      symptoms: 'Consulta preventiva sem queixas agudas.',
+      clinicalNotes: 'Escore corporal adequado, mucosas normais e boa aceitação do manejo. Tutor relata boa adaptação à rotina com fonte de água.',
+      examsRequested: ['Bioquímico renal de rotina', 'Urina tipo I preventiva'],
+      recommendations: ['Manter enriquecimento ambiental', 'Reforçar consumo de água com alimento úmido'],
+      prescriptionItems: ['Sem nova medicação contínua', 'Rotina preventiva mantida']
+    },
+    {
+      id: 206,
+      petId: 3,
+      date: '18/05/2026',
+      veterinarian: 'Dra. Helena Souto',
+      specialty: 'Aquáticos',
+      diagnosis: 'Parâmetros do aquário estáveis com necessidade de reforço biológico.',
+      prescription: 'Aumentar TPA semanal e revisar carga biológica do filtro.',
+      returnWindow: 'Acompanhamento em 30 dias',
+      status: 'Atenção',
+      symptoms: 'Leve redução de atividade nas primeiras horas da manhã após oscilação prévia.',
+      clinicalNotes: 'Sem sinais visíveis de parasitose externa. Ambiente plantado com boa oxigenação, porém há espaço para reforço no filtro biológico.',
+      examsRequested: ['Teste seriado de amônia e nitrito por 7 dias', 'Registro fotográfico da alimentação'],
+      recommendations: ['Reforçar colônia bacteriana', 'Não aumentar a carga orgânica do aquário', 'Monitorar temperatura após TPA'],
+      prescriptionItems: ['Condicionador biológico conforme litragem', 'TPA de 20% semanal']
+    },
+    {
+      id: 207,
+      petId: 9,
+      date: '16/05/2026',
+      veterinarian: 'Dra. Elisa Moraes',
+      specialty: 'Aves Ornamentais',
+      diagnosis: 'Desgaste irregular de bico associado a rotina alimentar limitada.',
+      prescription: 'Introduzir enriquecimento alimentar e poleiros de diferentes texturas.',
+      returnWindow: 'Revisão em 25 dias',
+      status: 'Atenção',
+      symptoms: 'Menor interesse por sementes secas e leve seletividade alimentar.',
+      clinicalNotes: 'Bico sem fratura, porém com desgaste assimétrico discreto. Condição corporal preservada e comportamento responsivo ao tutor.',
+      examsRequested: ['Avaliação de cavidade oral na revisão', 'Registro semanal de ingestão alimentar'],
+      recommendations: ['Oferecer legumes seguros e pellets', 'Variar poleiros e momentos de forrageamento'],
+      prescriptionItems: ['Plano alimentar com pellets e vegetais', 'Suplementação mineral sob orientação']
+    },
+    {
+      id: 208,
+      petId: 10,
+      date: '10/05/2026',
+      veterinarian: 'Dr. Renato Braga',
+      specialty: 'Animais Exóticos',
+      diagnosis: 'Ajuste preventivo de manejo UVB e suplementação de cálcio.',
+      prescription: 'Trocar lâmpada UVB, revisar distância da plataforma e manter suplementação orientada.',
+      returnWindow: 'Revisão em 20 dias',
+      status: 'Estável',
+      symptoms: 'Sem sinais clínicos agudos. Consulta preventiva ambiental.',
+      clinicalNotes: 'Casco íntegro, boa resposta ao manejo e sem alterações locomotoras. Ambiente demanda apenas refinamento técnico.',
+      examsRequested: ['Checklist ambiental com fotos', 'Medição de temperatura por zonas'],
+      recommendations: ['Trocar UVB dentro da validade', 'Garantir basking seco', 'Registrar rotina de cálcio'],
+      prescriptionItems: ['Suplementação de cálcio conforme protocolo', 'Ajuste de timer da iluminação']
+    },
+    {
+      id: 209,
+      petId: 1,
+      date: '04/04/2026',
+      veterinarian: 'Dra. Camila Freitas',
+      specialty: 'Clínica Geral',
+      diagnosis: 'Otite externa leve em ouvido direito.',
+      prescription: 'Limpeza auricular a cada 48h e revisão se persistir secreção.',
+      returnWindow: 'Revisão em 12 dias',
+      status: 'Estável',
+      symptoms: 'Sacudidas frequentes da cabeça e coceira pontual na orelha direita.',
+      clinicalNotes: 'Canal com discreto excesso de cerúmen e sem dor intensa à palpação. Quadro leve em boa resposta.',
+      examsRequested: ['Otoscopia de revisão', 'Citologia auricular se mantiver secreção'],
+      recommendations: ['Evitar água no conduto', 'Secar bem após banho'],
+      prescriptionItems: ['Solução auricular 2x ao dia por 7 dias', 'Limpeza externa com gaze']
+    },
+    {
+      id: 210,
+      petId: 2,
+      date: '02/03/2026',
+      veterinarian: 'Dr. Lucas Varella',
+      specialty: 'Felinos',
+      diagnosis: 'Gengivite leve em acompanhamento.',
+      prescription: 'Escovação adaptada e gel oral veterinário.',
+      returnWindow: 'Retorno em 45 dias',
+      status: 'Em tratamento',
+      symptoms: 'Halitose discreta e seletividade com ração seca.',
+      clinicalNotes: 'Gengiva com rubor leve em arcada superior, sem perda dentária. Tutor recebeu orientação de adaptação gradual à higiene oral.',
+      examsRequested: ['Avaliação odontológica de controle'],
+      recommendations: ['Priorizar alimento úmido em parte da rotina', 'Observar sangramento durante mastigação'],
+      prescriptionItems: ['Gel oral veterinário 1x ao dia', 'Escova dedeira com adaptação progressiva']
     },
     {
       id: 202,
@@ -365,6 +542,22 @@ export const MOCK_BACKOFFICE: BackofficeSnapshot = {
       unit: 'Unidade Exóticos',
       shift: '10:00 às 19:00',
       status: 'Agenda cheia'
+    },
+    {
+      id: 4,
+      name: 'Dra. Helena Souto',
+      specialty: 'Peixes Ornamentais e Ambientes Aquáticos',
+      unit: 'Consultoria técnica',
+      shift: '15:00 às 21:00',
+      status: 'Disponível'
+    },
+    {
+      id: 5,
+      name: 'Dra. Elisa Moraes',
+      specialty: 'Aves Ornamentais e pequenos exóticos',
+      unit: 'Unidade Vieiralves',
+      shift: '09:00 às 17:00',
+      status: 'Em atendimento'
     }
   ],
   alerts: [
@@ -416,6 +609,43 @@ export const MOCK_BACKOFFICE: BackofficeSnapshot = {
       notes: 'Cliente pediu conferência especial da embalagem por causa de sensibilidade do pet.'
     },
     {
+      id: 6,
+      number: 'AQ-60192',
+      clientId: 1,
+      createdAt: '25/05/2026',
+      status: 'Pago',
+      fulfillment: 'Entrega',
+      total: 214.8,
+      items: [
+        { productId: 14, name: 'Fonte de Água Cerâmica Bivolt 2L', quantity: 1, unitPrice: 179.9 },
+        { productId: 18, name: 'Sachê Gourmet Salmão & Atum 85g', quantity: 2, unitPrice: 8.9 },
+        { productId: 13, name: 'Areia Biodegradável de Milho 4kg', quantity: 1, unitPrice: 17.1 }
+      ],
+      notes: 'Entrega combinada com portaria e preferência por janela do fim da manhã.'
+    },
+    {
+      id: 7,
+      number: 'AQ-59680',
+      clientId: 1,
+      createdAt: '15/05/2026',
+      status: 'Entregue',
+      fulfillment: 'Retirada',
+      total: 129.9,
+      items: [{ productId: 6, name: 'Kit Teste pH, Amônia e Nitrito', quantity: 1, unitPrice: 129.9 }],
+      notes: 'Pedido retirado presencialmente após revisão do aquário.'
+    },
+    {
+      id: 8,
+      number: 'AQ-59321',
+      clientId: 1,
+      createdAt: '06/05/2026',
+      status: 'Enviado',
+      fulfillment: 'Entrega',
+      total: 88.9,
+      items: [{ productId: 10, name: 'Shampoo Hipoalergênico Aveia Orgânica', quantity: 1, unitPrice: 44.9 }, { productId: 12, name: 'Peitoral Air Mesh com Guia M', quantity: 1, unitPrice: 44.0 }],
+      notes: 'Pedido complementar para rotina dermatológica do Thor.'
+    },
+    {
       id: 2,
       number: 'AQ-60048',
       clientId: 2,
@@ -462,16 +692,45 @@ export const MOCK_BACKOFFICE: BackofficeSnapshot = {
   ]
 };
 
-const readBackofficeSnapshot = (): BackofficeSnapshot => ({
-  clients: readSeededAppSessionSlice<BackofficeClient[]>(CLIENTS_SLICE, [...MOCK_BACKOFFICE.clients]),
-  pets: readSeededAppSessionSlice<BackofficePet[]>(PETS_SLICE, [...MOCK_BACKOFFICE.pets]),
-  appointments: readSeededAppSessionSlice<ClientAppointment[]>(APPOINTMENTS_SLICE, [...MOCK_BACKOFFICE.appointments]),
-  records: readSeededAppSessionSlice<MedicalRecord[]>(RECORDS_SLICE, [...MOCK_BACKOFFICE.records]),
-  veterinarians: readSeededAppSessionSlice<BackofficeVet[]>(VETERINARIANS_SLICE, [...MOCK_BACKOFFICE.veterinarians]),
-  alerts: readSeededAppSessionSlice<BackofficeAlert[]>(ALERTS_SLICE, [...MOCK_BACKOFFICE.alerts]),
-  inventory: readSeededAppSessionSlice<BackofficeInventoryItem[]>(INVENTORY_SLICE, [...MOCK_BACKOFFICE.inventory]),
-  orders: readSeededAppSessionSlice<BackofficeOrder[]>(ORDERS_SLICE, [...MOCK_BACKOFFICE.orders])
-});
+function readBackofficeSnapshot(): BackofficeSnapshot {
+  const snapshot: BackofficeSnapshot = {
+    clients: readSeededAppSessionSlice<BackofficeClient[]>(CLIENTS_SLICE, [...MOCK_BACKOFFICE.clients]),
+    pets: readSeededAppSessionSlice<BackofficePet[]>(PETS_SLICE, [...MOCK_BACKOFFICE.pets]),
+    appointments: readSeededAppSessionSlice<ClientAppointment[]>(APPOINTMENTS_SLICE, [...MOCK_BACKOFFICE.appointments]),
+    records: readSeededAppSessionSlice<MedicalRecord[]>(RECORDS_SLICE, [...MOCK_BACKOFFICE.records]),
+    veterinarians: readSeededAppSessionSlice<BackofficeVet[]>(VETERINARIANS_SLICE, [...MOCK_BACKOFFICE.veterinarians]),
+    alerts: readSeededAppSessionSlice<BackofficeAlert[]>(ALERTS_SLICE, [...MOCK_BACKOFFICE.alerts]),
+    inventory: readSeededAppSessionSlice<BackofficeInventoryItem[]>(INVENTORY_SLICE, [...MOCK_BACKOFFICE.inventory]),
+    orders: readSeededAppSessionSlice<BackofficeOrder[]>(ORDERS_SLICE, [...MOCK_BACKOFFICE.orders])
+  };
+
+  const hydratedSnapshot: BackofficeSnapshot = {
+    clients: mergeSeededById(snapshot.clients, MOCK_BACKOFFICE.clients),
+    pets: mergeSeededById(snapshot.pets, MOCK_BACKOFFICE.pets),
+    appointments: mergeSeededById(snapshot.appointments, MOCK_BACKOFFICE.appointments),
+    records: mergeSeededById(snapshot.records, MOCK_BACKOFFICE.records),
+    veterinarians: mergeSeededById(snapshot.veterinarians, MOCK_BACKOFFICE.veterinarians),
+    alerts: mergeSeededById(snapshot.alerts, MOCK_BACKOFFICE.alerts),
+    inventory: mergeSeededById(snapshot.inventory, MOCK_BACKOFFICE.inventory),
+    orders: mergeSeededById(snapshot.orders, MOCK_BACKOFFICE.orders)
+  };
+
+  const changed =
+    hydratedSnapshot.clients.length !== snapshot.clients.length ||
+    hydratedSnapshot.pets.length !== snapshot.pets.length ||
+    hydratedSnapshot.appointments.length !== snapshot.appointments.length ||
+    hydratedSnapshot.records.length !== snapshot.records.length ||
+    hydratedSnapshot.veterinarians.length !== snapshot.veterinarians.length ||
+    hydratedSnapshot.alerts.length !== snapshot.alerts.length ||
+    hydratedSnapshot.inventory.length !== snapshot.inventory.length ||
+    hydratedSnapshot.orders.length !== snapshot.orders.length;
+
+  if (changed) {
+    writeBackofficeSnapshot(hydratedSnapshot);
+  }
+
+  return hydratedSnapshot;
+}
 
 const writeBackofficeSnapshot = (snapshot: BackofficeSnapshot) => {
   writeAppSessionSlice(CLIENTS_SLICE, snapshot.clients);

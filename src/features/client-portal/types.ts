@@ -10,7 +10,7 @@ import type {
   ClientOrder
 } from '@/services/clientPortal';
 
-export type PortalTab = 'dashboard' | 'pets' | 'appointments' | 'medical' | 'vets' | 'store';
+export type PortalTab = 'dashboard' | 'profile' | 'pets' | 'appointments' | 'medical' | 'vets' | 'store';
 export type AuthMode = 'login' | 'register';
 export type PortalTheme = 'light' | 'dark';
 
