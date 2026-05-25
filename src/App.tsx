@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Footer } from '@/components/footer/Footer';
 import { Header } from '@/components/header/Header';
+import { InstallGate } from '@/components/pwa/install-gate/InstallGate';
 import { AdminPortal } from '@/pages/admin-portal/AdminPortal';
 import { ClientPortal } from '@/pages/client-portal/ClientPortal';
 import { Store } from '@/pages/store/Store';
@@ -82,6 +83,7 @@ function App() {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <InstallGate />
       {!isPrivatePortal && (
         <Header
           view={view}

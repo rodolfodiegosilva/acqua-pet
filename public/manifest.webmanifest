@@ -1,0 +1,19 @@
+{
+  "name": "Acqua Pet",
+  "short_name": "AcquaPet",
+  "description": "Petshop, clínica, área do cliente, painel veterinário e admin em experiência instalável.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#030274",
+  "icons": [
+    {
+      "src": "/acqua_pet_icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
