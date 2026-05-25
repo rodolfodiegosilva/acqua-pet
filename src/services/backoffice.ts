@@ -1,5 +1,6 @@
-import { PRODUCTS_CATALOG, type Product } from './api';
+import { PRODUCTS_CATALOG, getStoredProductsCatalog, saveStoredProductsCatalog, type Product } from './api';
 import type { ClientAppointment, ClientPet, ClientPetSex, ClientPetSpecies, MedicalRecord } from './clientPortal';
+import { readSeededAppSessionSlice, simulateApiDelay, writeAppSessionSlice } from './mockStorage';
 
 export type BackofficeRole = 'admin' | 'veterinarian';
 
@@ -94,6 +95,14 @@ export interface BackofficeSnapshot {
 
 const ADMIN_AUTH_STORAGE_KEY = 'acqua-pet-admin-auth-session';
 const VET_AUTH_STORAGE_KEY = 'acqua-pet-veterinary-auth-session';
+const CLIENTS_SLICE = 'clients';
+const PETS_SLICE = 'pets';
+const APPOINTMENTS_SLICE = 'appointments';
+const RECORDS_SLICE = 'medicalRecords';
+const VETERINARIANS_SLICE = 'veterinarians';
+const ALERTS_SLICE = 'alerts';
+const INVENTORY_SLICE = 'inventory';
+const ORDERS_SLICE = 'orders';
 
 const buildPet = (
   id: number,
@@ -453,6 +462,139 @@ export const MOCK_BACKOFFICE: BackofficeSnapshot = {
   ]
 };
 
+const readBackofficeSnapshot = (): BackofficeSnapshot => ({
+  clients: readSeededAppSessionSlice<BackofficeClient[]>(CLIENTS_SLICE, [...MOCK_BACKOFFICE.clients]),
+  pets: readSeededAppSessionSlice<BackofficePet[]>(PETS_SLICE, [...MOCK_BACKOFFICE.pets]),
+  appointments: readSeededAppSessionSlice<ClientAppointment[]>(APPOINTMENTS_SLICE, [...MOCK_BACKOFFICE.appointments]),
+  records: readSeededAppSessionSlice<MedicalRecord[]>(RECORDS_SLICE, [...MOCK_BACKOFFICE.records]),
+  veterinarians: readSeededAppSessionSlice<BackofficeVet[]>(VETERINARIANS_SLICE, [...MOCK_BACKOFFICE.veterinarians]),
+  alerts: readSeededAppSessionSlice<BackofficeAlert[]>(ALERTS_SLICE, [...MOCK_BACKOFFICE.alerts]),
+  inventory: readSeededAppSessionSlice<BackofficeInventoryItem[]>(INVENTORY_SLICE, [...MOCK_BACKOFFICE.inventory]),
+  orders: readSeededAppSessionSlice<BackofficeOrder[]>(ORDERS_SLICE, [...MOCK_BACKOFFICE.orders])
+});
+
+const writeBackofficeSnapshot = (snapshot: BackofficeSnapshot) => {
+  writeAppSessionSlice(CLIENTS_SLICE, snapshot.clients);
+  writeAppSessionSlice(PETS_SLICE, snapshot.pets);
+  writeAppSessionSlice(APPOINTMENTS_SLICE, snapshot.appointments);
+  writeAppSessionSlice(RECORDS_SLICE, snapshot.records);
+  writeAppSessionSlice(VETERINARIANS_SLICE, snapshot.veterinarians);
+  writeAppSessionSlice(ALERTS_SLICE, snapshot.alerts);
+  writeAppSessionSlice(INVENTORY_SLICE, snapshot.inventory);
+  writeAppSessionSlice(ORDERS_SLICE, snapshot.orders);
+};
+
+export const fetchBackofficeSnapshot = async (): Promise<BackofficeSnapshot> => simulateApiDelay(readBackofficeSnapshot());
+
+export const createBackofficeInventoryItem = async (product: Omit<BackofficeInventoryItem, 'id' | 'status'>): Promise<BackofficeInventoryItem> => {
+  const snapshot = readBackofficeSnapshot();
+  const products = getStoredProductsCatalog();
+  const nextItem: BackofficeInventoryItem = {
+    ...product,
+    id: snapshot.inventory.reduce((highestId, item) => Math.max(highestId, item.id), 0) + 1,
+    status: product.stock <= Math.max(2, Math.floor(product.minStock / 2)) ? 'Crítico' : product.stock <= product.minStock ? 'Baixo' : 'Saudável'
+  };
+
+  writeBackofficeSnapshot({
+    ...snapshot,
+    inventory: [nextItem, ...snapshot.inventory]
+  });
+  saveStoredProductsCatalog([{ ...nextItem }, ...products]);
+
+  return simulateApiDelay(nextItem);
+};
+
+export const updateBackofficeInventoryStock = async (itemId: number, nextStock: number): Promise<BackofficeInventoryItem[]> => {
+  const snapshot = readBackofficeSnapshot();
+  const products = getStoredProductsCatalog();
+  const nextInventory: BackofficeInventoryItem[] = snapshot.inventory.map((item) =>
+    item.id === itemId
+      ? {
+          ...item,
+          stock: nextStock,
+          status: (nextStock <= Math.max(2, Math.floor(item.minStock / 2)) ? 'Crítico' : nextStock <= item.minStock ? 'Baixo' : 'Saudável') as BackofficeInventoryItem['status']
+        }
+      : item
+  );
+
+  writeBackofficeSnapshot({
+    ...snapshot,
+    inventory: nextInventory
+  });
+  saveStoredProductsCatalog(
+    products.map((product) =>
+      product.id === itemId
+        ? {
+            ...product,
+            stock: nextStock
+          }
+        : product
+    )
+  );
+
+  return simulateApiDelay(nextInventory);
+};
+
+export const updateBackofficeOrderStatus = async (orderId: number, status: BackofficeOrder['status']): Promise<BackofficeOrder[]> => {
+  const snapshot = readBackofficeSnapshot();
+  const nextOrders: BackofficeOrder[] = snapshot.orders.map((order) => (order.id === orderId ? { ...order, status } : order));
+
+  writeBackofficeSnapshot({
+    ...snapshot,
+    orders: nextOrders
+  });
+
+  return simulateApiDelay(nextOrders);
+};
+
+export const cancelBackofficeOrder = async (orderId: number): Promise<BackofficeOrder[]> => {
+  const snapshot = readBackofficeSnapshot();
+  const nextOrders: BackofficeOrder[] = snapshot.orders.map((order) =>
+    order.id === orderId ? { ...order, status: 'Cancelado' as BackofficeOrder['status'], notes: `${order.notes} Cancelado pelo admin.` } : order
+  );
+
+  writeBackofficeSnapshot({
+    ...snapshot,
+    orders: nextOrders
+  });
+
+  return simulateApiDelay(nextOrders);
+};
+
+export const createVeterinaryRecord = async (
+  petId: number,
+  veterinarian: string,
+  draft: Omit<MedicalRecord, 'id' | 'petId' | 'veterinarian'>
+): Promise<BackofficeSnapshot> => {
+  const snapshot = readBackofficeSnapshot();
+  const nextRecord: MedicalRecord = {
+    ...draft,
+    id: snapshot.records.reduce((highestId, record) => Math.max(highestId, record.id), 0) + 1,
+    petId,
+    veterinarian
+  };
+
+  const nextPets: BackofficePet[] = snapshot.pets.map((pet) =>
+    pet.id === petId
+      ? {
+          ...pet,
+          lastVisit: draft.date,
+          nextAction: draft.returnWindow,
+          status: (draft.status === 'Estável' ? 'Ativo' : draft.status === 'Atenção' ? 'Observação' : 'Em acompanhamento') as BackofficePet['status']
+        }
+      : pet
+  );
+
+  const nextSnapshot: BackofficeSnapshot = {
+    ...snapshot,
+    pets: nextPets,
+    records: [nextRecord, ...snapshot.records]
+  };
+
+  writeBackofficeSnapshot(nextSnapshot);
+  return simulateApiDelay(nextSnapshot);
+};
+
 const ADMIN_USER: BackofficeSessionUser = {
   id: 1,
   name: 'Paula Nascimento',
@@ -502,7 +644,6 @@ export const clearBackofficeSession = (role: BackofficeRole) => {
 };
 
 export const mockBackofficeLogin = async (role: BackofficeRole, email: string): Promise<BackofficeAuthSession> => {
-  await new Promise((resolve) => setTimeout(resolve, 500));
   const baseUser = role === 'admin' ? ADMIN_USER : VETERINARIAN_USER;
-  return buildSession({ ...baseUser, email: email || baseUser.email });
+  return simulateApiDelay(buildSession({ ...baseUser, email: email || baseUser.email }));
 };

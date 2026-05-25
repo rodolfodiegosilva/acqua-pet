@@ -32,6 +32,7 @@ interface AppointmentsTabProps {
     companion: NonNullable<ClientAppointment['companion']>;
   }>>;
   onCreateAppointment: (event: React.FormEvent) => void;
+  isSubmitting?: boolean;
   formatDateInput: (value: string) => string;
 }
 
@@ -42,6 +43,7 @@ export const AppointmentsTab: React.FC<AppointmentsTabProps> = ({
   appointmentForm,
   setAppointmentForm,
   onCreateAppointment,
+  isSubmitting = false,
   formatDateInput
 }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -167,11 +169,12 @@ export const AppointmentsTab: React.FC<AppointmentsTabProps> = ({
       <input className="portal-input" type="time" value={appointmentForm.time} onChange={(event) => setAppointmentForm({ ...appointmentForm, time: event.target.value })} />
       <button
         type="submit"
+        disabled={isSubmitting}
         className="gradient-bg gradient-bg-hover"
         style={{ padding: '15px', borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', fontWeight: 700, cursor: 'pointer' }}
         onClick={() => setIsCreateModalOpen(false)}
       >
-        {appointmentForm.type === 'Táxi Pet' ? 'Confirmar rota Táxi Pet' : 'Confirmar agendamento mockado'}
+        {isSubmitting ? 'Salvando agendamento...' : appointmentForm.type === 'Táxi Pet' ? 'Confirmar rota Táxi Pet' : 'Confirmar agendamento mockado'}
       </button>
     </form>
   );

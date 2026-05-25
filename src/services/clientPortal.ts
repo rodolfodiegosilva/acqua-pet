@@ -1,4 +1,6 @@
-import { PRODUCTS_CATALOG, type Product } from './api';
+import { getStoredProductsCatalog, type Product } from './api';
+import type { BackofficeClient, BackofficePet, BackofficeSnapshot, BackofficeVet, BackofficeOrder } from './backoffice';
+import { readSeededAppSessionSlice, simulateApiDelay, writeAppSessionSlice } from './mockStorage';
 
 export const CLIENT_PET_SPECIES = [
   'Cão',
@@ -115,6 +117,13 @@ export interface ClientAuthSession {
 }
 
 const CLIENT_AUTH_STORAGE_KEY = 'acqua-pet-client-auth-session';
+const CLIENT_PROFILE_SLICE = 'clientProfile';
+const CLIENTS_SLICE = 'clients';
+const PETS_SLICE = 'pets';
+const APPOINTMENTS_SLICE = 'appointments';
+const RECORDS_SLICE = 'medicalRecords';
+const VETERINARIANS_SLICE = 'veterinarians';
+const ORDERS_SLICE = 'orders';
 
 export const MOCK_CLIENT_PORTAL: ClientPortalSnapshot = {
   user: {
@@ -417,7 +426,7 @@ export const MOCK_CLIENT_PORTAL: ClientPortalSnapshot = {
       items: ['Fonte de Água Cerâmica Bivolt 2L']
     }
   ],
-  recommendedProducts: PRODUCTS_CATALOG.slice(0, 8)
+  recommendedProducts: getStoredProductsCatalog().slice(0, 8)
 };
 
 const buildMockSession = (user: ClientUser): ClientAuthSession => ({
@@ -426,6 +435,122 @@ const buildMockSession = (user: ClientUser): ClientAuthSession => ({
   refreshToken: 'mock-refresh-token',
   expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30).toISOString()
 });
+
+const readClientProfile = () =>
+  readSeededAppSessionSlice<ClientUser>(CLIENT_PROFILE_SLICE, {
+    ...MOCK_CLIENT_PORTAL.user
+  });
+
+const writeClientProfile = (profile: ClientUser) => {
+  writeAppSessionSlice(CLIENT_PROFILE_SLICE, profile);
+};
+
+const buildFallbackClientSnapshot = (): ClientPortalSnapshot => ({
+  ...MOCK_CLIENT_PORTAL,
+  user: readClientProfile(),
+  recommendedProducts: getStoredProductsCatalog().slice(0, 8)
+});
+
+const readBackofficeSnapshot = (): BackofficeSnapshot => ({
+  clients: readSeededAppSessionSlice<BackofficeClient[]>(CLIENTS_SLICE, []),
+  pets: readSeededAppSessionSlice<BackofficePet[]>(PETS_SLICE, []),
+  appointments: readSeededAppSessionSlice<ClientAppointment[]>(APPOINTMENTS_SLICE, []),
+  records: readSeededAppSessionSlice<MedicalRecord[]>(RECORDS_SLICE, []),
+  veterinarians: readSeededAppSessionSlice<BackofficeVet[]>(VETERINARIANS_SLICE, []),
+  alerts: [],
+  inventory: [],
+  orders: readSeededAppSessionSlice<BackofficeOrder[]>(ORDERS_SLICE, [])
+});
+
+const mapBackofficeVetToAvailability = (vet: BackofficeVet): VetAvailability => ({
+  id: vet.id,
+  name: vet.name,
+  specialty: vet.specialty,
+  nextSlot: vet.status === 'Agenda cheia' ? 'Agenda temporariamente cheia' : 'Próximo encaixe disponível',
+  shift: vet.shift,
+  channel: 'Presencial e retorno digital',
+  status: vet.status === 'Disponível' ? 'Disponível' : vet.status === 'Agenda cheia' ? 'Agenda cheia' : 'Últimas vagas'
+});
+
+const deriveClientSnapshotFromBackoffice = (fallbackUser?: ClientUser): ClientPortalSnapshot | null => {
+  const backofficeSnapshot = readBackofficeSnapshot();
+  if (backofficeSnapshot.clients.length === 0) return null;
+
+  const baseUser = fallbackUser ?? readClientProfile();
+  const matchingClient = backofficeSnapshot.clients.find((client) => client.id === baseUser.id || client.email === baseUser.email);
+
+  const hydratedUser: ClientUser = {
+    ...baseUser,
+    id: matchingClient?.id ?? baseUser.id,
+    name: matchingClient?.name ?? baseUser.name,
+    email: matchingClient?.email ?? baseUser.email,
+    phone: matchingClient?.phone ?? baseUser.phone,
+    plan: matchingClient?.plan ?? baseUser.plan,
+    memberSince: matchingClient?.joinedAt ?? baseUser.memberSince,
+    city: matchingClient?.city ?? baseUser.city
+  };
+
+  const pets = backofficeSnapshot.pets.filter((pet) => pet.clientId === hydratedUser.id).map<ClientPet>(({ clientId, status, lastVisit, nextAction, ...pet }) => pet);
+  const petIds = new Set(pets.map((pet) => pet.id));
+
+  return {
+    user: hydratedUser,
+    pets,
+    medicalRecords: backofficeSnapshot.records.filter((record) => petIds.has(record.petId)),
+    veterinarians: backofficeSnapshot.veterinarians.map(mapBackofficeVetToAvailability),
+    appointments: backofficeSnapshot.appointments.filter((appointment) => petIds.has(appointment.petId)),
+    orders: backofficeSnapshot.orders
+      .filter((order) => order.clientId === hydratedUser.id)
+      .map<ClientOrder>((order) => ({
+        id: order.id,
+        number: order.number,
+        createdAt: order.createdAt,
+        status: order.status === 'Entregue' ? 'Entregue' : order.fulfillment === 'Retirada' ? 'Pronto para retirada' : 'Separando',
+        total: order.total,
+        items: order.items.map((item) => `${item.quantity}x ${item.name}`)
+      })),
+    recommendedProducts: getStoredProductsCatalog().slice(0, 8)
+  };
+};
+
+export const fetchClientPortalSnapshot = async (): Promise<ClientPortalSnapshot> => {
+  const derived = deriveClientSnapshotFromBackoffice();
+  return simulateApiDelay(derived ?? buildFallbackClientSnapshot());
+};
+
+export const createClientPet = async (pet: Omit<ClientPet, 'id'>): Promise<ClientPet> => {
+  const snapshot = deriveClientSnapshotFromBackoffice() ?? buildFallbackClientSnapshot();
+  const nextPet: ClientPet = {
+    ...pet,
+    id: snapshot.pets.reduce((highestId, item) => Math.max(highestId, item.id), 0) + 1
+  };
+
+  const backofficeSnapshot = readBackofficeSnapshot();
+  const mirroredPet: BackofficePet = {
+    ...nextPet,
+    clientId: snapshot.user.id,
+    status: 'Ativo',
+    lastVisit: 'Ainda sem consulta',
+    nextAction: 'Aguardando primeiro atendimento'
+  };
+
+  writeAppSessionSlice(PETS_SLICE, [...backofficeSnapshot.pets, mirroredPet]);
+
+  return simulateApiDelay(nextPet);
+};
+
+export const createClientAppointment = async (appointment: Omit<ClientAppointment, 'id'>): Promise<ClientAppointment> => {
+  const snapshot = deriveClientSnapshotFromBackoffice() ?? buildFallbackClientSnapshot();
+  const nextAppointment: ClientAppointment = {
+    ...appointment,
+    id: snapshot.appointments.reduce((highestId, item) => Math.max(highestId, item.id), 0) + 1
+  };
+
+  const backofficeSnapshot = readBackofficeSnapshot();
+  writeAppSessionSlice(APPOINTMENTS_SLICE, [nextAppointment, ...backofficeSnapshot.appointments]);
+
+  return simulateApiDelay(nextAppointment);
+};
 
 export const getStoredClientAuthSession = (): ClientAuthSession | null => {
   const raw = localStorage.getItem(CLIENT_AUTH_STORAGE_KEY);
@@ -450,19 +575,51 @@ export const clearStoredClientAuthSession = () => {
 
 export const mockAuthLogin = (email: string): Promise<ClientAuthSession> => {
   const user = {
-    ...MOCK_CLIENT_PORTAL.user,
-    email: email || MOCK_CLIENT_PORTAL.user.email
+    ...readClientProfile(),
+    email: email || readClientProfile().email
   };
 
-  return Promise.resolve(buildMockSession(user));
+  return simulateApiDelay(buildMockSession(user));
 };
 
 export const mockAuthRegister = (name: string, email: string): Promise<ClientAuthSession> => {
   const user = {
-    ...MOCK_CLIENT_PORTAL.user,
-    name: name || MOCK_CLIENT_PORTAL.user.name,
-    email: email || MOCK_CLIENT_PORTAL.user.email
+    ...readClientProfile(),
+    name: name || readClientProfile().name,
+    email: email || readClientProfile().email
   };
 
-  return Promise.resolve(buildMockSession(user));
+  writeClientProfile(user);
+
+  const backofficeSnapshot = readBackofficeSnapshot();
+  const existingClient = backofficeSnapshot.clients.find((client) => client.email === user.email);
+  const nextClientId = backofficeSnapshot.clients.reduce((highestId, client) => Math.max(highestId, client.id), 0) + 1;
+  const mirroredClient: BackofficeClient = existingClient
+    ? {
+        ...existingClient,
+        name: user.name,
+        email: user.email,
+        phone: user.phone
+      }
+    : {
+        id: nextClientId,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        city: user.city,
+        neighborhood: 'A definir',
+        plan: user.plan,
+        status: 'Novo',
+        joinedAt: user.memberSince,
+        tags: ['cadastro portal']
+      };
+
+  writeAppSessionSlice(
+    CLIENTS_SLICE,
+    existingClient
+      ? backofficeSnapshot.clients.map((client) => (client.email === user.email ? mirroredClient : client))
+      : [...backofficeSnapshot.clients, mirroredClient]
+  );
+
+  return simulateApiDelay(buildMockSession(user));
 };

@@ -8,10 +8,11 @@ interface PetsTabProps {
   petForm: { name: string; species: ClientPetSpecies | ''; sex: ClientPetSex | ''; breed: string; age: string; weight: string; observation: string };
   setPetForm: React.Dispatch<React.SetStateAction<{ name: string; species: ClientPetSpecies | ''; sex: ClientPetSex | ''; breed: string; age: string; weight: string; observation: string }>>;
   onAddPet: (event: React.FormEvent) => void;
+  isSubmitting?: boolean;
   onOpenMedical: (petId: number) => void;
 }
 
-export const PetsTab: React.FC<PetsTabProps> = ({ pets, petForm, setPetForm, onAddPet, onOpenMedical }) => {
+export const PetsTab: React.FC<PetsTabProps> = ({ pets, petForm, setPetForm, onAddPet, isSubmitting = false, onOpenMedical }) => {
   const [isCreatePetModalOpen, setIsCreatePetModalOpen] = useState(false);
 
   const renderPetForm = () => (
@@ -35,11 +36,12 @@ export const PetsTab: React.FC<PetsTabProps> = ({ pets, petForm, setPetForm, onA
       <textarea className="portal-input" placeholder="Observação" value={petForm.observation} onChange={(event) => setPetForm({ ...petForm, observation: event.target.value })} rows={4} style={{ resize: 'vertical' }} />
       <button
         type="submit"
+        disabled={isSubmitting}
         className="gradient-bg gradient-bg-hover"
         style={{ padding: '15px', borderRadius: 'var(--radius-md)', border: 'none', color: '#fff', fontWeight: 700, cursor: 'pointer' }}
         onClick={() => setIsCreatePetModalOpen(false)}
       >
-        Adicionar pet ao portal
+        {isSubmitting ? 'Salvando pet...' : 'Adicionar pet ao portal'}
       </button>
     </form>
   );

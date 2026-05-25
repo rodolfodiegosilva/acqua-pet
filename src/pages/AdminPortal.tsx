@@ -1,13 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Boxes, LayoutDashboard, PackageSearch, PawPrint, Users } from 'lucide-react';
 import {
-  MOCK_BACKOFFICE,
+  cancelBackofficeOrder,
+  createBackofficeInventoryItem,
+  fetchBackofficeSnapshot,
   type BackofficeInventoryItem,
   type BackofficeOrder,
+  type BackofficeSnapshot,
   clearBackofficeSession,
   getStoredBackofficeSession,
   mockBackofficeLogin,
-  saveBackofficeSession
+  saveBackofficeSession,
+  updateBackofficeInventoryStock,
+  updateBackofficeOrderStatus
 } from '../services/backoffice';
 import { BackofficeAuth } from '../features/backoffice/components/BackofficeAuth';
 import { BackofficeShell } from '../features/backoffice/components/BackofficeShell';
@@ -19,8 +24,6 @@ import { AdminPetsTab } from '../features/backoffice/tabs/AdminPetsTab';
 import type { AdminTab, BackofficeNavItem, BackofficeTheme } from '../features/backoffice/types';
 import '../features/backoffice/backoffice.css';
 
-const ADMIN_INVENTORY_STORAGE_KEY = 'acqua-pet-admin-inventory';
-
 interface AdminPortalProps {
   setView: (view: 'landing' | 'store' | 'client' | 'admin' | 'veterinary') => void;
 }
@@ -30,26 +33,23 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
   const [sessionUser, setSessionUser] = useState(() => getStoredBackofficeSession('admin')?.user ?? null);
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [panelLoading, setPanelLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<AdminTab>('overview');
-  const [inventory, setInventory] = useState<BackofficeInventoryItem[]>(() => {
-    const storedInventory = localStorage.getItem(ADMIN_INVENTORY_STORAGE_KEY);
-    if (!storedInventory) return MOCK_BACKOFFICE.inventory;
-
-    try {
-      return JSON.parse(storedInventory) as BackofficeInventoryItem[];
-    } catch {
-      return MOCK_BACKOFFICE.inventory;
-    }
-  });
-  const [orders, setOrders] = useState<BackofficeOrder[]>(MOCK_BACKOFFICE.orders);
+  const [snapshot, setSnapshot] = useState<BackofficeSnapshot | null>(null);
 
   useEffect(() => {
     localStorage.setItem('acqua-pet-admin-theme', theme);
   }, [theme]);
 
   useEffect(() => {
-    localStorage.setItem(ADMIN_INVENTORY_STORAGE_KEY, JSON.stringify(inventory));
-  }, [inventory]);
+    if (!sessionUser) return;
+    setPanelLoading(true);
+    fetchBackofficeSnapshot().then((nextSnapshot) => {
+      setSnapshot(nextSnapshot);
+      setPanelLoading(false);
+    });
+  }, [sessionUser]);
 
   const navItems: BackofficeNavItem<AdminTab>[] = [
     { id: 'overview', label: 'Visão geral', icon: LayoutDashboard },
@@ -73,45 +73,32 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
     setSessionUser(null);
   };
 
-  const handleAdjustStock = (itemId: number, nextStock: number) => {
-    setInventory((current) =>
-      current.map((item) =>
-        item.id === itemId
-          ? {
-              ...item,
-              stock: nextStock,
-              status: nextStock <= Math.max(2, Math.floor(item.minStock / 2)) ? 'Crítico' : nextStock <= item.minStock ? 'Baixo' : 'Saudável'
-            }
-          : item
-      )
-    );
+  const handleAdjustStock = async (itemId: number, nextStock: number) => {
+    setActionLoading(true);
+    const nextInventory = await updateBackofficeInventoryStock(itemId, nextStock);
+    setSnapshot((current) => (current ? { ...current, inventory: nextInventory } : current));
+    setActionLoading(false);
   };
 
-  const handleCreateProduct = (product: Omit<BackofficeInventoryItem, 'id' | 'status'>) => {
-    setInventory((current) => {
-      const nextId = current.reduce((highestId, item) => Math.max(highestId, item.id), 0) + 1;
-      const nextStock = Math.max(0, product.stock);
-
-      return [
-        {
-          ...product,
-          id: nextId,
-          stock: nextStock,
-          status: nextStock <= Math.max(2, Math.floor(product.minStock / 2)) ? 'Crítico' : nextStock <= product.minStock ? 'Baixo' : 'Saudável'
-        },
-        ...current
-      ];
-    });
+  const handleCreateProduct = async (product: Omit<BackofficeInventoryItem, 'id' | 'status'>) => {
+    setActionLoading(true);
+    const nextItem = await createBackofficeInventoryItem(product);
+    setSnapshot((current) => (current ? { ...current, inventory: [nextItem, ...current.inventory] } : current));
+    setActionLoading(false);
   };
 
-  const handleUpdateOrderStatus = (orderId: number, status: BackofficeOrder['status']) => {
-    setOrders((current) => current.map((order) => (order.id === orderId ? { ...order, status } : order)));
+  const handleUpdateOrderStatus = async (orderId: number, status: BackofficeOrder['status']) => {
+    setActionLoading(true);
+    const nextOrders = await updateBackofficeOrderStatus(orderId, status);
+    setSnapshot((current) => (current ? { ...current, orders: nextOrders } : current));
+    setActionLoading(false);
   };
 
-  const handleCancelOrder = (orderId: number) => {
-    setOrders((current) =>
-      current.map((order) => (order.id === orderId ? { ...order, status: 'Cancelado', notes: `${order.notes} Cancelado pelo admin.` } : order))
-    );
+  const handleCancelOrder = async (orderId: number) => {
+    setActionLoading(true);
+    const nextOrders = await cancelBackofficeOrder(orderId);
+    setSnapshot((current) => (current ? { ...current, orders: nextOrders } : current));
+    setActionLoading(false);
   };
 
   if (!sessionUser) {
@@ -124,6 +111,27 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
         onSubmit={handleLogin}
         onBackToSite={() => setView('landing')}
       />
+    );
+  }
+
+  if (panelLoading || !snapshot) {
+    return (
+      <BackofficeShell
+        theme={theme}
+        setTheme={setTheme}
+        user={sessionUser}
+        title="Central administrativa"
+        description="Painel operacional para gerenciar carteira de clientes, pets, riscos e rotina comercial do ecossistema."
+        navItems={navItems}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        onLogout={handleLogout}
+      >
+        <div className="backoffice-card" style={{ padding: '28px', textAlign: 'center' }}>
+          <strong style={{ display: 'block', color: 'var(--backoffice-text)', marginBottom: '8px', fontSize: '20px' }}>Carregando operação administrativa</strong>
+          <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.7 }}>Listando base de clientes, estoque, alertas e pedidos a partir do mock persistido na sessão.</p>
+        </div>
+      </BackofficeShell>
     );
   }
 
@@ -141,17 +149,17 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
     >
       {activeTab === 'overview' && (
         <AdminOverviewTab
-          clients={MOCK_BACKOFFICE.clients}
-          pets={MOCK_BACKOFFICE.pets}
-          alerts={MOCK_BACKOFFICE.alerts}
-          inventory={inventory}
-          orders={orders}
+          clients={snapshot.clients}
+          pets={snapshot.pets}
+          alerts={snapshot.alerts}
+          inventory={snapshot.inventory}
+          orders={snapshot.orders}
         />
       )}
-      {activeTab === 'clients' && <AdminClientsTab clients={MOCK_BACKOFFICE.clients} />}
-      {activeTab === 'pets' && <AdminPetsTab pets={MOCK_BACKOFFICE.pets} clients={MOCK_BACKOFFICE.clients} />}
-      {activeTab === 'inventory' && <AdminInventoryTab inventory={inventory} onAdjustStock={handleAdjustStock} onCreateProduct={handleCreateProduct} />}
-      {activeTab === 'orders' && <AdminOrdersTab orders={orders} clients={MOCK_BACKOFFICE.clients} onUpdateOrderStatus={handleUpdateOrderStatus} onCancelOrder={handleCancelOrder} />}
+      {activeTab === 'clients' && <AdminClientsTab clients={snapshot.clients} />}
+      {activeTab === 'pets' && <AdminPetsTab pets={snapshot.pets} clients={snapshot.clients} />}
+      {activeTab === 'inventory' && <AdminInventoryTab inventory={snapshot.inventory} onAdjustStock={handleAdjustStock} onCreateProduct={handleCreateProduct} isSubmitting={actionLoading} />}
+      {activeTab === 'orders' && <AdminOrdersTab orders={snapshot.orders} clients={snapshot.clients} onUpdateOrderStatus={handleUpdateOrderStatus} onCancelOrder={handleCancelOrder} />}
     </BackofficeShell>
   );
 };

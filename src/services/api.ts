@@ -1,3 +1,5 @@
+import { readSeededAppSessionSlice, simulateApiDelay, writeAppSessionSlice } from './mockStorage';
+
 export interface Product {
   id: number;
   name: string;
@@ -430,16 +432,21 @@ export const PRODUCTS_CATALOG: Product[] = [
   }
 ];
 
-export const fetchProducts = (category?: string): Promise<Product[]> => {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      if (!category || category === 'Todos') {
-        resolve(PRODUCTS_CATALOG);
-        return;
-      }
+const PRODUCTS_STORAGE_SLICE = 'productsCatalog';
 
-      const parsedCategory = (category.match(/[A-Za-zÀ-ÿ\s]+/)?.[0] ?? category).trim();
-      resolve(PRODUCTS_CATALOG.filter((product) => product.category === parsedCategory));
-    }, 600);
-  });
+export const getStoredProductsCatalog = () => readSeededAppSessionSlice<Product[]>(PRODUCTS_STORAGE_SLICE, PRODUCTS_CATALOG);
+
+export const saveStoredProductsCatalog = (products: Product[]) => {
+  writeAppSessionSlice(PRODUCTS_STORAGE_SLICE, products);
+};
+
+export const fetchProducts = (category?: string): Promise<Product[]> => {
+  const products = getStoredProductsCatalog();
+
+  if (!category || category === 'Todos') {
+    return simulateApiDelay(products);
+  }
+
+  const parsedCategory = (category.match(/[A-Za-zÀ-ÿ\s]+/)?.[0] ?? category).trim();
+  return simulateApiDelay(products.filter((product) => product.category === parsedCategory));
 };

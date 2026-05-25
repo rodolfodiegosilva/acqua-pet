@@ -6,6 +6,7 @@ interface AdminInventoryTabProps {
   inventory: BackofficeInventoryItem[];
   onAdjustStock: (itemId: number, nextStock: number) => void;
   onCreateProduct: (product: Omit<BackofficeInventoryItem, 'id' | 'status'>) => void;
+  isSubmitting?: boolean;
 }
 
 const CATEGORY_OPTIONS: BackofficeInventoryItem['category'][] = ['Cães', 'Gatos', 'Peixes', 'Aves', 'Répteis', 'Pequenos Pets'];
@@ -38,7 +39,7 @@ const buildSku = (name: string, category: BackofficeInventoryItem['category']) =
   return `${prefix}-${slug || 'NOVO'}`;
 };
 
-export const AdminInventoryTab: React.FC<AdminInventoryTabProps> = ({ inventory, onAdjustStock, onCreateProduct }) => {
+export const AdminInventoryTab: React.FC<AdminInventoryTabProps> = ({ inventory, onAdjustStock, onCreateProduct, isSubmitting = false }) => {
   const [query, setQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'Todos' | BackofficeInventoryItem['status']>('Todos');
   const [sortBy, setSortBy] = useState<'stock' | 'name' | 'reserved'>('stock');
@@ -212,7 +213,7 @@ export const AdminInventoryTab: React.FC<AdminInventoryTabProps> = ({ inventory,
             )}
 
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <button className="backoffice-primary-btn" type="submit">Salvar produto</button>
+              <button className="backoffice-primary-btn" type="submit" disabled={isSubmitting}>{isSubmitting ? 'Salvando produto...' : 'Salvar produto'}</button>
               <button
                 className="backoffice-ghost-btn"
                 type="button"
@@ -307,9 +308,9 @@ export const AdminInventoryTab: React.FC<AdminInventoryTabProps> = ({ inventory,
             </div>
 
             <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <button className="backoffice-ghost-btn" onClick={() => onAdjustStock(item.id, Math.max(0, item.stock - 1))}>-1 estoque</button>
-              <button className="backoffice-ghost-btn" onClick={() => onAdjustStock(item.id, item.stock + 1)}>+1 estoque</button>
-              <button className="backoffice-primary-btn" onClick={() => onAdjustStock(item.id, item.stock + 5)}>Repor +5</button>
+              <button className="backoffice-ghost-btn" onClick={() => onAdjustStock(item.id, Math.max(0, item.stock - 1))} disabled={isSubmitting}>-1 estoque</button>
+              <button className="backoffice-ghost-btn" onClick={() => onAdjustStock(item.id, item.stock + 1)} disabled={isSubmitting}>+1 estoque</button>
+              <button className="backoffice-primary-btn" onClick={() => onAdjustStock(item.id, item.stock + 5)} disabled={isSubmitting}>Repor +5</button>
             </div>
           </div>
         ))}

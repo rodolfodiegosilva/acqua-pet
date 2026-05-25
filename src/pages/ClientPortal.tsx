@@ -2,17 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { CalendarDays, HeartPulse, LayoutDashboard, PawPrint, ShoppingBag, Stethoscope } from 'lucide-react';
 import type { Product } from '../services/api';
 import {
-  MOCK_CLIENT_PORTAL,
   clearStoredClientAuthSession,
+  createClientAppointment,
+  createClientPet,
+  fetchClientPortalSnapshot,
   getStoredClientAuthSession,
   mockAuthLogin,
   mockAuthRegister,
   saveClientAuthSession,
   type ClientAppointment,
+  type ClientOrder,
   type ClientPet,
   type ClientPetSpecies,
   type ClientPetSex,
-  type ClientUser
+  type ClientUser,
+  type MedicalRecord,
+  type VetAvailability
 } from '../services/clientPortal';
 import { ClientPortalAuth } from '../features/client-portal/components/ClientPortalAuth';
 import { ClientPortalSidebar } from '../features/client-portal/components/ClientPortalSidebar';
@@ -48,9 +53,15 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
     return saved === 'dark' ? 'dark' : 'light';
   });
   const [currentUser, setCurrentUser] = useState<ClientUser | null>(() => getStoredClientAuthSession()?.user ?? null);
-  const [pets, setPets] = useState(MOCK_CLIENT_PORTAL.pets);
-  const [appointments, setAppointments] = useState(MOCK_CLIENT_PORTAL.appointments);
-  const [selectedMedicalPetId, setSelectedMedicalPetId] = useState<number>(MOCK_CLIENT_PORTAL.pets[0]?.id ?? 1);
+  const [portalLoading, setPortalLoading] = useState(false);
+  const [actionLoading, setActionLoading] = useState<'pet' | 'appointment' | null>(null);
+  const [pets, setPets] = useState<ClientPet[]>([]);
+  const [appointments, setAppointments] = useState<ClientAppointment[]>([]);
+  const [records, setRecords] = useState<MedicalRecord[]>([]);
+  const [veterinarians, setVeterinarians] = useState<VetAvailability[]>([]);
+  const [orders, setOrders] = useState<ClientOrder[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [selectedMedicalPetId, setSelectedMedicalPetId] = useState<number>(1);
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [registerForm, setRegisterForm] = useState({ name: '', email: '', password: '', phone: '' });
   const [petForm, setPetForm] = useState<{ name: string; species: ClientPetSpecies | ''; sex: ClientPetSex | ''; breed: string; age: string; weight: string; observation: string }>({
@@ -64,9 +75,9 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
   });
   const [appointmentForm, setAppointmentForm] = useState({
     type: 'Serviço' as ClientAppointment['type'],
-    petId: String(MOCK_CLIENT_PORTAL.pets[0]?.id ?? 1),
+    petId: '1',
     service: 'Consulta clínica premium',
-    veterinarian: MOCK_CLIENT_PORTAL.veterinarians[0]?.name ?? '',
+    veterinarian: '',
     date: '28/05/2026',
     time: '15:40',
     pickupAddress: '',
@@ -79,6 +90,34 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
     localStorage.setItem('acqua-pet-client-theme', portalTheme);
   }, [portalTheme]);
 
+  useEffect(() => {
+    if (!currentUser) return;
+
+    let isMounted = true;
+    setPortalLoading(true);
+
+    fetchClientPortalSnapshot().then((snapshot) => {
+      if (!isMounted) return;
+      setPets(snapshot.pets);
+      setAppointments(snapshot.appointments);
+      setRecords(snapshot.medicalRecords);
+      setVeterinarians(snapshot.veterinarians);
+      setOrders(snapshot.orders);
+      setProducts(snapshot.recommendedProducts);
+      setSelectedMedicalPetId(snapshot.pets[0]?.id ?? 1);
+      setAppointmentForm((current) => ({
+        ...current,
+        petId: String(snapshot.pets[0]?.id ?? 1),
+        veterinarian: snapshot.veterinarians[0]?.name ?? ''
+      }));
+      setPortalLoading(false);
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [currentUser]);
+
   const tabItems: PortalTabItem[] = [
     { id: 'dashboard', label: 'Visão geral', icon: LayoutDashboard },
     { id: 'pets', label: 'Meus pets', icon: PawPrint },
@@ -89,7 +128,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
   ];
 
   const upcomingAppointments = appointments.filter((appointment) => appointment.status !== 'Concluído');
-  const filteredRecords = MOCK_CLIENT_PORTAL.medicalRecords.filter((record) => record.petId === selectedMedicalPetId);
+  const filteredRecords = records.filter((record) => record.petId === selectedMedicalPetId);
 
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -116,12 +155,12 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
     setAuthLoading(false);
   };
 
-  const handleAddPet = (event: React.FormEvent) => {
+  const handleAddPet = async (event: React.FormEvent) => {
     event.preventDefault();
     if (!petForm.name || !petForm.species || !petForm.breed) return;
+    setActionLoading('pet');
 
-    const newPet: ClientPet = {
-      id: pets.length + 1,
+    const newPet = await createClientPet({
       name: petForm.name,
       species: petForm.species,
       sex: petForm.sex || 'Não informado',
@@ -135,22 +174,23 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
           : petForm.species.toLowerCase().includes('ave')
             ? '🦜'
             : '🐾',
-      tutorName: currentUser?.name ?? MOCK_CLIENT_PORTAL.user.name,
+      tutorName: currentUser?.name ?? 'Cliente AcquaPet',
       observation: petForm.observation || 'Cadastro criado pelo portal do cliente.',
       vaccines: []
-    };
+    });
 
     setPets((prev) => [...prev, newPet]);
     setPetForm({ name: '', species: '', sex: '', breed: '', age: '', weight: '', observation: '' });
+    setActionLoading(null);
   };
 
-  const handleCreateAppointment = (event: React.FormEvent) => {
+  const handleCreateAppointment = async (event: React.FormEvent) => {
     event.preventDefault();
     if (appointmentForm.type === 'Táxi Pet' && !appointmentForm.pickupAddress.trim()) return;
     if (!/^\d{2}\/\d{2}\/\d{4}$/.test(appointmentForm.date)) return;
+    setActionLoading('appointment');
 
-    const newAppointment: ClientAppointment = {
-      id: appointments.length + 1,
+    const newAppointment = await createClientAppointment({
       petId: Number(appointmentForm.petId),
       type: appointmentForm.type,
       service: appointmentForm.service,
@@ -163,14 +203,14 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
       destinationAddress: appointmentForm.type === 'Táxi Pet' ? appointmentForm.destinationAddress : undefined,
       transportMode: appointmentForm.type === 'Táxi Pet' ? appointmentForm.transportMode : undefined,
       companion: appointmentForm.type === 'Táxi Pet' ? appointmentForm.companion : undefined
-    };
+    });
 
     setAppointments((prev) => [newAppointment, ...prev]);
     setAppointmentForm((prev) => ({
       ...prev,
       type: 'Serviço',
       service: 'Consulta clínica premium',
-      veterinarian: MOCK_CLIENT_PORTAL.veterinarians[0]?.name ?? '',
+      veterinarian: veterinarians[0]?.name ?? '',
       date: '28/05/2026',
       time: '15:40',
       pickupAddress: '',
@@ -179,6 +219,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
       companion: 'Tutor acompanha'
     }));
     setActiveTab('appointments');
+    setActionLoading(null);
   };
 
   const handleLogout = () => {
@@ -204,10 +245,23 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
     );
   }
 
+  if (portalLoading) {
+    return (
+      <div className="portal-app" data-portal-theme={portalTheme} style={{ minHeight: '100vh', paddingTop: '32px', paddingBottom: '32px', background: 'var(--portal-bg)' }}>
+        <div className="container">
+          <div className="glass-card" style={{ padding: '36px', textAlign: 'center' }}>
+            <strong style={{ color: 'var(--portal-text)', fontSize: '20px', display: 'block', marginBottom: '8px' }}>Carregando sua área do cliente</strong>
+            <p style={{ color: 'var(--portal-muted)', lineHeight: 1.7 }}>Sincronizando pets, agendamentos, prontuários e recomendações com o mock da sessão.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="portal-app" data-portal-theme={portalTheme} style={{ minHeight: '100vh', paddingTop: '32px', paddingBottom: '32px', background: 'var(--portal-bg)' }}>
       <div className="container">
-        <ClientPortalTopbar portalTheme={portalTheme} setPortalTheme={setPortalTheme} setView={setView} onOpenSidebar={() => setIsSidebarOpen(true)} />
+        <ClientPortalTopbar portalTheme={portalTheme} setPortalTheme={setPortalTheme} setView={setView} onOpenSidebar={() => setIsSidebarOpen(true)} isSidebarOpen={isSidebarOpen} />
         
 
         <div className="portal-shell" style={{ display: 'grid', gridTemplateColumns: '280px minmax(0, 1fr)', gap: '24px' }}>
@@ -247,9 +301,9 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
                 pets={pets}
                 petsCount={pets.length}
                 appointments={upcomingAppointments}
-                medicalRecordsCount={MOCK_CLIENT_PORTAL.medicalRecords.length}
-                orders={MOCK_CLIENT_PORTAL.orders}
-                ordersCount={MOCK_CLIENT_PORTAL.orders.length}
+                medicalRecordsCount={records.length}
+                orders={orders}
+                ordersCount={orders.length}
                 currentUser={currentUser}
                 onOpenAppointments={() => setActiveTab('appointments')}
               />
@@ -261,6 +315,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
                 petForm={petForm}
                 setPetForm={setPetForm}
                 onAddPet={handleAddPet}
+                isSubmitting={actionLoading === 'pet'}
                 onOpenMedical={(petId) => {
                   setSelectedMedicalPetId(petId);
                   setActiveTab('medical');
@@ -272,10 +327,11 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
               <AppointmentsTab
                 pets={pets}
                 appointments={appointments}
-                veterinarians={MOCK_CLIENT_PORTAL.veterinarians}
+                veterinarians={veterinarians}
                 appointmentForm={appointmentForm}
                 setAppointmentForm={setAppointmentForm}
                 onCreateAppointment={handleCreateAppointment}
+                isSubmitting={actionLoading === 'appointment'}
                 formatDateInput={formatPtBrDateInput}
               />
             )}
@@ -289,13 +345,13 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
               />
             )}
 
-            {activeTab === 'vets' && <VetsTab veterinarians={MOCK_CLIENT_PORTAL.veterinarians} />}
+            {activeTab === 'vets' && <VetsTab veterinarians={veterinarians} />}
 
             {activeTab === 'store' && (
               <StoreTab
                 pets={pets}
-                products={MOCK_CLIENT_PORTAL.recommendedProducts}
-                orders={MOCK_CLIENT_PORTAL.orders}
+                products={products}
+                orders={orders}
                 addToCart={addToCart}
                 setView={setView}
               />
