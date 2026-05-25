@@ -103,27 +103,27 @@ export const PetsTab: React.FC<PetsTabProps> = ({ pets, petForm, setPetForm, onA
         <div style={{ display: 'grid', gap: '16px' }}>
           {pets.map((pet) => (
             <div key={pet.id} className="portal-pet-card" style={{ padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)', display: 'grid', gridTemplateColumns: '72px minmax(0, 1fr)', gap: '16px' }}>
-              <div style={{ width: '72px', height: '72px', borderRadius: '20px', background: 'var(--portal-avatar-surface)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '34px' }}>
+              <div className="portal-pet-card__avatar" style={{ width: '72px', height: '72px', borderRadius: '20px', background: 'var(--portal-avatar-surface)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '34px' }}>
                 {pet.avatar}
               </div>
-              <div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', marginBottom: '8px', flexWrap: 'wrap' }}>
-                  <div>
-                    <strong style={{ display: 'block', fontSize: '18px', color: 'var(--portal-text)' }}>{pet.name}</strong>
-                    <span style={{ fontSize: '14px', color: 'var(--portal-muted)' }}>{pet.species} · {pet.sex} · {pet.breed}</span>
+              <div className="portal-pet-card__body">
+                <div className="portal-pet-card__head" style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', marginBottom: '8px', flexWrap: 'wrap' }}>
+                  <div className="portal-pet-card__content">
+                    <strong className="portal-pet-card__title" style={{ display: 'block', fontSize: '18px', color: 'var(--portal-text)' }}>{pet.name}</strong>
+                    <span className="portal-pet-card__subtitle" style={{ fontSize: '14px', color: 'var(--portal-muted)' }}>{pet.species} · {pet.sex} · {pet.breed}</span>
                   </div>
-                  <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                  <div className="portal-pet-card__actions-head" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
                     <button type="button" onClick={() => startEditingPet(pet)} className="portal-link-btn">Editar cadastro</button>
                     <button type="button" onClick={() => onOpenMedical(pet.id)} className="portal-link-btn">Ver prontuário</button>
                   </div>
                 </div>
-                <div className="portal-mini-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '10px', marginBottom: '10px' }}>
+                <div className="portal-mini-grid portal-pet-card__meta" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '10px', marginBottom: '10px' }}>
                   <div><span className="portal-mini-label">Idade</span><strong style={{ color: 'var(--portal-text)' }}>{pet.age}</strong></div>
                   <div><span className="portal-mini-label">Peso</span><strong style={{ color: 'var(--portal-text)' }}>{pet.weight}</strong></div>
                   <div><span className="portal-mini-label">Tutor</span><strong style={{ color: 'var(--portal-text)' }}>{pet.tutorName}</strong></div>
                 </div>
-                <p style={{ fontSize: '14px', color: 'var(--portal-muted)', marginBottom: '8px' }}>{pet.observation}</p>
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                <p className="portal-pet-card__observation" style={{ fontSize: '14px', color: 'var(--portal-muted)', marginBottom: '8px' }}>{pet.observation}</p>
+                <div className="portal-pet-card__tags" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   {pet.vaccines.length > 0 ? pet.vaccines.map((vaccine) => (
                     <span key={vaccine} style={{ padding: '7px 10px', borderRadius: 'var(--radius-full)', background: 'var(--portal-pill-info-bg)', fontSize: '12px', fontWeight: 700, color: 'var(--portal-pill-info-text)' }}>
                       {vaccine}

@@ -231,16 +231,16 @@ export const AppointmentsTab: React.FC<AppointmentsTabProps> = ({
             const pet = pets.find((item) => item.id === appointment.petId);
             return (
               <div key={appointment.id} className="portal-appointment-card" style={{ padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', marginBottom: '10px', flexWrap: 'wrap' }}>
-                  <div>
-                    <strong style={{ display: 'block', fontSize: '17px', color: 'var(--portal-text)' }}>{appointment.service}</strong>
-                    <span style={{ fontSize: '14px', color: 'var(--portal-muted)' }}>{pet?.avatar} {pet?.name} · {appointment.veterinarian}</span>
+                <div className="portal-appointment-card__head" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', marginBottom: '10px', flexWrap: 'wrap' }}>
+                  <div className="portal-appointment-card__content">
+                    <strong className="portal-appointment-card__title" style={{ display: 'block', fontSize: '17px', color: 'var(--portal-text)' }}>{appointment.service}</strong>
+                    <span className="portal-appointment-card__subtitle" style={{ fontSize: '14px', color: 'var(--portal-muted)' }}>{pet?.avatar} {pet?.name} · {appointment.veterinarian}</span>
                   </div>
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                    <span style={{ padding: '8px 12px', borderRadius: 'var(--radius-full)', background: appointment.type === 'Táxi Pet' ? 'var(--portal-pill-warn-bg)' : 'var(--portal-pill-info-bg)', color: appointment.type === 'Táxi Pet' ? 'var(--portal-pill-warn-text)' : 'var(--portal-pill-info-text)', fontSize: '12px', fontWeight: 700, height: 'fit-content' }}>
+                  <div className="portal-appointment-card__chips" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+                    <span className="portal-appointment-card__chip" style={{ padding: '8px 12px', borderRadius: 'var(--radius-full)', background: appointment.type === 'Táxi Pet' ? 'var(--portal-pill-warn-bg)' : 'var(--portal-pill-info-bg)', color: appointment.type === 'Táxi Pet' ? 'var(--portal-pill-warn-text)' : 'var(--portal-pill-info-text)', fontSize: '12px', fontWeight: 700, height: 'fit-content' }}>
                       {appointment.type}
                     </span>
-                    <span style={{ padding: '8px 12px', borderRadius: 'var(--radius-full)', background: appointment.status === 'Concluído' ? 'var(--portal-pill-success-bg)' : 'var(--portal-pill-info-bg)', color: appointment.status === 'Concluído' ? 'var(--portal-pill-success-text)' : 'var(--portal-pill-info-text)', fontSize: '12px', fontWeight: 700, height: 'fit-content' }}>
+                    <span className="portal-appointment-card__chip" style={{ padding: '8px 12px', borderRadius: 'var(--radius-full)', background: appointment.status === 'Concluído' ? 'var(--portal-pill-success-bg)' : 'var(--portal-pill-info-bg)', color: appointment.status === 'Concluído' ? 'var(--portal-pill-success-text)' : 'var(--portal-pill-info-text)', fontSize: '12px', fontWeight: 700, height: 'fit-content' }}>
                       {appointment.status}
                     </span>
                   </div>

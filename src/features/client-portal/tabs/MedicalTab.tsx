@@ -76,14 +76,14 @@ export const MedicalTab: React.FC<MedicalTabProps> = ({ pets, selectedMedicalPet
         </select>
       }
     >
-      <div className="portal-surface" style={{ padding: '18px' }}>
-        <strong style={{ display: 'block', fontSize: '18px', marginBottom: '6px', color: 'var(--portal-text)' }}>
-          {selectedPet?.avatar} {selectedPet?.name}
-        </strong>
-        <p style={{ fontSize: '14px', color: 'var(--portal-muted)' }}>
-          {selectedPet?.species} · {selectedPet?.sex} · {selectedPet?.breed} · {selectedPet?.observation}
-        </p>
-      </div>
+        <div className="portal-surface portal-medical-pet-summary" style={{ padding: '18px' }}>
+          <strong className="portal-medical-pet-summary__title" style={{ display: 'block', fontSize: '18px', marginBottom: '6px', color: 'var(--portal-text)' }}>
+            {selectedPet?.avatar} {selectedPet?.name}
+          </strong>
+          <p className="portal-medical-pet-summary__copy" style={{ fontSize: '14px', color: 'var(--portal-muted)' }}>
+            {selectedPet?.species} · {selectedPet?.sex} · {selectedPet?.breed} · {selectedPet?.observation}
+          </p>
+        </div>
 
       <div style={{ display: 'grid', gap: '14px' }}>
         <div className="portal-medical-controls" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) repeat(2, minmax(0, 0.7fr))', gap: '12px' }}>
@@ -115,12 +115,12 @@ export const MedicalTab: React.FC<MedicalTabProps> = ({ pets, selectedMedicalPet
       <div style={{ display: 'grid', gap: '14px' }}>
         {paginatedRecords.map((record) => (
           <div key={record.id} className="portal-medical-record-card" style={{ padding: '20px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', marginBottom: '12px', flexWrap: 'wrap' }}>
-              <div>
-                <strong style={{ display: 'block', fontSize: '17px', color: 'var(--portal-text)' }}>{record.diagnosis}</strong>
-                <span style={{ fontSize: '14px', color: 'var(--portal-muted)' }}>{record.veterinarian} · {record.specialty}</span>
+            <div className="portal-medical-record-card__head" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', marginBottom: '12px', flexWrap: 'wrap' }}>
+              <div className="portal-medical-record-card__content">
+                <strong className="portal-medical-record-card__title" style={{ display: 'block', fontSize: '17px', color: 'var(--portal-text)' }}>{record.diagnosis}</strong>
+                <span className="portal-medical-record-card__subtitle" style={{ fontSize: '14px', color: 'var(--portal-muted)' }}>{record.veterinarian} · {record.specialty}</span>
               </div>
-              <span style={{ padding: '8px 12px', borderRadius: 'var(--radius-full)', background: 'var(--portal-danger-surface)', color: 'var(--portal-danger-text)', fontSize: '12px', fontWeight: 700, height: 'fit-content' }}>
+              <span className="portal-medical-record-card__status" style={{ padding: '8px 12px', borderRadius: 'var(--radius-full)', background: 'var(--portal-danger-surface)', color: 'var(--portal-danger-text)', fontSize: '12px', fontWeight: 700, height: 'fit-content' }}>
                 {record.status}
               </span>
             </div>

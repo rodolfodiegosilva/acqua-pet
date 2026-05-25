@@ -226,6 +226,145 @@
   display: block;
 }
 
+.portal-dashboard-highlight-card,
+.portal-featured-pet-card,
+.portal-dashboard-appointment-card,
+.portal-pet-card,
+.portal-appointment-card,
+.portal-medical-pet-summary,
+.portal-medical-record-card,
+.portal-vet-card,
+.portal-store-product-card,
+.portal-order-card {
+  display: grid;
+  gap: 12px;
+}
+
+.portal-dashboard-appointment-card__content,
+.portal-featured-pet-card__content,
+.portal-pet-card__content,
+.portal-appointment-card__content,
+.portal-medical-record-card__content,
+.portal-vet-card__content,
+.portal-store-product-card__content,
+.portal-order-card__content {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.portal-dashboard-appointment-card__title,
+.portal-featured-pet-card__title,
+.portal-pet-card__title,
+.portal-appointment-card__title,
+.portal-medical-record-card__title,
+.portal-vet-card__title,
+.portal-store-product-card__title,
+.portal-order-card__title {
+  letter-spacing: -0.02em;
+}
+
+.portal-dashboard-appointment-card__subtitle,
+.portal-featured-pet-card__copy,
+.portal-pet-card__subtitle,
+.portal-pet-card__observation,
+.portal-appointment-card__subtitle,
+.portal-medical-pet-summary__copy,
+.portal-medical-record-card__subtitle,
+.portal-vet-card__subtitle,
+.portal-store-product-card__copy,
+.portal-order-card__subtitle,
+.portal-order-card__copy {
+  overflow-wrap: anywhere;
+}
+
+.portal-dashboard-appointment-card__status,
+.portal-featured-pet-card__badge,
+.portal-vet-card__status,
+.portal-order-card__status,
+.portal-medical-record-card__status {
+  align-self: flex-start;
+}
+
+.portal-pet-card__avatar {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--portal-accent) 18%, var(--portal-border));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.portal-pet-card__avatar::after,
+.portal-store-product-card__media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14), transparent 48%);
+  pointer-events: none;
+}
+
+.portal-pet-card__body {
+  display: grid;
+  gap: 10px;
+  min-width: 0;
+}
+
+.portal-pet-card__head,
+.portal-appointment-card__head,
+.portal-vet-card__head,
+.portal-order-card__head,
+.portal-featured-pet-card__head {
+  align-items: flex-start;
+}
+
+.portal-pet-card__meta > div,
+.portal-appointments-meta > div,
+.portal-vet-card__meta > div {
+  display: grid;
+  gap: 6px;
+  min-height: 100%;
+  padding: 12px 14px;
+  border-radius: 16px;
+  border: 1px solid var(--portal-border);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--portal-accent) 5%, transparent) 0%, transparent 66%),
+    color-mix(in srgb, var(--portal-surface) 88%, transparent);
+}
+
+.portal-pet-card__meta strong,
+.portal-appointments-meta strong,
+.portal-vet-card__meta strong {
+  line-height: 1.5;
+}
+
+.portal-store-product-card__media {
+  position: relative;
+  overflow: hidden;
+}
+
+.portal-store-product-card__category {
+  letter-spacing: 0.08em;
+}
+
+.portal-store-product-card__footer {
+  padding-top: 2px;
+}
+
+.portal-medical-pet-summary {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--portal-accent) 5%, transparent) 0%, transparent 62%),
+    var(--portal-soft-surface);
+}
+
+.portal-medical-record-card {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--portal-danger-text) 5%, transparent) 0%, transparent 62%),
+    var(--portal-soft-surface);
+}
+
+.portal-medical-record-card__head {
+  align-items: flex-start;
+}
+
 .portal-store-product-card strong,
 .portal-order-card strong,
 .portal-vet-card strong {
@@ -574,11 +713,20 @@
     gap: 14px !important;
   }
 
+  .portal-pet-card__head,
+  .portal-appointment-card__head,
+  .portal-vet-card__head,
+  .portal-order-card__head,
+  .portal-featured-pet-card__head {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
   .portal-pet-card {
     grid-template-columns: 1fr !important;
   }
 
-  .portal-pet-card > div:first-child {
+  .portal-pet-card__avatar {
     width: 60px !important;
     height: 60px !important;
     border-radius: 18px !important;
@@ -597,6 +745,15 @@
   .portal-dashboard-appointment-card .portal-link-btn {
     width: 100%;
     justify-content: flex-start;
+  }
+
+  .portal-appointment-card__chips,
+  .portal-vet-card__status,
+  .portal-order-card__status,
+  .portal-featured-pet-card__badge,
+  .portal-dashboard-appointment-card__status,
+  .portal-medical-record-card__status {
+    width: 100%;
   }
 
   .portal-appointment-card .portal-appointments-route {
@@ -684,7 +841,8 @@
 
   .portal-pet-card .portal-mini-grid > div,
   .portal-appointments-meta > div,
-  .portal-record-grid > div {
+  .portal-record-grid > div,
+  .portal-vet-card__meta > div {
     padding: 10px 12px;
     border-radius: 14px;
     background: color-mix(in srgb, var(--portal-accent) 6%, var(--portal-soft-surface));

@@ -105,15 +105,15 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
           </div>
 
           <div className="portal-dashboard-highlight-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '12px' }}>
-            <div className="portal-surface" style={{ padding: '16px' }}>
+            <div className="portal-surface portal-dashboard-highlight-card" style={{ padding: '16px' }}>
               <span className="portal-mini-label">Plano ativo</span>
               <strong style={{ color: 'var(--portal-text)' }}>{currentUser.plan}</strong>
             </div>
-            <div className="portal-surface" style={{ padding: '16px' }}>
+            <div className="portal-surface portal-dashboard-highlight-card" style={{ padding: '16px' }}>
               <span className="portal-mini-label">Desde</span>
               <strong style={{ color: 'var(--portal-text)' }}>{currentUser.memberSince}</strong>
             </div>
-            <div className="portal-surface" style={{ padding: '16px' }}>
+            <div className="portal-surface portal-dashboard-highlight-card" style={{ padding: '16px' }}>
               <span className="portal-mini-label">Base de atendimento</span>
               <strong style={{ color: 'var(--portal-text)' }}>{currentUser.city}</strong>
             </div>
@@ -157,12 +157,12 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
           <div style={{ display: 'grid', gap: '14px' }}>
             {appointments.map((appointment) => (
               <div key={appointment.id} className="portal-dashboard-appointment-card" style={{ padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)', display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
-                <div>
-                  <strong style={{ display: 'block', fontSize: '16px', marginBottom: '4px', color: 'var(--portal-text)' }}>{appointment.service}</strong>
-                  <span style={{ display: 'block', fontSize: '14px', color: 'var(--portal-muted)' }}>{appointment.veterinarian}</span>
-                  <span style={{ display: 'block', fontSize: '13px', color: 'var(--portal-muted)', marginTop: '6px' }}>{appointment.date} às {appointment.time} · {appointment.location}</span>
+                <div className="portal-dashboard-appointment-card__content">
+                  <strong className="portal-dashboard-appointment-card__title" style={{ display: 'block', fontSize: '16px', marginBottom: '4px', color: 'var(--portal-text)' }}>{appointment.service}</strong>
+                  <span className="portal-dashboard-appointment-card__subtitle" style={{ display: 'block', fontSize: '14px', color: 'var(--portal-muted)' }}>{appointment.veterinarian}</span>
+                  <span className="portal-dashboard-appointment-card__subtitle" style={{ display: 'block', fontSize: '13px', color: 'var(--portal-muted)', marginTop: '6px' }}>{appointment.date} às {appointment.time} · {appointment.location}</span>
                 </div>
-                <span style={{ alignSelf: 'start', padding: '8px 12px', borderRadius: 'var(--radius-full)', background: 'var(--portal-pill-info-bg)', color: 'var(--portal-pill-info-text)', fontSize: '12px', fontWeight: 700 }}>
+                <span className="portal-dashboard-appointment-card__status" style={{ alignSelf: 'start', padding: '8px 12px', borderRadius: 'var(--radius-full)', background: 'var(--portal-pill-info-bg)', color: 'var(--portal-pill-info-text)', fontSize: '12px', fontWeight: 700 }}>
                   {appointment.status}
                 </span>
               </div>
@@ -175,18 +175,18 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
             <div style={{ display: 'grid', gap: '12px' }}>
               {pets.slice(0, 3).map((pet) => (
                 <div key={pet.id} className="portal-surface portal-featured-pet-card" style={{ padding: '16px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', alignItems: 'flex-start' }}>
-                    <div>
-                      <strong style={{ display: 'block', color: 'var(--portal-text)', marginBottom: '4px' }}>{pet.avatar} {pet.name}</strong>
-                      <p style={{ color: 'var(--portal-muted)', fontSize: '14px', lineHeight: 1.5 }}>
+                  <div className="portal-featured-pet-card__head" style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', alignItems: 'flex-start' }}>
+                    <div className="portal-featured-pet-card__content">
+                      <strong className="portal-featured-pet-card__title" style={{ display: 'block', color: 'var(--portal-text)', marginBottom: '4px' }}>{pet.avatar} {pet.name}</strong>
+                      <p className="portal-featured-pet-card__copy" style={{ color: 'var(--portal-muted)', fontSize: '14px', lineHeight: 1.5 }}>
                         {pet.species} · {pet.sex} · {pet.breed}
                       </p>
                     </div>
-                    <span style={{ padding: '6px 10px', borderRadius: '999px', background: 'var(--portal-pill-info-bg)', color: 'var(--portal-pill-info-text)', fontSize: '12px', fontWeight: 700 }}>
+                    <span className="portal-featured-pet-card__badge" style={{ padding: '6px 10px', borderRadius: '999px', background: 'var(--portal-pill-info-bg)', color: 'var(--portal-pill-info-text)', fontSize: '12px', fontWeight: 700 }}>
                       {pet.age}
                     </span>
                   </div>
-                  <p style={{ color: 'var(--portal-muted)', fontSize: '13px', lineHeight: 1.6, marginTop: '10px' }}>
+                  <p className="portal-featured-pet-card__copy" style={{ color: 'var(--portal-muted)', fontSize: '13px', lineHeight: 1.6, marginTop: '10px' }}>
                     {pet.observation}
                   </p>
                 </div>

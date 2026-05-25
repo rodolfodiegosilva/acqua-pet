@@ -138,14 +138,14 @@ export const StoreTab: React.FC<StoreTabProps> = ({ pets, products, orders, addT
         <div className="portal-store-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '16px' }}>
           {paginatedProducts.map((product) => (
             <div key={product.id} className="portal-store-product-card" style={{ padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)', display: 'flex', flexDirection: 'column', gap: '14px' }}>
-              <div style={{ height: '140px', borderRadius: 'var(--radius-md)', background: product.imageBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px' }}>
+              <div className="portal-store-product-card__media" style={{ height: '140px', borderRadius: 'var(--radius-md)', background: product.imageBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px' }}>
                 {product.imageEmoji}
               </div>
-              <div>
-                <span style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--portal-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>{product.category}</span>
-                <strong style={{ display: 'block', fontSize: '16px', marginBottom: '6px', color: 'var(--portal-text)' }}>{product.name}</strong>
-                <p style={{ fontSize: '13px', color: 'var(--portal-muted)', lineHeight: 1.5 }}>{product.description}</p>
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '10px' }}>
+              <div className="portal-store-product-card__content">
+                <span className="portal-store-product-card__category" style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--portal-muted)', textTransform: 'uppercase', marginBottom: '6px' }}>{product.category}</span>
+                <strong className="portal-store-product-card__title" style={{ display: 'block', fontSize: '16px', marginBottom: '6px', color: 'var(--portal-text)' }}>{product.name}</strong>
+                <p className="portal-store-product-card__copy" style={{ fontSize: '13px', color: 'var(--portal-muted)', lineHeight: 1.5 }}>{product.description}</p>
+                <div className="portal-store-product-card__tags" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '10px' }}>
                   {recommendedCategories.has(product.category) && (
                     <span style={{ padding: '6px 9px', borderRadius: 'var(--radius-full)', background: 'var(--portal-pill-info-bg)', color: 'var(--portal-pill-info-text)', fontSize: '11px', fontWeight: 700 }}>
                       Indicado para seus pets
@@ -158,8 +158,8 @@ export const StoreTab: React.FC<StoreTabProps> = ({ pets, products, orders, addT
                   )}
                 </div>
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', marginTop: 'auto', flexWrap: 'wrap' }}>
-                <div>
+              <div className="portal-store-product-card__footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '12px', marginTop: 'auto', flexWrap: 'wrap' }}>
+                <div className="portal-store-product-card__price">
                   {product.originalPrice && (
                     <span style={{ display: 'block', fontSize: '12px', color: 'var(--portal-muted)', textDecoration: 'line-through' }}>
                       R$ {product.originalPrice.toFixed(2)}
@@ -191,16 +191,16 @@ export const StoreTab: React.FC<StoreTabProps> = ({ pets, products, orders, addT
         <div style={{ display: 'grid', gap: '14px' }}>
           {orders.map((order) => (
             <div key={order.id} className="portal-order-card" style={{ padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', marginBottom: '10px', flexWrap: 'wrap' }}>
-                <div>
-                  <strong style={{ display: 'block', fontSize: '17px', color: 'var(--portal-text)' }}>{order.number}</strong>
-                  <span style={{ fontSize: '13px', color: 'var(--portal-muted)' }}>{order.createdAt}</span>
+              <div className="portal-order-card__head" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', marginBottom: '10px', flexWrap: 'wrap' }}>
+                <div className="portal-order-card__content">
+                  <strong className="portal-order-card__title" style={{ display: 'block', fontSize: '17px', color: 'var(--portal-text)' }}>{order.number}</strong>
+                  <span className="portal-order-card__subtitle" style={{ fontSize: '13px', color: 'var(--portal-muted)' }}>{order.createdAt}</span>
                 </div>
-                <span style={{ padding: '8px 12px', borderRadius: 'var(--radius-full)', background: 'var(--portal-pill-info-bg)', color: 'var(--portal-pill-info-text)', fontSize: '12px', fontWeight: 700, height: 'fit-content' }}>
+                <span className="portal-order-card__status" style={{ padding: '8px 12px', borderRadius: 'var(--radius-full)', background: 'var(--portal-pill-info-bg)', color: 'var(--portal-pill-info-text)', fontSize: '12px', fontWeight: 700, height: 'fit-content' }}>
                   {order.status}
                 </span>
               </div>
-              <p style={{ fontSize: '14px', color: 'var(--portal-muted)', lineHeight: 1.6, marginBottom: '10px' }}>{order.items.join(' · ')}</p>
+              <p className="portal-order-card__copy" style={{ fontSize: '14px', color: 'var(--portal-muted)', lineHeight: 1.6, marginBottom: '10px' }}>{order.items.join(' · ')}</p>
               <strong style={{ color: 'var(--portal-accent)' }}>Total R$ {order.total.toFixed(2)}</strong>
             </div>
           ))}
