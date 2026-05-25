@@ -104,33 +104,33 @@ export const VetPatientsTab: React.FC<VetPatientsTabProps> = ({
         </select>
       </div>
 
-      <div style={{ display: 'grid', gap: '14px' }}>
+      <div className="backoffice-patient-list" style={{ display: 'grid', gap: '14px' }}>
         {paginatedPatients.map(({ pet, latestRecord, recordCount }) => (
-          <div key={pet.id} className="backoffice-card" style={{ padding: '18px', background: 'var(--backoffice-soft)' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '12px' }}>
-              <div style={{ display: 'flex', gap: '14px', minWidth: 0 }}>
-                <div style={{ width: '72px', height: '72px', borderRadius: '22px', background: 'color-mix(in srgb, var(--backoffice-accent-strong) 14%, var(--backoffice-surface))', display: 'grid', placeItems: 'center', fontSize: '34px', flexShrink: 0 }}>
+          <div key={pet.id} className="backoffice-card backoffice-entity-card backoffice-patient-card" style={{ padding: '18px', background: 'var(--backoffice-soft)' }}>
+            <div className="backoffice-patient-card__head" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '12px' }}>
+              <div className="backoffice-patient-card__identity" style={{ display: 'flex', gap: '14px', minWidth: 0 }}>
+                <div className="backoffice-patient-card__avatar" style={{ width: '72px', height: '72px', borderRadius: '22px', background: 'color-mix(in srgb, var(--backoffice-accent-strong) 14%, var(--backoffice-surface))', display: 'grid', placeItems: 'center', fontSize: '34px', flexShrink: 0 }}>
                   {pet.avatar}
                 </div>
-                <div style={{ minWidth: 0 }}>
-                  <strong style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '18px', marginBottom: '6px' }}>{pet.name}</strong>
-                  <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{pet.species} · {pet.sex} · {pet.breed} · Tutor: {pet.tutorName}</p>
-                  <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>Último diagnóstico: {latestRecord?.diagnosis ?? 'Sem prontuário clínico registrado'}</p>
+                <div className="backoffice-patient-card__content" style={{ minWidth: 0 }}>
+                  <strong className="backoffice-patient-card__title" style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '18px', marginBottom: '6px' }}>{pet.name}</strong>
+                  <p className="backoffice-patient-card__subtitle" style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{pet.species} · {pet.sex} · {pet.breed} · Tutor: {pet.tutorName}</p>
+                  <p className="backoffice-patient-card__diagnosis" style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>Último diagnóstico: {latestRecord?.diagnosis ?? 'Sem prontuário clínico registrado'}</p>
                 </div>
               </div>
-              <span className={`backoffice-pill ${pet.status === 'Ativo' ? 'backoffice-status-success' : pet.status === 'Em acompanhamento' ? 'backoffice-status-attention' : 'backoffice-status-critical'}`}>
+              <span className={`backoffice-pill backoffice-patient-card__status ${pet.status === 'Ativo' ? 'backoffice-status-success' : pet.status === 'Em acompanhamento' ? 'backoffice-status-attention' : 'backoffice-status-critical'}`}>
                 {pet.status}
               </span>
             </div>
 
-            <div className="backoffice-mini-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '12px', marginBottom: '14px' }}>
-              <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Prontuários</span><strong style={{ color: 'var(--backoffice-text)' }}>{recordCount}</strong></div>
-              <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Última visita</span><strong style={{ color: 'var(--backoffice-text)' }}>{pet.lastVisit}</strong></div>
-              <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Próxima ação</span><strong style={{ color: 'var(--backoffice-text)' }}>{pet.nextAction}</strong></div>
-              <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Status clínico</span><strong style={{ color: 'var(--backoffice-text)' }}>{latestRecord?.status ?? 'Sem status'}</strong></div>
+            <div className="backoffice-mini-grid backoffice-patient-card__meta" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '12px', marginBottom: '14px' }}>
+              <div className="backoffice-patient-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Prontuários</span><strong style={{ color: 'var(--backoffice-text)' }}>{recordCount}</strong></div>
+              <div className="backoffice-patient-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Última visita</span><strong style={{ color: 'var(--backoffice-text)' }}>{pet.lastVisit}</strong></div>
+              <div className="backoffice-patient-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Próxima ação</span><strong style={{ color: 'var(--backoffice-text)' }}>{pet.nextAction}</strong></div>
+              <div className="backoffice-patient-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Status clínico</span><strong style={{ color: 'var(--backoffice-text)' }}>{latestRecord?.status ?? 'Sem status'}</strong></div>
             </div>
 
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+            <div className="backoffice-patient-card__actions" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
               <button className="backoffice-primary-btn" onClick={() => onSelectPet(pet.id)}>Abrir ficha completa</button>
             </div>
           </div>

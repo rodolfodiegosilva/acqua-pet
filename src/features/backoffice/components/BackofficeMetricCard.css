@@ -1,0 +1,50 @@
+.backoffice-metric-card {
+  padding: 22px;
+  display: grid;
+  gap: 14px;
+  min-height: 186px;
+  border-radius: 24px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--backoffice-accent-strong) 6%, transparent) 0%, transparent 45%),
+    var(--backoffice-surface);
+}
+
+.backoffice-metric-card__icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--backoffice-accent-strong) 14%, var(--backoffice-soft));
+  color: var(--backoffice-accent-strong);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+}
+
+.backoffice-metric-card__content {
+  display: grid;
+  gap: 6px;
+}
+
+.backoffice-metric-card__label {
+  display: block;
+  font-size: 12px;
+  color: var(--backoffice-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 800;
+}
+
+.backoffice-metric-card__value {
+  display: block;
+  font-size: 30px;
+  line-height: 1.02;
+  color: var(--backoffice-text);
+  letter-spacing: -0.03em;
+}
+
+.backoffice-metric-card__hint {
+  color: var(--backoffice-muted);
+  line-height: 1.6;
+  font-size: 14px;
+}

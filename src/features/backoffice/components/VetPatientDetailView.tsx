@@ -25,10 +25,10 @@ export const VetPatientDetailView: React.FC<VetPatientDetailViewProps> = ({ pet,
   const latestRecord = sortedRecords[0];
 
   return (
-    <div style={{ display: 'grid', gap: '20px' }}>
-      <div className="backoffice-card" style={{ padding: '24px', display: 'grid', gap: '18px', background: 'var(--backoffice-hero)' }}>
+    <div className="backoffice-patient-detail" style={{ display: 'grid', gap: '20px' }}>
+      <div className="backoffice-card backoffice-detail-hero" style={{ padding: '24px', display: 'grid', gap: '18px', background: 'var(--backoffice-hero)' }}>
         <div className="backoffice-section-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', alignItems: 'flex-start' }}>
-          <div style={{ display: 'flex', gap: '16px', minWidth: 0 }}>
+          <div className="backoffice-patient-detail__identity" style={{ display: 'flex', gap: '16px', minWidth: 0 }}>
             <button className="backoffice-ghost-btn" type="button" onClick={onBack} style={{ alignSelf: 'flex-start' }}>
               <ArrowBackRounded sx={{ fontSize: 16 }} />
               Voltar
@@ -36,39 +36,39 @@ export const VetPatientDetailView: React.FC<VetPatientDetailViewProps> = ({ pet,
             <div className="backoffice-patient-avatar" style={{ width: '88px', height: '88px', borderRadius: '28px', background: 'rgba(255,255,255,0.18)', display: 'grid', placeItems: 'center', fontSize: '42px', flexShrink: 0 }}>
               {pet.avatar}
             </div>
-            <div style={{ minWidth: 0 }}>
-              <span style={{ display: 'inline-flex', padding: '8px 12px', borderRadius: '999px', background: 'rgba(255,255,255,0.16)', color: 'var(--backoffice-text)', fontSize: '12px', fontWeight: 800, marginBottom: '10px' }}>
+            <div className="backoffice-patient-detail__copy" style={{ minWidth: 0 }}>
+              <span className="backoffice-patient-detail__hero-status" style={{ display: 'inline-flex', padding: '8px 12px', borderRadius: '999px', background: 'rgba(255,255,255,0.16)', color: 'var(--backoffice-text)', fontSize: '12px', fontWeight: 800, marginBottom: '10px' }}>
                 {pet.status}
               </span>
-              <h2 style={{ color: 'var(--backoffice-text)', fontSize: '30px', marginBottom: '8px' }}>{pet.name}</h2>
-              <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.7 }}>
+              <h2 className="backoffice-patient-detail__title" style={{ color: 'var(--backoffice-text)', fontSize: '30px', marginBottom: '8px' }}>{pet.name}</h2>
+              <p className="backoffice-patient-detail__subtitle" style={{ color: 'var(--backoffice-muted)', lineHeight: 1.7 }}>
                 {pet.species} · {pet.sex} · {pet.breed} · {pet.age} · {pet.weight}
               </p>
-              <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.7 }}>
+              <p className="backoffice-patient-detail__subtitle" style={{ color: 'var(--backoffice-muted)', lineHeight: 1.7 }}>
                 Tutor: {pet.tutorName} · Último atendimento: {pet.lastVisit} · Próxima ação: {pet.nextAction}
               </p>
             </div>
           </div>
-          <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+          <div className="backoffice-patient-detail__chips" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
             <span className="backoffice-pill backoffice-status-info"><MedicalServicesRounded sx={{ fontSize: 14 }} /> Ficha clínica completa</span>
             <span className="backoffice-pill backoffice-status-success"><NoteAddRounded sx={{ fontSize: 14 }} /> {sortedRecords.length} registros</span>
           </div>
         </div>
 
-        <div className="backoffice-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '12px' }}>
-          <div className="backoffice-card" style={{ padding: '16px', background: 'rgba(255,255,255,0.08)' }}>
+        <div className="backoffice-grid backoffice-patient-detail__summary" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '12px' }}>
+          <div className="backoffice-card backoffice-patient-detail__summary-card" style={{ padding: '16px', background: 'rgba(255,255,255,0.08)' }}>
             <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Observação base</span>
             <strong style={{ color: 'var(--backoffice-text)', lineHeight: 1.6 }}>{pet.observation || 'Sem observação registrada.'}</strong>
           </div>
-          <div className="backoffice-card" style={{ padding: '16px', background: 'rgba(255,255,255,0.08)' }}>
+          <div className="backoffice-card backoffice-patient-detail__summary-card" style={{ padding: '16px', background: 'rgba(255,255,255,0.08)' }}>
             <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Vacinas</span>
             <strong style={{ color: 'var(--backoffice-text)', lineHeight: 1.6 }}>{pet.vaccines.length > 0 ? pet.vaccines.join(', ') : 'Sem vacina registrada'}</strong>
           </div>
-          <div className="backoffice-card" style={{ padding: '16px', background: 'rgba(255,255,255,0.08)' }}>
+          <div className="backoffice-card backoffice-patient-detail__summary-card" style={{ padding: '16px', background: 'rgba(255,255,255,0.08)' }}>
             <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Último diagnóstico</span>
             <strong style={{ color: 'var(--backoffice-text)', lineHeight: 1.6 }}>{latestRecord?.diagnosis ?? 'Ainda sem prontuário clínico.'}</strong>
           </div>
-          <div className="backoffice-card" style={{ padding: '16px', background: 'rgba(255,255,255,0.08)' }}>
+          <div className="backoffice-card backoffice-patient-detail__summary-card" style={{ padding: '16px', background: 'rgba(255,255,255,0.08)' }}>
             <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Retorno</span>
             <strong style={{ color: 'var(--backoffice-text)', lineHeight: 1.6 }}>{latestRecord?.returnWindow ?? 'A definir'}</strong>
           </div>
@@ -77,32 +77,32 @@ export const VetPatientDetailView: React.FC<VetPatientDetailViewProps> = ({ pet,
 
       <div className="backoffice-two-cols" style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '20px', alignItems: 'start' }}>
         <BackofficeSectionCard title="Histórico médico completo" eyebrow="Prontuário">
-          <div style={{ display: 'grid', gap: '14px' }}>
+          <div className="backoffice-patient-record-list" style={{ display: 'grid', gap: '14px' }}>
             {sortedRecords.length > 0 ? sortedRecords.map((record) => (
-              <article key={record.id} className="backoffice-card" style={{ padding: '18px', background: 'var(--backoffice-soft)', display: 'grid', gap: '14px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
-                  <div>
-                    <strong style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '18px', marginBottom: '6px' }}>{record.diagnosis}</strong>
-                    <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{record.date} · {record.veterinarian} · {record.specialty}</p>
+              <article key={record.id} className="backoffice-card backoffice-entity-card backoffice-patient-record-card" style={{ padding: '18px', background: 'var(--backoffice-soft)', display: 'grid', gap: '14px' }}>
+                <div className="backoffice-patient-record-card__head" style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
+                  <div className="backoffice-patient-record-card__identity">
+                    <strong className="backoffice-patient-record-card__title" style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '18px', marginBottom: '6px' }}>{record.diagnosis}</strong>
+                    <p className="backoffice-patient-record-card__meta" style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{record.date} · {record.veterinarian} · {record.specialty}</p>
                   </div>
-                  <span className={`backoffice-pill ${record.status === 'Estável' ? 'backoffice-status-success' : record.status === 'Atenção' ? 'backoffice-status-attention' : 'backoffice-status-critical'}`}>
+                  <span className={`backoffice-pill backoffice-patient-record-card__status ${record.status === 'Estável' ? 'backoffice-status-success' : record.status === 'Atenção' ? 'backoffice-status-attention' : 'backoffice-status-critical'}`}>
                     {record.status}
                   </span>
                 </div>
 
-                <div className="backoffice-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '12px' }}>
-                  <div>
+                <div className="backoffice-grid backoffice-patient-record-card__notes" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '12px' }}>
+                  <div className="backoffice-patient-record-card__note-block">
                     <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Sintomas</span>
                     <p style={{ color: 'var(--backoffice-text)', lineHeight: 1.7 }}>{record.symptoms}</p>
                   </div>
-                  <div>
+                  <div className="backoffice-patient-record-card__note-block">
                     <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '6px' }}>Notas clínicas</span>
                     <p style={{ color: 'var(--backoffice-text)', lineHeight: 1.7 }}>{record.clinicalNotes}</p>
                   </div>
                 </div>
 
-                <div className="backoffice-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '12px' }}>
-                  <div className="backoffice-card" style={{ padding: '16px', background: 'var(--backoffice-surface)' }}>
+                <div className="backoffice-grid backoffice-patient-record-card__details" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '12px' }}>
+                  <div className="backoffice-card backoffice-patient-record-card__detail-box" style={{ padding: '16px', background: 'var(--backoffice-surface)' }}>
                     <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '8px' }}>Receituário</span>
                     <p style={{ color: 'var(--backoffice-text)', lineHeight: 1.7, marginBottom: '10px' }}>{record.prescription}</p>
                     <div style={{ display: 'grid', gap: '6px' }}>
@@ -111,7 +111,7 @@ export const VetPatientDetailView: React.FC<VetPatientDetailViewProps> = ({ pet,
                       ))}
                     </div>
                   </div>
-                  <div className="backoffice-card" style={{ padding: '16px', background: 'var(--backoffice-surface)' }}>
+                  <div className="backoffice-card backoffice-patient-record-card__detail-box" style={{ padding: '16px', background: 'var(--backoffice-surface)' }}>
                     <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '8px' }}>Exames solicitados</span>
                     <div style={{ display: 'grid', gap: '6px' }}>
                       {record.examsRequested.length > 0 ? record.examsRequested.map((item) => (
@@ -119,7 +119,7 @@ export const VetPatientDetailView: React.FC<VetPatientDetailViewProps> = ({ pet,
                       )) : <span style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>Sem exames adicionais.</span>}
                     </div>
                   </div>
-                  <div className="backoffice-card" style={{ padding: '16px', background: 'var(--backoffice-surface)' }}>
+                  <div className="backoffice-card backoffice-patient-record-card__detail-box" style={{ padding: '16px', background: 'var(--backoffice-surface)' }}>
                     <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '8px' }}>Orientações ao tutor</span>
                     <div style={{ display: 'grid', gap: '6px' }}>
                       {record.recommendations.length > 0 ? record.recommendations.map((item) => (

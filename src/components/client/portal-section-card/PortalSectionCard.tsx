@@ -1,4 +1,5 @@
 import React from 'react';
+import './PortalSectionCard.css';
 
 interface PortalSectionCardProps {
   title: string;
@@ -10,7 +11,7 @@ interface PortalSectionCardProps {
 export const PortalSectionCard: React.FC<PortalSectionCardProps> = ({ title, eyebrow, action, children }) => {
   return (
     <section
-      className="glass-card"
+      className="glass-card portal-section-card"
       style={{
         padding: '24px',
         display: 'flex',
@@ -27,13 +28,13 @@ export const PortalSectionCard: React.FC<PortalSectionCardProps> = ({ title, eye
           gap: '16px'
         }}
       >
-        <div>
+        <div className="portal-section-card__heading">
           {eyebrow && (
-            <span style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: 'var(--accent)', textTransform: 'uppercase', letterSpacing: '1.5px', marginBottom: '6px' }}>
+            <span className="portal-section-card__eyebrow">
               {eyebrow}
             </span>
           )}
-          <h3 style={{ fontSize: '22px', fontWeight: 800 }}>{title}</h3>
+          <h3 className="portal-section-card__title">{title}</h3>
         </div>
         {action}
       </div>

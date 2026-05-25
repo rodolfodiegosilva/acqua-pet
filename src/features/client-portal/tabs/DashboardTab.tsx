@@ -156,7 +156,7 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
         <PortalSectionCard title="Agenda da semana" eyebrow="Operação" action={<button onClick={onOpenAppointments} className="portal-link-btn">Gerenciar agenda</button>}>
           <div style={{ display: 'grid', gap: '14px' }}>
             {appointments.map((appointment) => (
-              <div key={appointment.id} style={{ padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)', display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
+              <div key={appointment.id} className="portal-dashboard-appointment-card" style={{ padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)', display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap' }}>
                 <div>
                   <strong style={{ display: 'block', fontSize: '16px', marginBottom: '4px', color: 'var(--portal-text)' }}>{appointment.service}</strong>
                   <span style={{ display: 'block', fontSize: '14px', color: 'var(--portal-muted)' }}>{appointment.veterinarian}</span>
@@ -174,7 +174,7 @@ export const DashboardTab: React.FC<DashboardTabProps> = ({
           <PortalSectionCard title="Pets em destaque" eyebrow="Perfis">
             <div style={{ display: 'grid', gap: '12px' }}>
               {pets.slice(0, 3).map((pet) => (
-                <div key={pet.id} className="portal-surface" style={{ padding: '16px' }}>
+                <div key={pet.id} className="portal-surface portal-featured-pet-card" style={{ padding: '16px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', alignItems: 'flex-start' }}>
                     <div>
                       <strong style={{ display: 'block', color: 'var(--portal-text)', marginBottom: '4px' }}>{pet.avatar} {pet.name}</strong>

@@ -78,7 +78,7 @@ export const VetRecordComposer: React.FC<VetRecordComposerProps> = ({ veterinari
   };
 
   return (
-    <div className="backoffice-card" style={{ padding: '20px', display: 'grid', gap: '18px', background: 'var(--backoffice-soft)' }}>
+    <div className="backoffice-card backoffice-composer-card" style={{ padding: '20px', display: 'grid', gap: '18px', background: 'var(--backoffice-soft)' }}>
       <div className="backoffice-section-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', alignItems: 'center' }}>
         <div>
           <strong style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '18px', marginBottom: '6px' }}>Novo prontuário clínico</strong>

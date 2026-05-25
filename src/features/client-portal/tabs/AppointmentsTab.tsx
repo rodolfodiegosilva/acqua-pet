@@ -230,7 +230,7 @@ export const AppointmentsTab: React.FC<AppointmentsTabProps> = ({
           {paginatedAppointments.map((appointment) => {
             const pet = pets.find((item) => item.id === appointment.petId);
             return (
-              <div key={appointment.id} style={{ padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)' }}>
+              <div key={appointment.id} className="portal-appointment-card" style={{ padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', marginBottom: '10px', flexWrap: 'wrap' }}>
                   <div>
                     <strong style={{ display: 'block', fontSize: '17px', color: 'var(--portal-text)' }}>{appointment.service}</strong>

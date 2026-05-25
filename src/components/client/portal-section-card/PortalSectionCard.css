@@ -1,0 +1,35 @@
+.portal-section-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.portal-section-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--portal-accent) 45%, transparent), transparent);
+  opacity: 0.8;
+}
+
+.portal-section-card__heading {
+  min-width: 0;
+}
+
+.portal-section-card__eyebrow {
+  display: block;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--portal-link);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin-bottom: 6px;
+}
+
+.portal-section-card__title {
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1.08;
+  color: var(--portal-text);
+  letter-spacing: -0.03em;
+}

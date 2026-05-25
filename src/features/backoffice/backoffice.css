@@ -44,8 +44,9 @@
   background: var(--backoffice-surface);
   border: 1px solid var(--backoffice-border);
   border-radius: 24px;
-  box-shadow: 0 22px 44px rgba(2, 6, 23, 0.16);
+  box-shadow: 0 18px 36px rgba(2, 6, 23, 0.14);
   backdrop-filter: blur(16px);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
 .backoffice-pill {
@@ -54,9 +55,46 @@
   justify-content: center;
   gap: 8px;
   padding: 8px 12px;
-  border-radius: 999px;
-  font-size: 12px;
+  border-radius: 14px;
+  font-size: 11px;
   font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.backoffice-section-card,
+.backoffice-entity-card,
+.backoffice-alert-card,
+.backoffice-overview-card,
+.backoffice-detail-hero,
+.backoffice-composer-card,
+.backoffice-inventory-item,
+.backoffice-inventory-toolbar,
+.backoffice-product-preview-shell,
+.backoffice-relationship-card,
+.backoffice-relationship-hero {
+  position: relative;
+  overflow: hidden;
+}
+
+.backoffice-section-card::before,
+.backoffice-entity-card::before,
+.backoffice-alert-card::before,
+.backoffice-overview-card::before,
+.backoffice-detail-hero::before,
+.backoffice-composer-card::before,
+.backoffice-inventory-item::before,
+.backoffice-inventory-toolbar::before,
+.backoffice-product-preview-shell::before,
+.backoffice-relationship-card::before,
+.backoffice-relationship-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  background: linear-gradient(90deg, color-mix(in srgb, var(--backoffice-accent-strong) 50%, transparent), transparent);
+  opacity: 0.8;
 }
 
 .backoffice-input,
@@ -160,6 +198,7 @@
 .backoffice-inventory-item:hover {
   transform: translateY(-2px);
   border-color: color-mix(in srgb, var(--backoffice-accent-strong) 22%, var(--backoffice-border));
+  box-shadow: 0 20px 40px rgba(2, 6, 23, 0.14);
 }
 
 .backoffice-modal-overlay {
@@ -222,21 +261,25 @@
 .backoffice-status-critical {
   background: color-mix(in srgb, var(--backoffice-danger) 18%, transparent);
   color: var(--backoffice-danger);
+  border-color: color-mix(in srgb, var(--backoffice-danger) 24%, transparent);
 }
 
 .backoffice-status-attention {
   background: color-mix(in srgb, var(--backoffice-warn) 18%, transparent);
   color: var(--backoffice-warn);
+  border-color: color-mix(in srgb, var(--backoffice-warn) 24%, transparent);
 }
 
 .backoffice-status-info {
   background: color-mix(in srgb, var(--backoffice-accent-strong) 16%, transparent);
   color: var(--backoffice-accent-strong);
+  border-color: color-mix(in srgb, var(--backoffice-accent-strong) 22%, transparent);
 }
 
 .backoffice-status-success {
   background: color-mix(in srgb, var(--backoffice-success) 16%, transparent);
   color: var(--backoffice-success);
+  border-color: color-mix(in srgb, var(--backoffice-success) 24%, transparent);
 }
 
 .backoffice-sidebar-toggle,
@@ -349,7 +392,9 @@
   padding: 18px;
   border-radius: 18px;
   border: 1px solid var(--backoffice-border);
-  background: var(--backoffice-soft);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--backoffice-accent-strong) 5%, transparent) 0%, transparent 58%),
+    var(--backoffice-soft);
 }
 
 .backoffice-relationship-card-label {
@@ -370,6 +415,245 @@
   color: var(--backoffice-muted);
   font-size: 13px;
   line-height: 1.55;
+}
+
+.backoffice-alert-card,
+.backoffice-overview-card,
+.backoffice-entity-card {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--backoffice-accent-strong) 4%, transparent) 0%, transparent 54%),
+    var(--backoffice-soft);
+}
+
+.backoffice-alert-card:hover,
+.backoffice-overview-card:hover,
+.backoffice-entity-card:hover,
+.backoffice-composer-card:hover,
+.backoffice-detail-hero:hover {
+  border-color: color-mix(in srgb, var(--backoffice-accent-strong) 26%, var(--backoffice-border));
+  box-shadow: 0 22px 44px rgba(2, 6, 23, 0.14);
+}
+
+.backoffice-patient-list {
+  align-items: start;
+}
+
+.backoffice-patient-card {
+  display: grid;
+  gap: 16px;
+  background:
+    linear-gradient(140deg, color-mix(in srgb, var(--backoffice-accent-strong) 7%, transparent) 0%, transparent 46%),
+    linear-gradient(180deg, color-mix(in srgb, var(--backoffice-accent) 4%, transparent) 0%, transparent 72%),
+    var(--backoffice-soft) !important;
+}
+
+.backoffice-patient-card__head,
+.backoffice-patient-record-card__head {
+  align-items: flex-start;
+}
+
+.backoffice-patient-card__identity,
+.backoffice-patient-detail__identity {
+  align-items: flex-start;
+}
+
+.backoffice-patient-card__avatar {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--backoffice-accent-strong) 22%, var(--backoffice-border));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+
+.backoffice-patient-card__avatar::after,
+.backoffice-patient-avatar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12), transparent 44%);
+  pointer-events: none;
+}
+
+.backoffice-patient-card__content,
+.backoffice-patient-record-card__identity,
+.backoffice-patient-detail__copy {
+  display: grid;
+  gap: 6px;
+}
+
+.backoffice-patient-card__title,
+.backoffice-patient-record-card__title {
+  letter-spacing: -0.02em;
+}
+
+.backoffice-patient-card__subtitle,
+.backoffice-patient-card__diagnosis,
+.backoffice-patient-record-card__meta,
+.backoffice-patient-detail__subtitle {
+  overflow-wrap: anywhere;
+}
+
+.backoffice-patient-card__subtitle,
+.backoffice-patient-record-card__meta {
+  font-size: 13px;
+}
+
+.backoffice-patient-card__diagnosis {
+  color: var(--backoffice-text) !important;
+  font-size: 14px;
+}
+
+.backoffice-patient-card__status,
+.backoffice-patient-record-card__status,
+.backoffice-patient-detail__hero-status {
+  align-self: flex-start;
+}
+
+.backoffice-patient-card__meta {
+  margin-top: 2px;
+}
+
+.backoffice-patient-card__meta-item,
+.backoffice-patient-detail__summary-card,
+.backoffice-patient-record-card__note-block,
+.backoffice-patient-record-card__detail-box {
+  position: relative;
+  overflow: hidden;
+  display: grid;
+  gap: 6px;
+  min-height: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--backoffice-border);
+  border-radius: 18px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--backoffice-accent-strong) 5%, transparent) 0%, transparent 66%),
+    color-mix(in srgb, var(--backoffice-surface) 88%, transparent);
+}
+
+.backoffice-patient-card__meta-item strong,
+.backoffice-patient-detail__summary-card strong {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.backoffice-patient-card__actions {
+  padding-top: 2px;
+}
+
+.backoffice-patient-card__actions .backoffice-primary-btn {
+  min-width: 200px;
+}
+
+.backoffice-patient-detail__title {
+  letter-spacing: -0.03em;
+}
+
+.backoffice-patient-detail__chips {
+  justify-content: flex-end;
+}
+
+.backoffice-patient-detail__summary-card {
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, transparent 64%),
+    rgba(255, 255, 255, 0.08) !important;
+}
+
+.backoffice-patient-record-list {
+  align-items: start;
+}
+
+.backoffice-patient-record-card {
+  display: grid;
+  gap: 16px;
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--backoffice-accent-strong) 5%, transparent) 0%, transparent 62%),
+    var(--backoffice-soft) !important;
+}
+
+.backoffice-patient-record-card__title {
+  font-size: 19px !important;
+}
+
+.backoffice-patient-record-card__notes p,
+.backoffice-patient-record-card__detail-box p,
+.backoffice-patient-record-card__detail-box span,
+.backoffice-patient-detail__summary-card strong {
+  overflow-wrap: anywhere;
+}
+
+.backoffice-patient-record-card__detail-box {
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--backoffice-accent) 4%, transparent) 0%, transparent 60%),
+    var(--backoffice-surface) !important;
+}
+
+.backoffice-vet-agenda-list,
+.backoffice-vet-overview-list {
+  align-items: start;
+}
+
+.backoffice-vet-agenda-card,
+.backoffice-vet-overview-card {
+  display: grid;
+  gap: 14px;
+}
+
+.backoffice-vet-agenda-card {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--backoffice-accent-strong) 7%, transparent) 0%, transparent 44%),
+    linear-gradient(180deg, color-mix(in srgb, var(--backoffice-accent) 4%, transparent) 0%, transparent 72%),
+    var(--backoffice-soft) !important;
+}
+
+.backoffice-vet-overview-card {
+  background:
+    linear-gradient(140deg, color-mix(in srgb, var(--backoffice-accent-strong) 6%, transparent) 0%, transparent 52%),
+    var(--backoffice-soft) !important;
+}
+
+.backoffice-vet-agenda-card__head {
+  align-items: flex-start;
+}
+
+.backoffice-vet-agenda-card__content {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.backoffice-vet-agenda-card__title,
+.backoffice-vet-overview-card__title {
+  letter-spacing: -0.02em;
+}
+
+.backoffice-vet-agenda-card__subtitle,
+.backoffice-vet-overview-card__copy {
+  overflow-wrap: anywhere;
+  font-size: 14px;
+}
+
+.backoffice-vet-agenda-card__chips {
+  align-items: flex-start;
+}
+
+.backoffice-vet-agenda-card__meta-item {
+  display: grid;
+  gap: 6px;
+  min-height: 100%;
+  padding: 14px 16px;
+  border-radius: 18px;
+  border: 1px solid var(--backoffice-border);
+  background:
+    linear-gradient(180deg, color-mix(in srgb, var(--backoffice-accent-strong) 5%, transparent) 0%, transparent 66%),
+    color-mix(in srgb, var(--backoffice-surface) 88%, transparent);
+}
+
+.backoffice-vet-agenda-card__meta-item strong {
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+.backoffice-vet-overview-card__status {
+  align-self: flex-start;
 }
 
 .backoffice-auth-screen,
@@ -411,6 +695,15 @@
 
   .backoffice-product-preview-shell {
     position: static;
+  }
+
+  .backoffice-patient-detail__chips {
+    justify-content: flex-start;
+  }
+
+  .backoffice-vet-agenda-card__head {
+    flex-direction: column !important;
+    align-items: stretch !important;
   }
 }
 
@@ -472,6 +765,75 @@
     flex-direction: column;
     align-items: stretch;
   }
+
+  .backoffice-card,
+  .backoffice-section-card,
+  .backoffice-entity-card,
+  .backoffice-detail-hero,
+  .backoffice-composer-card,
+  .backoffice-inventory-toolbar {
+    border-radius: 20px !important;
+  }
+
+  .backoffice-section-card,
+  .backoffice-detail-hero,
+  .backoffice-composer-card,
+  .backoffice-product-modal {
+    padding: 20px !important;
+  }
+
+  .backoffice-topbar h1 {
+    font-size: clamp(22px, 7vw, 32px) !important;
+    line-height: 1.12 !important;
+  }
+
+  .backoffice-topbar p,
+  .backoffice-relationship-copy {
+    max-width: none !important;
+  }
+
+  .backoffice-patient-card__head,
+  .backoffice-patient-card__identity,
+  .backoffice-patient-detail__identity,
+  .backoffice-patient-record-card__head {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .backoffice-patient-card__status,
+  .backoffice-patient-record-card__status,
+  .backoffice-patient-card__actions .backoffice-primary-btn {
+    width: 100%;
+  }
+
+  .backoffice-vet-agenda-card__chips,
+  .backoffice-vet-overview-card__status {
+    width: 100%;
+  }
+
+  .backoffice-section-header > *:last-child,
+  .backoffice-section-header .backoffice-primary-btn,
+  .backoffice-section-header .backoffice-ghost-btn {
+    width: 100%;
+  }
+
+  .backoffice-ghost-btn,
+  .backoffice-primary-btn {
+    min-height: 44px;
+  }
+
+  .backoffice-entity-card,
+  .backoffice-detail-hero,
+  .backoffice-product-preview-shell {
+    gap: 14px !important;
+  }
+
+  .backoffice-entity-card strong,
+  .backoffice-detail-hero strong,
+  .backoffice-detail-hero p,
+  .backoffice-relationship-card-hint {
+    overflow-wrap: anywhere;
+  }
 }
 
 @media (max-width: 620px) {
@@ -506,7 +868,105 @@
     padding-bottom: 18px !important;
   }
 
+  .backoffice-frame {
+    min-height: calc(100vh - 36px);
+  }
+
+  .backoffice-shell,
+  .backoffice-main,
+  .backoffice-two-cols {
+    gap: 14px !important;
+  }
+
   .backoffice-card {
-    border-radius: 20px;
+    border-radius: 18px;
+  }
+
+  .backoffice-grid,
+  .backoffice-table-grid,
+  .backoffice-mini-grid,
+  .backoffice-inventory-summary,
+  .backoffice-relationship-grid {
+    gap: 12px !important;
+  }
+
+  .backoffice-section-card,
+  .backoffice-entity-card,
+  .backoffice-detail-hero,
+  .backoffice-composer-card,
+  .backoffice-inventory-toolbar {
+    padding: 18px !important;
+  }
+
+  .backoffice-grid > .backoffice-card,
+  .backoffice-mini-grid > .backoffice-card,
+  .backoffice-relationship-card {
+    min-height: auto !important;
+  }
+
+  .backoffice-relationship-hero {
+    padding: 18px !important;
+    border-radius: 18px !important;
+  }
+
+  .backoffice-relationship-value {
+    font-size: clamp(28px, 9vw, 40px) !important;
+  }
+
+  .backoffice-entity-card .backoffice-mini-grid > div,
+  .backoffice-detail-hero .backoffice-grid > .backoffice-card,
+  .backoffice-patient-card .backoffice-mini-grid > div {
+    padding: 10px 12px;
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--backoffice-accent-strong) 6%, var(--backoffice-soft));
+    border: 1px solid var(--backoffice-border);
+  }
+
+  .backoffice-patient-card > div:first-child,
+  .backoffice-entity-card > div:first-child,
+  .backoffice-detail-hero > div:first-child {
+    margin-bottom: 12px !important;
+  }
+
+  .backoffice-patient-avatar {
+    width: 68px !important;
+    height: 68px !important;
+    border-radius: 20px !important;
+    font-size: 32px !important;
+  }
+
+  .backoffice-patient-card__avatar {
+    width: 64px !important;
+    height: 64px !important;
+    border-radius: 18px !important;
+    font-size: 30px !important;
+  }
+
+  .backoffice-patient-card__title,
+  .backoffice-patient-record-card__title {
+    font-size: 17px !important;
+  }
+
+  .backoffice-patient-card__meta-item,
+  .backoffice-patient-detail__summary-card,
+  .backoffice-patient-record-card__note-block,
+  .backoffice-patient-record-card__detail-box,
+  .backoffice-vet-agenda-card__meta-item {
+    padding: 12px 14px;
+    border-radius: 16px;
+  }
+
+  .backoffice-vet-agenda-card__title,
+  .backoffice-vet-overview-card__title {
+    font-size: 17px !important;
+  }
+
+  .backoffice-product-modal {
+    padding: 18px !important;
+    border-radius: 20px !important;
+  }
+
+  .backoffice-product-preview {
+    padding: 12px !important;
   }
 }

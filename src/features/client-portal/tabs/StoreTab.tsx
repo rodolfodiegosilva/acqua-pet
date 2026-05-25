@@ -137,7 +137,7 @@ export const StoreTab: React.FC<StoreTabProps> = ({ pets, products, orders, addT
 
         <div className="portal-store-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '16px' }}>
           {paginatedProducts.map((product) => (
-            <div key={product.id} style={{ padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)', display: 'flex', flexDirection: 'column', gap: '14px' }}>
+            <div key={product.id} className="portal-store-product-card" style={{ padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)', display: 'flex', flexDirection: 'column', gap: '14px' }}>
               <div style={{ height: '140px', borderRadius: 'var(--radius-md)', background: product.imageBg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '48px' }}>
                 {product.imageEmoji}
               </div>
@@ -190,7 +190,7 @@ export const StoreTab: React.FC<StoreTabProps> = ({ pets, products, orders, addT
       <PortalSectionCard title="Pedidos recentes" eyebrow="Histórico de compra">
         <div style={{ display: 'grid', gap: '14px' }}>
           {orders.map((order) => (
-            <div key={order.id} style={{ padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)' }}>
+            <div key={order.id} className="portal-order-card" style={{ padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', marginBottom: '10px', flexWrap: 'wrap' }}>
                 <div>
                   <strong style={{ display: 'block', fontSize: '17px', color: 'var(--portal-text)' }}>{order.number}</strong>

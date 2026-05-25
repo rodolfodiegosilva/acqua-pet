@@ -11,7 +11,7 @@ export const VetsTab: React.FC<VetsTabProps> = ({ veterinarians }) => {
     <PortalSectionCard title="Disponibilidade da equipe" eyebrow="Operação clínica">
       <div className="portal-vets-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '16px' }}>
         {veterinarians.map((vet) => (
-          <div key={vet.id} style={{ padding: '20px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)' }}>
+          <div key={vet.id} className="portal-vet-card" style={{ padding: '20px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', marginBottom: '12px', flexWrap: 'wrap' }}>
               <div>
                 <strong style={{ display: 'block', fontSize: '18px', marginBottom: '4px', color: 'var(--portal-text)' }}>{vet.name}</strong>

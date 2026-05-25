@@ -70,14 +70,14 @@ export const AdminOverviewTab: React.FC<AdminOverviewTabProps> = ({ clients, pet
 
       <div className="backoffice-two-cols" style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '20px' }}>
         <BackofficeSectionCard title="Alertas operacionais" eyebrow="Prioridades">
-          <div style={{ display: 'grid', gap: '14px' }}>
+          <div className="backoffice-admin-overview-list" style={{ display: 'grid', gap: '14px' }}>
             {alerts.map((alert) => (
-              <div key={alert.id} className="backoffice-card" style={{ padding: '18px', background: 'var(--backoffice-soft)' }}>
-                <span className={`backoffice-pill ${alert.tone === 'critical' ? 'backoffice-status-critical' : alert.tone === 'attention' ? 'backoffice-status-attention' : 'backoffice-status-info'}`} style={{ marginBottom: '10px' }}>
+              <div key={alert.id} className="backoffice-card backoffice-alert-card backoffice-admin-alert-card" style={{ padding: '18px', background: 'var(--backoffice-soft)' }}>
+                <span className={`backoffice-pill backoffice-admin-alert-card__status ${alert.tone === 'critical' ? 'backoffice-status-critical' : alert.tone === 'attention' ? 'backoffice-status-attention' : 'backoffice-status-info'}`} style={{ marginBottom: '10px' }}>
                   {alert.tone === 'critical' ? 'Crítico' : alert.tone === 'attention' ? 'Atenção' : 'Informativo'}
                 </span>
-                <strong style={{ display: 'block', color: 'var(--backoffice-text)', marginBottom: '6px' }}>{alert.title}</strong>
-                <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{alert.description}</p>
+                <strong className="backoffice-admin-alert-card__title" style={{ display: 'block', color: 'var(--backoffice-text)', marginBottom: '6px' }}>{alert.title}</strong>
+                <p className="backoffice-admin-alert-card__copy" style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{alert.description}</p>
               </div>
             ))}
           </div>

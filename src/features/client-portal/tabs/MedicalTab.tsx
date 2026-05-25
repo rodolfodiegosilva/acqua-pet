@@ -114,7 +114,7 @@ export const MedicalTab: React.FC<MedicalTabProps> = ({ pets, selectedMedicalPet
 
       <div style={{ display: 'grid', gap: '14px' }}>
         {paginatedRecords.map((record) => (
-          <div key={record.id} style={{ padding: '20px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)' }}>
+          <div key={record.id} className="portal-medical-record-card" style={{ padding: '20px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', marginBottom: '12px', flexWrap: 'wrap' }}>
               <div>
                 <strong style={{ display: 'block', fontSize: '17px', color: 'var(--portal-text)' }}>{record.diagnosis}</strong>

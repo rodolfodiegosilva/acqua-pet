@@ -102,7 +102,7 @@ export const PetsTab: React.FC<PetsTabProps> = ({ pets, petForm, setPetForm, onA
       >
         <div style={{ display: 'grid', gap: '16px' }}>
           {pets.map((pet) => (
-            <div key={pet.id} style={{ padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)', display: 'grid', gridTemplateColumns: '72px minmax(0, 1fr)', gap: '16px' }}>
+            <div key={pet.id} className="portal-pet-card" style={{ padding: '18px', borderRadius: 'var(--radius-md)', border: '1px solid var(--portal-border)', background: 'var(--portal-soft-surface)', display: 'grid', gridTemplateColumns: '72px minmax(0, 1fr)', gap: '16px' }}>
               <div style={{ width: '72px', height: '72px', borderRadius: '20px', background: 'var(--portal-avatar-surface)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '34px' }}>
                 {pet.avatar}
               </div>

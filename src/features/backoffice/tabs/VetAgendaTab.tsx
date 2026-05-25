@@ -46,26 +46,26 @@ export const VetAgendaTab: React.FC<VetAgendaTabProps> = ({ appointments, pets }
         </select>
       </div>
 
-      <div style={{ display: 'grid', gap: '14px' }}>
+      <div className="backoffice-vet-agenda-list" style={{ display: 'grid', gap: '14px' }}>
         {paginatedAppointments.map((appointment) => {
           const pet = pets.find((item) => item.id === appointment.petId);
           return (
-            <div key={appointment.id} className="backoffice-card" style={{ padding: '18px', background: 'var(--backoffice-soft)' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                <div>
-                  <strong style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '18px', marginBottom: '6px' }}>{appointment.service}</strong>
-                  <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{pet?.avatar} {pet?.name} · {appointment.veterinarian}</p>
+            <div key={appointment.id} className="backoffice-card backoffice-entity-card backoffice-vet-agenda-card" style={{ padding: '18px', background: 'var(--backoffice-soft)' }}>
+              <div className="backoffice-vet-agenda-card__head" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '12px' }}>
+                <div className="backoffice-vet-agenda-card__content">
+                  <strong className="backoffice-vet-agenda-card__title" style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '18px', marginBottom: '6px' }}>{appointment.service}</strong>
+                  <p className="backoffice-vet-agenda-card__subtitle" style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{pet?.avatar} {pet?.name} · {appointment.veterinarian}</p>
                 </div>
-                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                <div className="backoffice-vet-agenda-card__chips" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
                   <span className={`backoffice-pill ${appointment.type === 'Táxi Pet' ? 'backoffice-status-attention' : 'backoffice-status-info'}`}>{appointment.type}</span>
                   <span className={`backoffice-pill ${appointment.status === 'Confirmado' ? 'backoffice-status-success' : appointment.status === 'Em análise' ? 'backoffice-status-attention' : 'backoffice-status-info'}`}>{appointment.status}</span>
                 </div>
               </div>
 
-              <div className="backoffice-mini-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '12px' }}>
-                <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Data</span><strong style={{ color: 'var(--backoffice-text)' }}>{appointment.date}</strong></div>
-                <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Hora</span><strong style={{ color: 'var(--backoffice-text)' }}>{appointment.time}</strong></div>
-                <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Unidade</span><strong style={{ color: 'var(--backoffice-text)' }}>{appointment.location}</strong></div>
+              <div className="backoffice-mini-grid backoffice-vet-agenda-card__meta" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '12px' }}>
+                <div className="backoffice-vet-agenda-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Data</span><strong style={{ color: 'var(--backoffice-text)' }}>{appointment.date}</strong></div>
+                <div className="backoffice-vet-agenda-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Hora</span><strong style={{ color: 'var(--backoffice-text)' }}>{appointment.time}</strong></div>
+                <div className="backoffice-vet-agenda-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Unidade</span><strong style={{ color: 'var(--backoffice-text)' }}>{appointment.location}</strong></div>
               </div>
             </div>
           );

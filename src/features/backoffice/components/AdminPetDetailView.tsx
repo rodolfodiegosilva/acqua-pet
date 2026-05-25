@@ -18,7 +18,7 @@ interface AdminPetDetailViewProps {
 export const AdminPetDetailView: React.FC<AdminPetDetailViewProps> = ({ pet, tutor, onBack, onEdit }) => {
   return (
     <div style={{ display: 'grid', gap: '20px' }}>
-      <div className="backoffice-card" style={{ padding: '24px', display: 'grid', gap: '18px', background: 'var(--backoffice-hero)' }}>
+      <div className="backoffice-card backoffice-detail-hero" style={{ padding: '24px', display: 'grid', gap: '18px', background: 'var(--backoffice-hero)' }}>
         <div className="backoffice-section-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', alignItems: 'flex-start' }}>
           <div style={{ display: 'flex', gap: '16px', minWidth: 0 }}>
             <button className="backoffice-ghost-btn" type="button" onClick={onBack} style={{ alignSelf: 'flex-start' }}>

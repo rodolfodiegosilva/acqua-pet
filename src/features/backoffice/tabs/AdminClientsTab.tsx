@@ -75,33 +75,33 @@ export const AdminClientsTab: React.FC<AdminClientsTabProps> = ({ clients, pets,
         {sortedClients.length} clientes encontrados · página {page} de {totalPages}
       </span>
 
-      <div style={{ display: 'grid', gap: '14px' }}>
+      <div className="backoffice-admin-client-list" style={{ display: 'grid', gap: '14px' }}>
         {paginatedClients.map((client) => (
           <button
             key={client.id}
             type="button"
-            className="backoffice-card"
+            className="backoffice-card backoffice-entity-card backoffice-admin-client-card"
             onClick={() => onSelectClient(client.id)}
             style={{ padding: '18px', background: 'var(--backoffice-soft)', textAlign: 'left', cursor: 'pointer' }}
           >
-            <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '12px' }}>
-              <div>
-                <strong style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '18px', marginBottom: '6px' }}>{client.name}</strong>
-                <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{client.email} · {client.phone}</p>
+            <div className="backoffice-admin-client-card__head" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '12px' }}>
+              <div className="backoffice-admin-client-card__content">
+                <strong className="backoffice-admin-client-card__title" style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '18px', marginBottom: '6px' }}>{client.name}</strong>
+                <p className="backoffice-admin-client-card__subtitle" style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{client.email} · {client.phone}</p>
               </div>
-              <span className={`backoffice-pill ${client.status === 'Ativo' ? 'backoffice-status-success' : client.status === 'Atenção' ? 'backoffice-status-attention' : 'backoffice-status-info'}`}>
+              <span className={`backoffice-pill backoffice-admin-client-card__status ${client.status === 'Ativo' ? 'backoffice-status-success' : client.status === 'Atenção' ? 'backoffice-status-attention' : 'backoffice-status-info'}`}>
                 {client.status}
               </span>
             </div>
 
-            <div className="backoffice-mini-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '12px' }}>
-              <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Plano</span><strong style={{ color: 'var(--backoffice-text)' }}>{client.plan}</strong></div>
-              <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Cidade</span><strong style={{ color: 'var(--backoffice-text)' }}>{client.city}</strong></div>
-              <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Bairro</span><strong style={{ color: 'var(--backoffice-text)' }}>{client.neighborhood}</strong></div>
-              <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Desde</span><strong style={{ color: 'var(--backoffice-text)' }}>{client.joinedAt}</strong></div>
+            <div className="backoffice-mini-grid backoffice-admin-client-card__meta" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '12px' }}>
+              <div className="backoffice-admin-client-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Plano</span><strong style={{ color: 'var(--backoffice-text)' }}>{client.plan}</strong></div>
+              <div className="backoffice-admin-client-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Cidade</span><strong style={{ color: 'var(--backoffice-text)' }}>{client.city}</strong></div>
+              <div className="backoffice-admin-client-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Bairro</span><strong style={{ color: 'var(--backoffice-text)' }}>{client.neighborhood}</strong></div>
+              <div className="backoffice-admin-client-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Desde</span><strong style={{ color: 'var(--backoffice-text)' }}>{client.joinedAt}</strong></div>
             </div>
 
-            <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '14px' }}>
+            <div className="backoffice-admin-client-card__tags" style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', marginTop: '14px' }}>
               {client.tags.map((tag) => (
                 <span key={tag} className="backoffice-pill backoffice-status-info">{tag}</span>
               ))}

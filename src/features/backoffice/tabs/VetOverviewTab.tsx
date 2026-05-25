@@ -26,12 +26,12 @@ export const VetOverviewTab: React.FC<VetOverviewTabProps> = ({ appointments, re
 
       <div className="backoffice-two-cols" style={{ display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: '20px' }}>
         <BackofficeSectionCard title="Fila clínica priorizada" eyebrow="Hoje">
-          <div style={{ display: 'grid', gap: '14px' }}>
+          <div className="backoffice-vet-overview-list" style={{ display: 'grid', gap: '14px' }}>
             {appointments.slice(0, 3).map((appointment) => (
-              <div key={appointment.id} className="backoffice-card" style={{ padding: '18px', background: 'var(--backoffice-soft)' }}>
-                <strong style={{ display: 'block', color: 'var(--backoffice-text)', marginBottom: '6px' }}>{appointment.service}</strong>
-                <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{appointment.date} às {appointment.time} · {appointment.location}</p>
-                <span className={`backoffice-pill ${appointment.status === 'Confirmado' ? 'backoffice-status-success' : appointment.status === 'Em análise' ? 'backoffice-status-attention' : 'backoffice-status-info'}`} style={{ marginTop: '10px' }}>
+              <div key={appointment.id} className="backoffice-card backoffice-overview-card backoffice-vet-overview-card" style={{ padding: '18px', background: 'var(--backoffice-soft)' }}>
+                <strong className="backoffice-vet-overview-card__title" style={{ display: 'block', color: 'var(--backoffice-text)', marginBottom: '6px' }}>{appointment.service}</strong>
+                <p className="backoffice-vet-overview-card__copy" style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{appointment.date} às {appointment.time} · {appointment.location}</p>
+                <span className={`backoffice-pill backoffice-vet-overview-card__status ${appointment.status === 'Confirmado' ? 'backoffice-status-success' : appointment.status === 'Em análise' ? 'backoffice-status-attention' : 'backoffice-status-info'}`} style={{ marginTop: '10px' }}>
                   {appointment.status}
                 </span>
               </div>
@@ -40,12 +40,12 @@ export const VetOverviewTab: React.FC<VetOverviewTabProps> = ({ appointments, re
         </BackofficeSectionCard>
 
         <BackofficeSectionCard title="Casos de atenção" eyebrow="Clínica">
-          <div style={{ display: 'grid', gap: '14px' }}>
+          <div className="backoffice-vet-overview-list" style={{ display: 'grid', gap: '14px' }}>
             {records.filter((record) => record.status !== 'Estável').slice(0, 3).map((record) => (
-              <div key={record.id} className="backoffice-card" style={{ padding: '18px', background: 'var(--backoffice-soft)' }}>
-                <strong style={{ display: 'block', color: 'var(--backoffice-text)', marginBottom: '6px' }}>{record.diagnosis}</strong>
-                <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{record.veterinarian} · {record.returnWindow}</p>
-                <span className={`backoffice-pill ${record.status === 'Em tratamento' ? 'backoffice-status-critical' : 'backoffice-status-attention'}`} style={{ marginTop: '10px' }}>
+              <div key={record.id} className="backoffice-card backoffice-overview-card backoffice-vet-overview-card" style={{ padding: '18px', background: 'var(--backoffice-soft)' }}>
+                <strong className="backoffice-vet-overview-card__title" style={{ display: 'block', color: 'var(--backoffice-text)', marginBottom: '6px' }}>{record.diagnosis}</strong>
+                <p className="backoffice-vet-overview-card__copy" style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{record.veterinarian} · {record.returnWindow}</p>
+                <span className={`backoffice-pill backoffice-vet-overview-card__status ${record.status === 'Em tratamento' ? 'backoffice-status-critical' : 'backoffice-status-attention'}`} style={{ marginTop: '10px' }}>
                   {record.status}
                 </span>
               </div>

@@ -105,7 +105,7 @@ export const AdminPetsTab: React.FC<AdminPetsTabProps> = ({
             style={{ position: 'fixed', inset: 0, background: 'rgba(2, 6, 23, 0.68)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', zIndex: 160 }}
           >
             <div
-              className="backoffice-card"
+              className="backoffice-card backoffice-entity-card"
               onClick={(event) => event.stopPropagation()}
               style={{ width: 'min(760px, 100%)', maxHeight: '88vh', overflowY: 'auto', padding: '24px', display: 'grid', gap: '16px' }}
             >
@@ -186,36 +186,36 @@ export const AdminPetsTab: React.FC<AdminPetsTabProps> = ({
         </select>
       </div>
 
-      <div style={{ display: 'grid', gap: '14px' }}>
+      <div className="backoffice-admin-pet-list" style={{ display: 'grid', gap: '14px' }}>
         {paginatedPets.map((pet) => {
           const tutor = clients.find((client) => client.id === pet.clientId);
           return (
             <button
               key={pet.id}
               type="button"
-              className="backoffice-card"
+              className="backoffice-card backoffice-entity-card backoffice-admin-pet-card"
               onClick={() => onSelectPet(pet.id)}
               style={{ padding: '18px', background: 'var(--backoffice-soft)', textAlign: 'left', cursor: 'pointer' }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '12px' }}>
-                <div>
-                  <strong style={{ display: 'block', fontSize: '18px', color: 'var(--backoffice-text)', marginBottom: '6px' }}>{pet.avatar} {pet.name}</strong>
-                  <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{pet.species} · {pet.sex} · {pet.breed}</p>
+              <div className="backoffice-admin-pet-card__head" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '12px' }}>
+                <div className="backoffice-admin-pet-card__content">
+                  <strong className="backoffice-admin-pet-card__title" style={{ display: 'block', fontSize: '18px', color: 'var(--backoffice-text)', marginBottom: '6px' }}>{pet.avatar} {pet.name}</strong>
+                  <p className="backoffice-admin-pet-card__subtitle" style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>{pet.species} · {pet.sex} · {pet.breed}</p>
                 </div>
-                <span className={`backoffice-pill ${pet.status === 'Ativo' ? 'backoffice-status-success' : pet.status === 'Em acompanhamento' ? 'backoffice-status-attention' : 'backoffice-status-info'}`}>
+                <span className={`backoffice-pill backoffice-admin-pet-card__status ${pet.status === 'Ativo' ? 'backoffice-status-success' : pet.status === 'Em acompanhamento' ? 'backoffice-status-attention' : 'backoffice-status-info'}`}>
                   {pet.status}
                 </span>
               </div>
 
-              <div className="backoffice-mini-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '12px' }}>
-                <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Tutor</span><strong style={{ color: 'var(--backoffice-text)' }}>{tutor?.name ?? pet.tutorName}</strong></div>
-                <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Última visita</span><strong style={{ color: 'var(--backoffice-text)' }}>{pet.lastVisit}</strong></div>
-                <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Próxima ação</span><strong style={{ color: 'var(--backoffice-text)' }}>{pet.nextAction}</strong></div>
-                <div><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Vacinas</span><strong style={{ color: 'var(--backoffice-text)' }}>{pet.vaccines.length || 0}</strong></div>
+              <div className="backoffice-mini-grid backoffice-admin-pet-card__meta" style={{ display: 'grid', gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', gap: '12px' }}>
+                <div className="backoffice-admin-pet-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Tutor</span><strong style={{ color: 'var(--backoffice-text)' }}>{tutor?.name ?? pet.tutorName}</strong></div>
+                <div className="backoffice-admin-pet-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Última visita</span><strong style={{ color: 'var(--backoffice-text)' }}>{pet.lastVisit}</strong></div>
+                <div className="backoffice-admin-pet-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Próxima ação</span><strong style={{ color: 'var(--backoffice-text)' }}>{pet.nextAction}</strong></div>
+                <div className="backoffice-admin-pet-card__meta-item"><span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '4px' }}>Vacinas</span><strong style={{ color: 'var(--backoffice-text)' }}>{pet.vaccines.length || 0}</strong></div>
               </div>
 
-              <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6, fontSize: '14px', marginTop: '14px' }}>{pet.observation}</p>
-              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '14px' }}>
+              <p className="backoffice-admin-pet-card__observation" style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6, fontSize: '14px', marginTop: '14px' }}>{pet.observation}</p>
+              <div className="backoffice-admin-pet-card__actions" style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginTop: '14px' }}>
                 <button
                   type="button"
                   className="backoffice-primary-btn"

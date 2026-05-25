@@ -17,7 +17,7 @@ interface AdminClientDetailViewProps {
 export const AdminClientDetailView: React.FC<AdminClientDetailViewProps> = ({ client, pets, onBack }) => {
   return (
     <div style={{ display: 'grid', gap: '20px' }}>
-      <div className="backoffice-card" style={{ padding: '24px', display: 'grid', gap: '18px', background: 'var(--backoffice-hero)' }}>
+      <div className="backoffice-card backoffice-detail-hero" style={{ padding: '24px', display: 'grid', gap: '18px', background: 'var(--backoffice-hero)' }}>
         <div className="backoffice-section-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', alignItems: 'flex-start' }}>
           <div style={{ display: 'flex', gap: '16px', minWidth: 0 }}>
             <button className="backoffice-ghost-btn" type="button" onClick={onBack} style={{ alignSelf: 'flex-start' }}>
@@ -99,7 +99,7 @@ export const AdminClientDetailView: React.FC<AdminClientDetailViewProps> = ({ cl
         <BackofficeSectionCard title="Pets vinculados" eyebrow="Base animal">
           <div style={{ display: 'grid', gap: '14px' }}>
             {pets.length > 0 ? pets.map((pet) => (
-              <article key={pet.id} className="backoffice-card" style={{ padding: '18px', background: 'var(--backoffice-soft)', display: 'grid', gap: '14px' }}>
+              <article key={pet.id} className="backoffice-card backoffice-entity-card" style={{ padding: '18px', background: 'var(--backoffice-soft)', display: 'grid', gap: '14px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap' }}>
                   <div style={{ display: 'flex', gap: '14px', minWidth: 0 }}>
                     <div style={{ width: '60px', height: '60px', borderRadius: '18px', background: 'var(--backoffice-surface)', display: 'grid', placeItems: 'center', fontSize: '28px', flexShrink: 0 }}>
