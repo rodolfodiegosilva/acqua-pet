@@ -5,6 +5,7 @@ import { Header } from '@/components/header/Header';
 import {
   cancelBackofficeOrder,
   createBackofficeInventoryItem,
+  deleteBackofficeOrder,
   fetchBackofficeSnapshot,
   type BackofficeInventoryItem,
   type BackofficeOrder,
@@ -15,6 +16,7 @@ import {
   mockBackofficeLogin,
   saveBackofficeSession,
   updateBackofficeInventoryStock,
+  updateBackofficeOrder,
   updateBackofficePet,
   updateBackofficeOrderStatus
 } from '@/services/backoffice';
@@ -43,6 +45,8 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
   const [panelLoading, setPanelLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<AdminTab>('overview');
+  const [selectedClientId, setSelectedClientId] = useState<number | null>(null);
+  const [selectedPetId, setSelectedPetId] = useState<number | null>(null);
   const [snapshot, setSnapshot] = useState<BackofficeSnapshot | null>(null);
   const authBackground =
     'radial-gradient(circle at top left, rgba(3, 2, 116, 0.08), transparent 28%), radial-gradient(circle at bottom right, rgba(214, 20, 44, 0.08), transparent 24%), var(--bg-primary)';
@@ -77,6 +81,15 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
       unsubscribe();
     };
   }, [sessionUser]);
+
+  useEffect(() => {
+    if (activeTab !== 'clients') {
+      setSelectedClientId(null);
+    }
+    if (activeTab !== 'pets') {
+      setSelectedPetId(null);
+    }
+  }, [activeTab]);
 
   const navItems: BackofficeNavItem<AdminTab>[] = [
     { id: 'overview', label: 'Visão geral', icon: LayoutDashboard },
@@ -134,6 +147,20 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
     setActionLoading(false);
   };
 
+  const handleEditOrder = async (orderId: number, updates: Partial<Pick<BackofficeOrder, 'status' | 'fulfillment' | 'notes'>>) => {
+    setActionLoading(true);
+    const nextOrders = await updateBackofficeOrder(orderId, updates);
+    setSnapshot((current) => (current ? { ...current, orders: nextOrders } : current));
+    setActionLoading(false);
+  };
+
+  const handleDeleteOrder = async (orderId: number) => {
+    setActionLoading(true);
+    const nextOrders = await deleteBackofficeOrder(orderId);
+    setSnapshot((current) => (current ? { ...current, orders: nextOrders } : current));
+    setActionLoading(false);
+  };
+
   const handleUpdatePet = async (petId: number, updates: Partial<Omit<BackofficePet, 'id' | 'clientId' | 'tutorName' | 'vaccines'>>) => {
     setActionLoading(true);
     const nextPets = await updateBackofficePet(petId, updates);
@@ -164,7 +191,6 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
     <BackofficeShell
       theme={theme}
       setTheme={setTheme}
-      setView={setView}
       user={sessionUser}
       title="Central administrativa"
       description="Painel operacional para gerenciar carteira de clientes, pets, riscos e rotina comercial do ecossistema."
@@ -194,10 +220,38 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
           orders={snapshot.orders}
         />
       )}
-      {!panelLoading && snapshot && activeTab === 'clients' && <AdminClientsTab clients={snapshot.clients} />}
-      {!panelLoading && snapshot && activeTab === 'pets' && <AdminPetsTab pets={snapshot.pets} clients={snapshot.clients} onUpdatePet={handleUpdatePet} isSubmitting={actionLoading} />}
+      {!panelLoading && snapshot && activeTab === 'clients' && (
+        <AdminClientsTab
+          clients={snapshot.clients}
+          pets={snapshot.pets}
+          selectedClientId={selectedClientId}
+          onSelectClient={setSelectedClientId}
+          onBackToList={() => setSelectedClientId(null)}
+        />
+      )}
+      {!panelLoading && snapshot && activeTab === 'pets' && (
+        <AdminPetsTab
+          pets={snapshot.pets}
+          clients={snapshot.clients}
+          selectedPetId={selectedPetId}
+          onSelectPet={setSelectedPetId}
+          onBackToList={() => setSelectedPetId(null)}
+          onUpdatePet={handleUpdatePet}
+          isSubmitting={actionLoading}
+        />
+      )}
       {!panelLoading && snapshot && activeTab === 'inventory' && <AdminInventoryTab inventory={snapshot.inventory} onAdjustStock={handleAdjustStock} onCreateProduct={handleCreateProduct} isSubmitting={actionLoading} />}
-      {!panelLoading && snapshot && activeTab === 'orders' && <AdminOrdersTab orders={snapshot.orders} clients={snapshot.clients} onUpdateOrderStatus={handleUpdateOrderStatus} onCancelOrder={handleCancelOrder} />}
+      {!panelLoading && snapshot && activeTab === 'orders' && (
+        <AdminOrdersTab
+          orders={snapshot.orders}
+          clients={snapshot.clients}
+          onUpdateOrderStatus={handleUpdateOrderStatus}
+          onEditOrder={handleEditOrder}
+          onCancelOrder={handleCancelOrder}
+          onDeleteOrder={handleDeleteOrder}
+          isSubmitting={actionLoading}
+        />
+      )}
     </BackofficeShell>
   );
 };

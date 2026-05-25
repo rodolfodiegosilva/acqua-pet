@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { AppPagination, getResponsiveDefaultPageSize } from '@/components/pagination/AppPagination';
 import { PortalSectionCard } from '@/components/client/portal-section-card/PortalSectionCard';
 import type { Product } from '@/services/api';
 import type { ClientOrder, ClientPet } from '@/services/clientPortal';
@@ -36,6 +37,7 @@ export const StoreTab: React.FC<StoreTabProps> = ({ pets, products, orders, addT
   const [promoOnly, setPromoOnly] = useState(false);
   const [recommendedOnly, setRecommendedOnly] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(() => getResponsiveDefaultPageSize());
 
   const recommendedCategories = useMemo(() => {
     const categories = new Set<Product['category']>();
@@ -87,15 +89,14 @@ export const StoreTab: React.FC<StoreTabProps> = ({ pets, products, orders, addT
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, sortBy, categoryFilter, promoOnly, recommendedOnly]);
+  }, [searchQuery, sortBy, categoryFilter, promoOnly, recommendedOnly, pageSize]);
 
-  const productsPerPage = 4;
-  const totalPages = Math.max(1, Math.ceil(sortedProducts.length / productsPerPage));
-  const paginatedProducts = sortedProducts.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage);
+  const totalPages = Math.max(1, Math.ceil(sortedProducts.length / pageSize));
+  const paginatedProducts = sortedProducts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   return (
     <div className="portal-two-cols" style={{ display: 'grid', gridTemplateColumns: '1.15fr 0.85fr', gap: '20px' }}>
-      <PortalSectionCard title="Produtos recomendados" eyebrow="Loja do cliente" action={<button onClick={() => setView('store')} className="portal-link-btn">Abrir loja completa</button>}>
+      <PortalSectionCard title="Produtos recomendados" eyebrow="Loja" action={<button onClick={() => setView('store')} className="portal-link-btn">Abrir loja completa</button>}>
         <div style={{ display: 'grid', gap: '14px' }}>
           <div className="portal-store-controls" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) repeat(2, minmax(0, 0.7fr))', gap: '12px' }}>
             <input
@@ -183,38 +184,7 @@ export const StoreTab: React.FC<StoreTabProps> = ({ pets, products, orders, addT
           </div>
         )}
 
-        {sortedProducts.length > 0 && totalPages > 1 && (
-          <div className="portal-store-pagination" style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button className="portal-ghost-btn" onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} disabled={currentPage === 1}>
-              Anterior
-            </button>
-            {Array.from({ length: totalPages }, (_, index) => {
-              const page = index + 1;
-              return (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  style={{
-                    width: '42px',
-                    height: '42px',
-                    borderRadius: '50%',
-                    border: '1px solid',
-                    borderColor: currentPage === page ? 'var(--portal-accent)' : 'var(--portal-border)',
-                    background: currentPage === page ? 'var(--portal-accent)' : 'var(--portal-soft-surface)',
-                    color: currentPage === page ? '#fff' : 'var(--portal-text)',
-                    fontWeight: 700,
-                    cursor: 'pointer'
-                  }}
-                >
-                  {page}
-                </button>
-              );
-            })}
-            <button className="portal-ghost-btn" onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} disabled={currentPage === totalPages}>
-              Próxima
-            </button>
-          </div>
-        )}
+        {sortedProducts.length > 0 && <AppPagination page={currentPage} count={totalPages} pageSize={pageSize} onPageSizeChange={setPageSize} onChange={setCurrentPage} tone="portal" />}
       </PortalSectionCard>
 
       <PortalSectionCard title="Pedidos recentes" eyebrow="Histórico de compra">

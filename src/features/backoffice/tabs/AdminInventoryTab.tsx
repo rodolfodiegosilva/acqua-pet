@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { AppPagination, getResponsiveDefaultPageSize } from '@/components/pagination/AppPagination';
 import type { BackofficeInventoryItem } from '@/services/backoffice';
 import { BackofficeSectionCard } from '../components/BackofficeSectionCard';
 
@@ -44,6 +45,8 @@ export const AdminInventoryTab: React.FC<AdminInventoryTabProps> = ({ inventory,
   const [statusFilter, setStatusFilter] = useState<'Todos' | BackofficeInventoryItem['status']>('Todos');
   const [sortBy, setSortBy] = useState<'stock' | 'name' | 'reserved'>('stock');
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(() => getResponsiveDefaultPageSize());
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [imageInputMode, setImageInputMode] = useState<'upload' | 'url'>('upload');
   const [imagePreview, setImagePreview] = useState('');
   const [form, setForm] = useState({
@@ -82,11 +85,14 @@ export const AdminInventoryTab: React.FC<AdminInventoryTabProps> = ({ inventory,
 
   useEffect(() => {
     setPage(1);
-  }, [query, statusFilter, sortBy]);
+  }, [query, statusFilter, sortBy, pageSize]);
 
-  const perPage = 4;
-  const totalPages = Math.max(1, Math.ceil(sortedInventory.length / perPage));
-  const paginatedInventory = sortedInventory.slice((page - 1) * perPage, page * perPage);
+  const totalPages = Math.max(1, Math.ceil(sortedInventory.length / pageSize));
+  const paginatedInventory = sortedInventory.slice((page - 1) * pageSize, page * pageSize);
+  const criticalItems = inventory.filter((item) => item.status === 'Crítico').length;
+  const lowItems = inventory.filter((item) => item.status === 'Baixo').length;
+  const reservedUnits = inventory.reduce((total, item) => total + item.reserved, 0);
+  const totalUnits = inventory.reduce((total, item) => total + item.stock, 0);
 
   const handleFormChange = (field: keyof typeof form, value: string) => {
     setForm((current) => ({ ...current, [field]: value }));
@@ -150,118 +156,43 @@ export const AdminInventoryTab: React.FC<AdminInventoryTabProps> = ({ inventory,
     setImagePreview('');
     setImageInputMode('upload');
     setPage(1);
+    setIsCreateModalOpen(false);
   };
 
   return (
     <BackofficeSectionCard title="Estoque da loja" eyebrow="Operação de inventory">
-      <form className="backoffice-card backoffice-product-form" style={{ padding: '20px', marginBottom: '18px' }} onSubmit={handleCreateSubmit}>
-        <div className="backoffice-section-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', alignItems: 'center', marginBottom: '16px' }}>
-          <div>
-            <strong style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '18px', marginBottom: '6px' }}>Cadastrar produto mockado</strong>
-            <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>Salvando aqui, o item entra de verdade no estoque do painel para testar a operação.</p>
-          </div>
-          <span className="backoffice-pill backoffice-status-info">Cadastro ativo</span>
+      <div className="backoffice-inventory-summary">
+        <div className="backoffice-relationship-card">
+          <span className="backoffice-relationship-card-label">Itens cadastrados</span>
+          <strong className="backoffice-relationship-card-value">{inventory.length}</strong>
+          <p className="backoffice-relationship-card-hint">Base completa sincronizada com a vitrine pública e operação interna.</p>
         </div>
-
-        <div className="backoffice-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.2fr) minmax(260px, 0.8fr)', gap: '16px', alignItems: 'start' }}>
-          <div style={{ display: 'grid', gap: '12px' }}>
-            <div className="backoffice-table-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '12px' }}>
-              <input className="backoffice-input" type="text" placeholder="Nome do produto" value={form.name} onChange={(event) => handleFormChange('name', event.target.value)} />
-              <select className="backoffice-select" value={form.category} onChange={(event) => handleFormChange('category', event.target.value)}>
-                {CATEGORY_OPTIONS.map((category) => (
-                  <option key={category} value={category}>{category}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="backoffice-table-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '12px' }}>
-              <input className="backoffice-input" type="number" min="0" step="0.01" placeholder="Preço atual" value={form.price} onChange={(event) => handleFormChange('price', event.target.value)} />
-              <input className="backoffice-input" type="number" min="0" step="0.01" placeholder="Preço original opcional" value={form.originalPrice} onChange={(event) => handleFormChange('originalPrice', event.target.value)} />
-            </div>
-
-            <div className="backoffice-table-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '12px' }}>
-              <input className="backoffice-input" type="number" min="0" step="1" placeholder="Estoque inicial" value={form.stock} onChange={(event) => handleFormChange('stock', event.target.value)} />
-              <input className="backoffice-input" type="number" min="0" step="1" placeholder="Estoque mínimo" value={form.minStock} onChange={(event) => handleFormChange('minStock', event.target.value)} />
-              <input className="backoffice-input" type="text" placeholder="Fornecedor" value={form.supplier} onChange={(event) => handleFormChange('supplier', event.target.value)} />
-            </div>
-
-            <textarea
-              className="backoffice-input backoffice-textarea"
-              rows={4}
-              placeholder="Descrição do produto"
-              value={form.description}
-              onChange={(event) => handleFormChange('description', event.target.value)}
-            />
-
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <button type="button" className={imageInputMode === 'upload' ? 'backoffice-primary-btn' : 'backoffice-ghost-btn'} onClick={() => setImageInputMode('upload')}>
-                Subir imagem
-              </button>
-              <button type="button" className={imageInputMode === 'url' ? 'backoffice-primary-btn' : 'backoffice-ghost-btn'} onClick={() => setImageInputMode('url')}>
-                Anexar link
-              </button>
-            </div>
-
-            {imageInputMode === 'upload' ? (
-              <label className="backoffice-upload-field">
-                <span style={{ color: 'var(--backoffice-text)', fontWeight: 700 }}>Selecionar arquivo</span>
-                <span style={{ color: 'var(--backoffice-muted)', fontSize: '13px' }}>PNG, JPG ou WebP para testar a vitrine do painel.</span>
-                <input type="file" accept="image/*" onChange={handleImageUpload} />
-              </label>
-            ) : (
-              <input className="backoffice-input" type="url" placeholder="https://exemplo.com/minha-imagem.jpg" value={form.imageUrl} onChange={(event) => handleFormChange('imageUrl', event.target.value)} />
-            )}
-
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <button className="backoffice-primary-btn" type="submit" disabled={isSubmitting}>{isSubmitting ? 'Salvando produto...' : 'Salvar produto'}</button>
-              <button
-                className="backoffice-ghost-btn"
-                type="button"
-                onClick={() => {
-                  setForm({
-                    name: '',
-                    category: 'Cães',
-                    price: '',
-                    originalPrice: '',
-                    stock: '',
-                    minStock: '',
-                    supplier: '',
-                    description: '',
-                    imageUrl: ''
-                  });
-                  setImagePreview('');
-                  setImageInputMode('upload');
-                }}
-              >
-                Limpar
-              </button>
-            </div>
-          </div>
-
-          <div className="backoffice-card" style={{ padding: '16px', background: 'var(--backoffice-soft)' }}>
-            <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Prévia do produto</span>
-            <div className="backoffice-product-preview" style={{ padding: '16px', borderRadius: '20px', background: CATEGORY_VISUALS[form.category].imageBg }}>
-              {((imageInputMode === 'upload' && imagePreview) || (imageInputMode === 'url' && form.imageUrl.trim())) ? (
-                <img
-                  src={imageInputMode === 'upload' ? imagePreview : form.imageUrl.trim()}
-                  alt={form.name || 'Prévia do produto'}
-                  style={{ width: '100%', aspectRatio: '1 / 1', objectFit: 'cover', borderRadius: '18px', marginBottom: '14px', background: 'rgba(255,255,255,0.5)' }}
-                />
-              ) : (
-                <div style={{ width: '100%', aspectRatio: '1 / 1', borderRadius: '18px', marginBottom: '14px', background: 'rgba(255,255,255,0.38)', display: 'grid', placeItems: 'center', fontSize: '44px' }}>
-                  {CATEGORY_VISUALS[form.category].emoji}
-                </div>
-              )}
-              <strong style={{ display: 'block', color: '#0f172a', fontSize: '18px', marginBottom: '8px' }}>{form.name || 'Novo produto da loja'}</strong>
-              <p style={{ color: 'rgba(15, 23, 42, 0.72)', lineHeight: 1.6, marginBottom: '10px' }}>{form.description || 'A descrição aparece aqui para o admin validar a apresentação antes de salvar.'}</p>
-              <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', color: '#0f172a' }}>
-                <span><strong>Categoria:</strong> {form.category}</span>
-                <span><strong>Preço:</strong> {form.price ? `R$ ${Number(form.price).toFixed(2)}` : 'R$ 0,00'}</span>
-              </div>
-            </div>
-          </div>
+        <div className="backoffice-relationship-card">
+          <span className="backoffice-relationship-card-label">Unidades em estoque</span>
+          <strong className="backoffice-relationship-card-value">{totalUnits}</strong>
+          <p className="backoffice-relationship-card-hint">Volume total disponível para loja, reserva e reposição operacional.</p>
         </div>
-      </form>
+        <div className="backoffice-relationship-card">
+          <span className="backoffice-relationship-card-label">Reservas ativas</span>
+          <strong className="backoffice-relationship-card-value">{reservedUnits}</strong>
+          <p className="backoffice-relationship-card-hint">Itens comprometidos com pedidos já pagos ou em separação.</p>
+        </div>
+        <div className="backoffice-relationship-card">
+          <span className="backoffice-relationship-card-label">Pressão de ruptura</span>
+          <strong className="backoffice-relationship-card-value">{criticalItems + lowItems}</strong>
+          <p className="backoffice-relationship-card-hint">{criticalItems} críticos e {lowItems} em nível baixo no momento.</p>
+        </div>
+      </div>
+
+      <div className="backoffice-card backoffice-inventory-toolbar">
+        <div>
+          <strong className="backoffice-inventory-toolbar-title">Painel de estoque</strong>
+          <p className="backoffice-inventory-toolbar-copy">Monitore disponibilidade, reservas e risco de ruptura. O cadastro de novos itens agora fica isolado em modal.</p>
+        </div>
+        <button className="backoffice-primary-btn" type="button" onClick={() => setIsCreateModalOpen(true)}>
+          Novo produto
+        </button>
+      </div>
 
       <div className="backoffice-table-grid" style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.1fr) repeat(2, minmax(0, 0.7fr))', gap: '12px' }}>
         <input className="backoffice-input" type="text" placeholder="Buscar produto, categoria ou SKU" value={query} onChange={(event) => setQuery(event.target.value)} />
@@ -280,7 +211,7 @@ export const AdminInventoryTab: React.FC<AdminInventoryTabProps> = ({ inventory,
 
       <div style={{ display: 'grid', gap: '14px' }}>
         {paginatedInventory.map((item) => (
-          <div key={item.id} className="backoffice-card" style={{ padding: '18px', background: 'var(--backoffice-soft)' }}>
+          <div key={item.id} className="backoffice-card backoffice-inventory-item" style={{ padding: '18px', background: 'var(--backoffice-soft)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '12px' }}>
               <div style={{ display: 'flex', gap: '14px', alignItems: 'center', minWidth: 0 }}>
                 <div style={{ width: '76px', height: '76px', borderRadius: '18px', overflow: 'hidden', flexShrink: 0, background: item.imageBg }}>
@@ -316,18 +247,118 @@ export const AdminInventoryTab: React.FC<AdminInventoryTabProps> = ({ inventory,
         ))}
       </div>
 
-      {totalPages > 1 && (
-        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button className="backoffice-ghost-btn" onClick={() => setPage((current) => Math.max(1, current - 1))} disabled={page === 1}>Anterior</button>
-          {Array.from({ length: totalPages }, (_, index) => {
-            const pageNumber = index + 1;
-            return (
-              <button key={pageNumber} className={pageNumber === page ? 'backoffice-primary-btn' : 'backoffice-ghost-btn'} onClick={() => setPage(pageNumber)}>
-                {pageNumber}
+      <AppPagination page={page} count={totalPages} pageSize={pageSize} onPageSizeChange={setPageSize} onChange={setPage} tone="backoffice" />
+
+      {isCreateModalOpen && (
+        <div className="backoffice-modal-overlay" onClick={() => setIsCreateModalOpen(false)}>
+          <form className="backoffice-card backoffice-product-modal" onClick={(event) => event.stopPropagation()} onSubmit={handleCreateSubmit}>
+            <div className="backoffice-section-header" style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', alignItems: 'center' }}>
+              <div>
+                <strong style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '20px', marginBottom: '6px' }}>Cadastrar produto mockado</strong>
+                <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.6 }}>Ao salvar, o item entra na mesma base compartilhada usada pelo painel e pela loja pública.</p>
+              </div>
+              <button type="button" className="backoffice-ghost-btn" onClick={() => setIsCreateModalOpen(false)}>Fechar</button>
+            </div>
+
+            <div className="backoffice-product-modal-grid">
+              <div style={{ display: 'grid', gap: '12px' }}>
+                <div className="backoffice-table-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '12px' }}>
+                  <input className="backoffice-input" type="text" placeholder="Nome do produto" value={form.name} onChange={(event) => handleFormChange('name', event.target.value)} />
+                  <select className="backoffice-select" value={form.category} onChange={(event) => handleFormChange('category', event.target.value)}>
+                    {CATEGORY_OPTIONS.map((category) => (
+                      <option key={category} value={category}>{category}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="backoffice-table-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '12px' }}>
+                  <input className="backoffice-input" type="number" min="0" step="0.01" placeholder="Preço atual" value={form.price} onChange={(event) => handleFormChange('price', event.target.value)} />
+                  <input className="backoffice-input" type="number" min="0" step="0.01" placeholder="Preço original opcional" value={form.originalPrice} onChange={(event) => handleFormChange('originalPrice', event.target.value)} />
+                </div>
+
+                <div className="backoffice-table-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '12px' }}>
+                  <input className="backoffice-input" type="number" min="0" step="1" placeholder="Estoque inicial" value={form.stock} onChange={(event) => handleFormChange('stock', event.target.value)} />
+                  <input className="backoffice-input" type="number" min="0" step="1" placeholder="Estoque mínimo" value={form.minStock} onChange={(event) => handleFormChange('minStock', event.target.value)} />
+                  <input className="backoffice-input" type="text" placeholder="Fornecedor" value={form.supplier} onChange={(event) => handleFormChange('supplier', event.target.value)} />
+                </div>
+
+                <textarea
+                  className="backoffice-input backoffice-textarea"
+                  rows={4}
+                  placeholder="Descrição do produto"
+                  value={form.description}
+                  onChange={(event) => handleFormChange('description', event.target.value)}
+                />
+
+                <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                  <button type="button" className={imageInputMode === 'upload' ? 'backoffice-primary-btn' : 'backoffice-ghost-btn'} onClick={() => setImageInputMode('upload')}>
+                    Subir imagem
+                  </button>
+                  <button type="button" className={imageInputMode === 'url' ? 'backoffice-primary-btn' : 'backoffice-ghost-btn'} onClick={() => setImageInputMode('url')}>
+                    Anexar link
+                  </button>
+                </div>
+
+                {imageInputMode === 'upload' ? (
+                  <label className="backoffice-upload-field">
+                    <span style={{ color: 'var(--backoffice-text)', fontWeight: 700 }}>Selecionar arquivo</span>
+                    <span style={{ color: 'var(--backoffice-muted)', fontSize: '13px' }}>PNG, JPG ou WebP para testar a vitrine do painel.</span>
+                    <input type="file" accept="image/*" onChange={handleImageUpload} />
+                  </label>
+                ) : (
+                  <input className="backoffice-input" type="url" placeholder="https://exemplo.com/minha-imagem.jpg" value={form.imageUrl} onChange={(event) => handleFormChange('imageUrl', event.target.value)} />
+                )}
+              </div>
+
+              <div className="backoffice-card backoffice-product-preview-shell" style={{ padding: '16px', background: 'var(--backoffice-soft)' }}>
+                <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '12px', marginBottom: '10px', textTransform: 'uppercase', letterSpacing: '0.12em' }}>Prévia do produto</span>
+                <div className="backoffice-product-preview" style={{ padding: '16px', borderRadius: '20px', background: CATEGORY_VISUALS[form.category].imageBg }}>
+                  {((imageInputMode === 'upload' && imagePreview) || (imageInputMode === 'url' && form.imageUrl.trim())) ? (
+                    <img
+                      src={imageInputMode === 'upload' ? imagePreview : form.imageUrl.trim()}
+                      alt={form.name || 'Prévia do produto'}
+                      style={{ width: '100%', aspectRatio: '1 / 1', objectFit: 'cover', borderRadius: '18px', marginBottom: '14px', background: 'rgba(255,255,255,0.5)' }}
+                    />
+                  ) : (
+                    <div style={{ width: '100%', aspectRatio: '1 / 1', borderRadius: '18px', marginBottom: '14px', background: 'rgba(255,255,255,0.38)', display: 'grid', placeItems: 'center', fontSize: '44px' }}>
+                      {CATEGORY_VISUALS[form.category].emoji}
+                    </div>
+                  )}
+                  <strong style={{ display: 'block', color: '#0f172a', fontSize: '18px', marginBottom: '8px' }}>{form.name || 'Novo produto da loja'}</strong>
+                  <p style={{ color: 'rgba(15, 23, 42, 0.72)', lineHeight: 1.6, marginBottom: '10px' }}>{form.description || 'A descrição aparece aqui para o admin validar a apresentação antes de salvar.'}</p>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', flexWrap: 'wrap', color: '#0f172a' }}>
+                    <span><strong>Categoria:</strong> {form.category}</span>
+                    <span><strong>Preço:</strong> {form.price ? `R$ ${Number(form.price).toFixed(2)}` : 'R$ 0,00'}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+              <button className="backoffice-primary-btn" type="submit" disabled={isSubmitting}>{isSubmitting ? 'Salvando produto...' : 'Salvar produto'}</button>
+              <button
+                className="backoffice-ghost-btn"
+                type="button"
+                onClick={() => {
+                  setForm({
+                    name: '',
+                    category: 'Cães',
+                    price: '',
+                    originalPrice: '',
+                    stock: '',
+                    minStock: '',
+                    supplier: '',
+                    description: '',
+                    imageUrl: ''
+                  });
+                  setImagePreview('');
+                  setImageInputMode('upload');
+                }}
+              >
+                Limpar
               </button>
-            );
-          })}
-          <button className="backoffice-ghost-btn" onClick={() => setPage((current) => Math.min(totalPages, current + 1))} disabled={page === totalPages}>Próxima</button>
+            </div>
+          </form>
         </div>
       )}
     </BackofficeSectionCard>

@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Plus, X } from 'lucide-react';
+import { AppPagination, getResponsiveDefaultPageSize } from '@/components/pagination/AppPagination';
 import { PortalSectionCard } from '@/components/client/portal-section-card/PortalSectionCard';
 import type { ClientAppointment, ClientPet, VetAvailability } from '@/services/clientPortal';
 
@@ -51,6 +52,7 @@ export const AppointmentsTab: React.FC<AppointmentsTabProps> = ({
   const [typeFilter, setTypeFilter] = useState<'Todos' | ClientAppointment['type']>('Todos');
   const [sortBy, setSortBy] = useState<'date-desc' | 'date-asc' | 'status' | 'type'>('date-desc');
   const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(() => getResponsiveDefaultPageSize());
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
   const filteredAppointments = useMemo(() => {
@@ -91,11 +93,10 @@ export const AppointmentsTab: React.FC<AppointmentsTabProps> = ({
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, statusFilter, typeFilter, sortBy]);
+  }, [searchQuery, statusFilter, typeFilter, sortBy, pageSize]);
 
-  const appointmentsPerPage = 3;
-  const totalPages = Math.max(1, Math.ceil(sortedAppointments.length / appointmentsPerPage));
-  const paginatedAppointments = sortedAppointments.slice((currentPage - 1) * appointmentsPerPage, currentPage * appointmentsPerPage);
+  const totalPages = Math.max(1, Math.ceil(sortedAppointments.length / pageSize));
+  const paginatedAppointments = sortedAppointments.slice((currentPage - 1) * pageSize, currentPage * pageSize);
 
   const renderAppointmentForm = () => (
     <form onSubmit={onCreateAppointment} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
@@ -284,38 +285,7 @@ export const AppointmentsTab: React.FC<AppointmentsTabProps> = ({
           )}
         </div>
 
-        {sortedAppointments.length > 0 && totalPages > 1 && (
-          <div className="portal-appointments-pagination" style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
-            <button className="portal-ghost-btn" onClick={() => setCurrentPage((page) => Math.max(1, page - 1))} disabled={currentPage === 1}>
-              Anterior
-            </button>
-            {Array.from({ length: totalPages }, (_, index) => {
-              const page = index + 1;
-              return (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  style={{
-                    width: '42px',
-                    height: '42px',
-                    borderRadius: '50%',
-                    border: '1px solid',
-                    borderColor: currentPage === page ? 'var(--portal-accent)' : 'var(--portal-border)',
-                    background: currentPage === page ? 'var(--portal-accent)' : 'var(--portal-soft-surface)',
-                    color: currentPage === page ? '#fff' : 'var(--portal-text)',
-                    fontWeight: 700,
-                    cursor: 'pointer'
-                  }}
-                >
-                  {page}
-                </button>
-              );
-            })}
-            <button className="portal-ghost-btn" onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))} disabled={currentPage === totalPages}>
-              Próxima
-            </button>
-          </div>
-        )}
+        {sortedAppointments.length > 0 && <AppPagination page={currentPage} count={totalPages} pageSize={pageSize} onPageSizeChange={setPageSize} onChange={setCurrentPage} tone="portal" />}
       </PortalSectionCard>
 
       <PortalSectionCard title="Novo agendamento" eyebrow="Mock funcional">

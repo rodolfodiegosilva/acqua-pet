@@ -1,0 +1,39 @@
+.app-pagination {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.app-pagination-size {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.app-pagination-size-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.app-pagination--store,
+.app-pagination--portal,
+.app-pagination--backoffice {
+  margin-top: 4px;
+}
+
+@media (max-width: 640px) {
+  .app-pagination-size {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .app-pagination .MuiPagination-ul {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+}

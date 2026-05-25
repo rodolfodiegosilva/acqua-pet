@@ -8,7 +8,6 @@ import type { BackofficeNavItem, BackofficeTheme } from '../types';
 interface BackofficeShellProps<TTab extends string> {
   theme: BackofficeTheme;
   setTheme: React.Dispatch<React.SetStateAction<BackofficeTheme>>;
-  setView: (view: 'landing' | 'store' | 'client' | 'admin' | 'veterinary') => void;
   user: BackofficeSessionUser;
   title: string;
   description: string;
@@ -22,7 +21,6 @@ interface BackofficeShellProps<TTab extends string> {
 export const BackofficeShell = <TTab extends string>({
   theme,
   setTheme,
-  setView,
   user,
   title,
   description,
@@ -108,12 +106,6 @@ export const BackofficeShell = <TTab extends string>({
                 <button className="backoffice-ghost-btn" onClick={() => setTheme((prev) => (prev === 'dark' ? 'light' : 'dark'))}>
                   {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
                   {theme === 'dark' ? 'Modo claro' : 'Modo escuro'}
-                </button>
-                <button className="backoffice-ghost-btn" onClick={() => setView('store')}>
-                  Loja pública
-                </button>
-                <button className="backoffice-ghost-btn" onClick={() => setView('landing')}>
-                  Site institucional
                 </button>
                 <button className="backoffice-ghost-btn" onClick={onLogout}>
                   <LogOut size={16} />

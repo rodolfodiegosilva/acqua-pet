@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ShoppingBag, X, Plus, Minus, Trash2, Check, ArrowRight, CreditCard, ChevronRight, CheckCircle } from 'lucide-react';
+import { AppPagination, getResponsiveDefaultPageSize } from '@/components/pagination/AppPagination';
 import { fetchProducts } from '@/services/api';
 import type { Product } from '@/services/api';
 
@@ -39,6 +40,7 @@ export const Store: React.FC<StoreProps> = ({
   const [promoOnly, setPromoOnly] = useState<boolean>(false);
   const [inStockOnly, setInStockOnly] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [pageSize, setPageSize] = useState<number>(() => getResponsiveDefaultPageSize());
 
   // Checkout Flow states
   const [isCheckoutOpen, setIsCheckoutOpen] = useState<boolean>(false);
@@ -65,7 +67,6 @@ export const Store: React.FC<StoreProps> = ({
   });
 
   const categories = ['Todos', 'Cães 🐶', 'Gatos 🐱', 'Peixes 🐠', 'Aves 🦜', 'Répteis 🐢', 'Pequenos Pets 🐹'];
-  const productsPerPage = 8;
 
   // Carregar produtos da API mockada
   useEffect(() => {
@@ -78,7 +79,7 @@ export const Store: React.FC<StoreProps> = ({
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [activeCategory, searchQuery, sortBy, priceRange, minRating, promoOnly, inStockOnly]);
+  }, [activeCategory, searchQuery, sortBy, priceRange, minRating, promoOnly, inStockOnly, pageSize]);
 
   // Filtragem local baseada na busca
   const filteredProducts = products.filter((p) => {
@@ -119,10 +120,10 @@ export const Store: React.FC<StoreProps> = ({
     return b.rating - a.rating || a.id - b.id;
   });
 
-  const totalPages = Math.max(1, Math.ceil(sortedProducts.length / productsPerPage));
-  const paginatedProducts = sortedProducts.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage);
-  const startItem = sortedProducts.length === 0 ? 0 : (currentPage - 1) * productsPerPage + 1;
-  const endItem = Math.min(currentPage * productsPerPage, sortedProducts.length);
+  const totalPages = Math.max(1, Math.ceil(sortedProducts.length / pageSize));
+  const paginatedProducts = sortedProducts.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const startItem = sortedProducts.length === 0 ? 0 : (currentPage - 1) * pageSize + 1;
+  const endItem = Math.min(currentPage * pageSize, sortedProducts.length);
   const hasActiveRefinements = Boolean(
     searchQuery.trim() || priceRange !== 'all' || minRating !== 'all' || promoOnly || inStockOnly || activeCategory !== 'Todos'
   );
@@ -717,76 +718,7 @@ export const Store: React.FC<StoreProps> = ({
           </div>
         )}
 
-        {!loading && sortedProducts.length > 0 && totalPages > 1 && (
-          <div
-            className="pagination-bar"
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              gap: '10px',
-              marginTop: '36px',
-              flexWrap: 'wrap'
-            }}
-          >
-            <button
-              onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-              disabled={currentPage === 1}
-              style={{
-                padding: '12px 18px',
-                borderRadius: 'var(--radius-full)',
-                border: '1px solid var(--border-glass)',
-                background: 'var(--bg-secondary)',
-                color: 'var(--text-main)',
-                fontWeight: 700,
-                cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
-                opacity: currentPage === 1 ? 0.45 : 1
-              }}
-            >
-              Anterior
-            </button>
-
-            {Array.from({ length: totalPages }, (_, index) => {
-              const page = index + 1;
-              return (
-                <button
-                  key={page}
-                  onClick={() => setCurrentPage(page)}
-                  style={{
-                    width: '42px',
-                    height: '42px',
-                    borderRadius: '50%',
-                    border: '1px solid',
-                    borderColor: currentPage === page ? 'var(--primary)' : 'var(--border-glass)',
-                    background: currentPage === page ? 'var(--primary)' : 'var(--bg-secondary)',
-                    color: currentPage === page ? '#fff' : 'var(--text-main)',
-                    fontWeight: 700,
-                    cursor: 'pointer'
-                  }}
-                >
-                  {page}
-                </button>
-              );
-            })}
-
-            <button
-              onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
-              disabled={currentPage === totalPages}
-              style={{
-                padding: '12px 18px',
-                borderRadius: 'var(--radius-full)',
-                border: '1px solid var(--border-glass)',
-                background: 'var(--bg-secondary)',
-                color: 'var(--text-main)',
-                fontWeight: 700,
-                cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
-                opacity: currentPage === totalPages ? 0.45 : 1
-              }}
-            >
-              Próxima
-            </button>
-          </div>
-        )}
+        {!loading && sortedProducts.length > 0 && <AppPagination page={currentPage} count={totalPages} pageSize={pageSize} onPageSizeChange={setPageSize} onChange={setCurrentPage} tone="store" />}
       </div>
 
       {/* CARRINHO DE COMPRAS LATERAL (CART DRAWER) */}

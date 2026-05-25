@@ -143,7 +143,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
     { id: 'appointments', label: 'Agendamentos', icon: CalendarDays },
     { id: 'medical', label: 'Histórico médico', icon: HeartPulse },
     { id: 'vets', label: 'Veterinários', icon: Stethoscope },
-    { id: 'store', label: 'Loja do cliente', icon: ShoppingBag }
+    { id: 'store', label: 'Loja', icon: ShoppingBag }
   ];
 
   const upcomingAppointments = appointments.filter((appointment) => appointment.status !== 'Concluído');
@@ -362,7 +362,6 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
               activeTab={activeTab}
               tabItems={tabItems}
               setActiveTab={setActiveTab}
-              setView={setView}
               onLogout={handleLogout}
               isOpen={isSidebarOpen}
               onClose={() => setIsSidebarOpen(false)}

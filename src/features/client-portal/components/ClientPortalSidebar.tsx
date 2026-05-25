@@ -9,7 +9,6 @@ interface ClientPortalSidebarProps {
   activeTab: PortalTab;
   tabItems: PortalTabItem[];
   setActiveTab: (tab: PortalTab) => void;
-  setView: (view: 'landing' | 'store' | 'client') => void;
   onLogout: () => void;
   isOpen: boolean;
   onClose: () => void;
@@ -22,7 +21,6 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
   activeTab,
   tabItems,
   setActiveTab,
-  setView,
   onLogout,
   isOpen,
   onClose,
@@ -119,24 +117,6 @@ export const ClientPortalSidebar: React.FC<ClientPortalSidebarProps> = ({
         <button onClick={() => setPortalTheme((current) => (current === 'dark' ? 'light' : 'dark'))} className="portal-ghost-btn">
           {portalTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
           {portalTheme === 'dark' ? 'Modo claro' : 'Modo escuro'}
-        </button>
-        <button
-          onClick={() => {
-            setView('store');
-            onClose();
-          }}
-          className="portal-ghost-btn"
-        >
-          Loja pública
-        </button>
-        <button
-          onClick={() => {
-            setView('landing');
-            onClose();
-          }}
-          className="portal-ghost-btn"
-        >
-          Site institucional
         </button>
       </div>
 

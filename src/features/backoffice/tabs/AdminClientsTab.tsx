@@ -1,16 +1,23 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import type { BackofficeClient } from '@/services/backoffice';
+import { AppPagination, getResponsiveDefaultPageSize } from '@/components/pagination/AppPagination';
+import type { BackofficeClient, BackofficePet } from '@/services/backoffice';
+import { AdminClientDetailView } from '../components/AdminClientDetailView';
 import { BackofficeSectionCard } from '../components/BackofficeSectionCard';
 
 interface AdminClientsTabProps {
   clients: BackofficeClient[];
+  pets: BackofficePet[];
+  selectedClientId: number | null;
+  onSelectClient: (clientId: number) => void;
+  onBackToList: () => void;
 }
 
-export const AdminClientsTab: React.FC<AdminClientsTabProps> = ({ clients }) => {
+export const AdminClientsTab: React.FC<AdminClientsTabProps> = ({ clients, pets, selectedClientId, onSelectClient, onBackToList }) => {
   const [query, setQuery] = useState('');
   const [planFilter, setPlanFilter] = useState<'Todos' | BackofficeClient['plan']>('Todos');
   const [sortBy, setSortBy] = useState<'name' | 'joinedAt' | 'status'>('name');
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(() => getResponsiveDefaultPageSize());
 
   const filteredClients = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
@@ -36,11 +43,16 @@ export const AdminClientsTab: React.FC<AdminClientsTabProps> = ({ clients }) => 
 
   useEffect(() => {
     setPage(1);
-  }, [query, planFilter, sortBy]);
+  }, [query, planFilter, sortBy, pageSize]);
 
-  const perPage = 3;
-  const totalPages = Math.max(1, Math.ceil(sortedClients.length / perPage));
-  const paginatedClients = sortedClients.slice((page - 1) * perPage, page * perPage);
+  const totalPages = Math.max(1, Math.ceil(sortedClients.length / pageSize));
+  const paginatedClients = sortedClients.slice((page - 1) * pageSize, page * pageSize);
+  const selectedClient = selectedClientId ? clients.find((client) => client.id === selectedClientId) ?? null : null;
+  const selectedClientPets = selectedClient ? pets.filter((pet) => pet.clientId === selectedClient.id) : [];
+
+  if (selectedClient) {
+    return <AdminClientDetailView client={selectedClient} pets={selectedClientPets} onBack={onBackToList} />;
+  }
 
   return (
     <BackofficeSectionCard title="Gestão de clientes" eyebrow="CRM clínico">
@@ -65,7 +77,13 @@ export const AdminClientsTab: React.FC<AdminClientsTabProps> = ({ clients }) => 
 
       <div style={{ display: 'grid', gap: '14px' }}>
         {paginatedClients.map((client) => (
-          <div key={client.id} className="backoffice-card" style={{ padding: '18px', background: 'var(--backoffice-soft)' }}>
+          <button
+            key={client.id}
+            type="button"
+            className="backoffice-card"
+            onClick={() => onSelectClient(client.id)}
+            style={{ padding: '18px', background: 'var(--backoffice-soft)', textAlign: 'left', cursor: 'pointer' }}
+          >
             <div style={{ display: 'flex', justifyContent: 'space-between', gap: '16px', flexWrap: 'wrap', marginBottom: '12px' }}>
               <div>
                 <strong style={{ display: 'block', color: 'var(--backoffice-text)', fontSize: '18px', marginBottom: '6px' }}>{client.name}</strong>
@@ -88,24 +106,11 @@ export const AdminClientsTab: React.FC<AdminClientsTabProps> = ({ clients }) => 
                 <span key={tag} className="backoffice-pill backoffice-status-info">{tag}</span>
               ))}
             </div>
-          </div>
+          </button>
         ))}
       </div>
 
-      {totalPages > 1 && (
-        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button className="backoffice-ghost-btn" onClick={() => setPage((current) => Math.max(1, current - 1))} disabled={page === 1}>Anterior</button>
-          {Array.from({ length: totalPages }, (_, index) => {
-            const pageNumber = index + 1;
-            return (
-              <button key={pageNumber} className={pageNumber === page ? 'backoffice-primary-btn' : 'backoffice-ghost-btn'} onClick={() => setPage(pageNumber)}>
-                {pageNumber}
-              </button>
-            );
-          })}
-          <button className="backoffice-ghost-btn" onClick={() => setPage((current) => Math.min(totalPages, current + 1))} disabled={page === totalPages}>Próxima</button>
-        </div>
-      )}
+      <AppPagination page={page} count={totalPages} pageSize={pageSize} onPageSizeChange={setPageSize} onChange={setPage} tone="backoffice" />
     </BackofficeSectionCard>
   );
 };

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { AppPagination, getResponsiveDefaultPageSize } from '@/components/pagination/AppPagination';
 import type { BackofficePet } from '@/services/backoffice';
 import type { ClientAppointment } from '@/services/clientPortal';
 import { BackofficeSectionCard } from '../components/BackofficeSectionCard';
@@ -12,6 +13,7 @@ export const VetAgendaTab: React.FC<VetAgendaTabProps> = ({ appointments, pets }
   const [statusFilter, setStatusFilter] = useState<'Todos' | ClientAppointment['status']>('Todos');
   const [typeFilter, setTypeFilter] = useState<'Todos' | ClientAppointment['type']>('Todos');
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(() => getResponsiveDefaultPageSize());
 
   const filteredAppointments = useMemo(() => {
     return appointments.filter((appointment) => {
@@ -23,11 +25,10 @@ export const VetAgendaTab: React.FC<VetAgendaTabProps> = ({ appointments, pets }
 
   useEffect(() => {
     setPage(1);
-  }, [statusFilter, typeFilter]);
+  }, [statusFilter, typeFilter, pageSize]);
 
-  const perPage = 3;
-  const totalPages = Math.max(1, Math.ceil(filteredAppointments.length / perPage));
-  const paginatedAppointments = filteredAppointments.slice((page - 1) * perPage, page * perPage);
+  const totalPages = Math.max(1, Math.ceil(filteredAppointments.length / pageSize));
+  const paginatedAppointments = filteredAppointments.slice((page - 1) * pageSize, page * pageSize);
 
   return (
     <BackofficeSectionCard title="Agenda clínica e logística" eyebrow="Atendimento">
@@ -71,20 +72,7 @@ export const VetAgendaTab: React.FC<VetAgendaTabProps> = ({ appointments, pets }
         })}
       </div>
 
-      {totalPages > 1 && (
-        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button className="backoffice-ghost-btn" onClick={() => setPage((current) => Math.max(1, current - 1))} disabled={page === 1}>Anterior</button>
-          {Array.from({ length: totalPages }, (_, index) => {
-            const pageNumber = index + 1;
-            return (
-              <button key={pageNumber} className={pageNumber === page ? 'backoffice-primary-btn' : 'backoffice-ghost-btn'} onClick={() => setPage(pageNumber)}>
-                {pageNumber}
-              </button>
-            );
-          })}
-          <button className="backoffice-ghost-btn" onClick={() => setPage((current) => Math.min(totalPages, current + 1))} disabled={page === totalPages}>Próxima</button>
-        </div>
-      )}
+      <AppPagination page={page} count={totalPages} pageSize={pageSize} onPageSizeChange={setPageSize} onChange={setPage} tone="backoffice" />
     </BackofficeSectionCard>
   );
 };

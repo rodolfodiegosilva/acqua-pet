@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { AppPagination, getResponsiveDefaultPageSize } from '@/components/pagination/AppPagination';
 import type { BackofficePet } from '@/services/backoffice';
 import type { MedicalRecord } from '@/services/clientPortal';
 import type { VetRecordDraft } from '../types';
@@ -28,6 +29,7 @@ export const VetPatientsTab: React.FC<VetPatientsTabProps> = ({
   const [statusFilter, setStatusFilter] = useState<'Todos' | BackofficePet['status']>('Todos');
   const [sortBy, setSortBy] = useState<'recent' | 'name' | 'attention'>('recent');
   const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(() => getResponsiveDefaultPageSize());
 
   const selectedPet = useMemo(() => pets.find((pet) => pet.id === selectedPetId) ?? null, [pets, selectedPetId]);
 
@@ -68,7 +70,7 @@ export const VetPatientsTab: React.FC<VetPatientsTabProps> = ({
 
   useEffect(() => {
     setPage(1);
-  }, [query, statusFilter, sortBy]);
+  }, [query, statusFilter, sortBy, pageSize]);
 
   if (selectedPet) {
     return (
@@ -82,9 +84,8 @@ export const VetPatientsTab: React.FC<VetPatientsTabProps> = ({
     );
   }
 
-  const perPage = 4;
-  const totalPages = Math.max(1, Math.ceil(sortedPatients.length / perPage));
-  const paginatedPatients = sortedPatients.slice((page - 1) * perPage, page * perPage);
+  const totalPages = Math.max(1, Math.ceil(sortedPatients.length / pageSize));
+  const paginatedPatients = sortedPatients.slice((page - 1) * pageSize, page * pageSize);
 
   return (
     <BackofficeSectionCard title="Pacientes e prontuários" eyebrow="Clínica">
@@ -136,20 +137,7 @@ export const VetPatientsTab: React.FC<VetPatientsTabProps> = ({
         ))}
       </div>
 
-      {totalPages > 1 && (
-        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <button className="backoffice-ghost-btn" onClick={() => setPage((current) => Math.max(1, current - 1))} disabled={page === 1}>Anterior</button>
-          {Array.from({ length: totalPages }, (_, index) => {
-            const pageNumber = index + 1;
-            return (
-              <button key={pageNumber} className={pageNumber === page ? 'backoffice-primary-btn' : 'backoffice-ghost-btn'} onClick={() => setPage(pageNumber)}>
-                {pageNumber}
-              </button>
-            );
-          })}
-          <button className="backoffice-ghost-btn" onClick={() => setPage((current) => Math.min(totalPages, current + 1))} disabled={page === totalPages}>Próxima</button>
-        </div>
-      )}
+      <AppPagination page={page} count={totalPages} pageSize={pageSize} onPageSizeChange={setPageSize} onChange={setPage} tone="backoffice" />
     </BackofficeSectionCard>
   );
 };

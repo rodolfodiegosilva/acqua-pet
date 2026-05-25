@@ -547,11 +547,45 @@ export const updateBackofficeOrderStatus = async (orderId: number, status: Backo
   return simulateApiDelay(nextOrders);
 };
 
+export const updateBackofficeOrder = async (
+  orderId: number,
+  updates: Partial<Pick<BackofficeOrder, 'status' | 'fulfillment' | 'notes'>>
+): Promise<BackofficeOrder[]> => {
+  const snapshot = readBackofficeSnapshot();
+  const nextOrders: BackofficeOrder[] = snapshot.orders.map((order) =>
+    order.id === orderId
+      ? {
+          ...order,
+          ...updates
+        }
+      : order
+  );
+
+  writeBackofficeSnapshot({
+    ...snapshot,
+    orders: nextOrders
+  });
+
+  return simulateApiDelay(nextOrders);
+};
+
 export const cancelBackofficeOrder = async (orderId: number): Promise<BackofficeOrder[]> => {
   const snapshot = readBackofficeSnapshot();
   const nextOrders: BackofficeOrder[] = snapshot.orders.map((order) =>
     order.id === orderId ? { ...order, status: 'Cancelado' as BackofficeOrder['status'], notes: `${order.notes} Cancelado pelo admin.` } : order
   );
+
+  writeBackofficeSnapshot({
+    ...snapshot,
+    orders: nextOrders
+  });
+
+  return simulateApiDelay(nextOrders);
+};
+
+export const deleteBackofficeOrder = async (orderId: number): Promise<BackofficeOrder[]> => {
+  const snapshot = readBackofficeSnapshot();
+  const nextOrders: BackofficeOrder[] = snapshot.orders.filter((order) => order.id !== orderId);
 
   writeBackofficeSnapshot({
     ...snapshot,

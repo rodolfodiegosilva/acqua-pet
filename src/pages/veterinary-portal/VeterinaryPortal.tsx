@@ -136,7 +136,6 @@ export const VeterinaryPortal: React.FC<VeterinaryPortalProps> = ({ setView }) =
     <BackofficeShell
       theme={theme}
       setTheme={setTheme}
-      setView={setView}
       user={sessionUser}
       title="Central veterinária"
       description="Ambiente clínico desacoplado da operação geral, focado em agenda, pacientes, histórico e decisões de atendimento."

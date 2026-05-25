@@ -18,6 +18,39 @@ export const AdminOverviewTab: React.FC<AdminOverviewTabProps> = ({ clients, pet
   const primeClients = clients.filter((client) => client.plan === 'Prime').length;
   const criticalStock = inventory.filter((item) => item.status === 'Crítico').length;
   const openOrders = orders.filter((order) => !['Entregue', 'Cancelado'].includes(order.status)).length;
+  const newClients = clients.filter((client) => client.status === 'Novo').length;
+  const upgradedClients = clients.filter((client) => client.plan !== 'Essential').length;
+  const multispeciesClients = clients.filter((client) => client.tags.includes('multiespécie')).length;
+  const canceledOrders = orders.filter((order) => order.status === 'Cancelado').length;
+  const lowStockItems = inventory.filter((item) => item.status !== 'Saudável').length;
+
+  const relationshipMetrics = [
+    {
+      label: 'Clientes novos',
+      value: String(newClients),
+      hint: 'Entradas recentes aguardando ativação plena na carteira.'
+    },
+    {
+      label: 'Planos Care+ ou Prime',
+      value: String(upgradedClients),
+      hint: 'Clientes com maior recorrência e potencial comercial.'
+    },
+    {
+      label: 'Tutoria multiespécie',
+      value: String(multispeciesClients),
+      hint: 'Famílias com maior profundidade de relacionamento.'
+    },
+    {
+      label: 'Pedidos cancelados',
+      value: String(canceledOrders),
+      hint: 'Pontos de atrito comercial para reengajamento.'
+    },
+    {
+      label: 'SKUs sob pressão',
+      value: String(lowStockItems),
+      hint: 'Itens que podem afetar retenção e experiência de compra.'
+    }
+  ];
 
   return (
     <>
@@ -46,20 +79,25 @@ export const AdminOverviewTab: React.FC<AdminOverviewTabProps> = ({ clients, pet
         </BackofficeSectionCard>
 
         <BackofficeSectionCard title="Resumo da carteira" eyebrow="Relacionamento">
-          <div style={{ display: 'grid', gap: '14px' }}>
-            {[
-              ['Clientes ativos', String(activeClients)],
-              ['Clientes novos', String(clients.filter((client) => client.status === 'Novo').length)],
-              ['Planos Care+ ou Prime', String(clients.filter((client) => client.plan !== 'Essential').length)],
-              ['Pets multiespécie', String(clients.filter((client) => client.tags.includes('multiespécie')).length)],
-              ['Pedidos cancelados', String(orders.filter((order) => order.status === 'Cancelado').length)],
-              ['SKUs com estoque baixo', String(inventory.filter((item) => item.status !== 'Saudável').length)]
-            ].map(([label, value]) => (
-              <div key={label} style={{ paddingBottom: '12px', borderBottom: '1px solid var(--backoffice-border)' }}>
-                <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '13px', marginBottom: '4px' }}>{label}</span>
-                <strong style={{ color: 'var(--backoffice-text)', fontSize: '18px' }}>{value}</strong>
-              </div>
-            ))}
+          <div className="backoffice-relationship-panel">
+            <div className="backoffice-relationship-hero">
+              <span className="backoffice-pill backoffice-status-info">Base acompanhada</span>
+              <strong className="backoffice-relationship-value">{activeClients}</strong>
+              <span className="backoffice-relationship-label">clientes ativos com relacionamento em andamento</span>
+              <p className="backoffice-relationship-copy">
+                Carteira viva entre assinaturas, recorrência clínica e consumo de loja. O foco aqui é retenção, upgrade de plano e prevenção de atrito operacional.
+              </p>
+            </div>
+
+            <div className="backoffice-relationship-grid">
+              {relationshipMetrics.map((item) => (
+                <div key={item.label} className="backoffice-relationship-card">
+                  <span className="backoffice-relationship-card-label">{item.label}</span>
+                  <strong className="backoffice-relationship-card-value">{item.value}</strong>
+                  <p className="backoffice-relationship-card-hint">{item.hint}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </BackofficeSectionCard>
       </div>
