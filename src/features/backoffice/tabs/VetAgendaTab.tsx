@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import type { ClientAppointment } from '../../../services/clientPortal';
-import type { BackofficePet } from '../../../services/backoffice';
+import type { BackofficePet } from '@/services/backoffice';
+import type { ClientAppointment } from '@/services/clientPortal';
 import { BackofficeSectionCard } from '../components/BackofficeSectionCard';
 
 interface VetAgendaTabProps {

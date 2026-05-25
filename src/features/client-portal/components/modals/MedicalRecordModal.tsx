@@ -1,6 +1,6 @@
 import React from 'react';
 import { ClipboardPlus, FileText, ShieldPlus } from 'lucide-react';
-import type { ClientPet, MedicalRecord } from '../../../../services/clientPortal';
+import type { ClientPet, MedicalRecord } from '@/services/clientPortal';
 import { PortalModal } from './PortalModal';
 
 interface MedicalRecordModalProps {

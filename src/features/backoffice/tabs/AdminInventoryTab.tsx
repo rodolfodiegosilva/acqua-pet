@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import type { BackofficeInventoryItem } from '../../../services/backoffice';
+import type { BackofficeInventoryItem } from '@/services/backoffice';
 import { BackofficeSectionCard } from '../components/BackofficeSectionCard';
 
 interface AdminInventoryTabProps {

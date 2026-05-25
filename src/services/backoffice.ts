@@ -617,22 +617,44 @@ export const updateBackofficePet = async (
   return simulateApiDelay(nextPets);
 };
 
-const ADMIN_USER: BackofficeSessionUser = {
+export const MOCK_BACKOFFICE_USERS = {
+  admin: {
   id: 1,
   name: 'Paula Nascimento',
   email: 'admin@acquapet.mock',
   role: 'admin',
   title: 'Admin Geral',
   unit: 'Central Operacional'
-};
+  },
+  veterinarian: {
+    id: 2,
+    name: 'Dr. Lucas Varella',
+    email: 'vet@acquapet.mock',
+    role: 'veterinarian',
+    title: 'Admin Veterinário',
+    unit: 'Clínica e prontuário'
+  }
+} satisfies Record<BackofficeRole, BackofficeSessionUser>;
 
-const VETERINARIAN_USER: BackofficeSessionUser = {
-  id: 2,
-  name: 'Dr. Lucas Varella',
-  email: 'vet@acquapet.mock',
-  role: 'veterinarian',
-  title: 'Admin Veterinário',
-  unit: 'Clínica e prontuário'
+const ADMIN_USER: BackofficeSessionUser = MOCK_BACKOFFICE_USERS.admin;
+const VETERINARIAN_USER: BackofficeSessionUser = MOCK_BACKOFFICE_USERS.veterinarian;
+
+export const MOCK_SYSTEM_USERS = {
+  client: {
+    id: MOCK_BACKOFFICE.clients[0].id,
+    name: MOCK_BACKOFFICE.clients[0].name,
+    email: MOCK_BACKOFFICE.clients[0].email
+  },
+  admin: {
+    id: MOCK_BACKOFFICE_USERS.admin.id,
+    name: MOCK_BACKOFFICE_USERS.admin.name,
+    email: MOCK_BACKOFFICE_USERS.admin.email
+  },
+  veterinarian: {
+    id: MOCK_BACKOFFICE_USERS.veterinarian.id,
+    name: MOCK_BACKOFFICE_USERS.veterinarian.name,
+    email: MOCK_BACKOFFICE_USERS.veterinarian.email
+  }
 };
 
 const buildSession = (user: BackofficeSessionUser): BackofficeAuthSession => ({
@@ -667,5 +689,10 @@ export const clearBackofficeSession = (role: BackofficeRole) => {
 
 export const mockBackofficeLogin = async (role: BackofficeRole, email: string): Promise<BackofficeAuthSession> => {
   const baseUser = role === 'admin' ? ADMIN_USER : VETERINARIAN_USER;
-  return simulateApiDelay(buildSession({ ...baseUser, email: email || baseUser.email }));
+  const normalizedEmail = email.trim().toLowerCase();
+  if (normalizedEmail !== baseUser.email.toLowerCase()) {
+    throw new Error(`Use o e-mail mockado ${baseUser.email} para acessar este painel.`);
+  }
+
+  return simulateApiDelay(buildSession(baseUser));
 };

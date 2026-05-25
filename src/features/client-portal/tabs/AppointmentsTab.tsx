@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Plus, X } from 'lucide-react';
-import type { ClientAppointment, ClientPet, VetAvailability } from '../../../services/clientPortal';
-import { PortalSectionCard } from '../../../components/client/PortalSectionCard';
+import { PortalSectionCard } from '@/components/client/portal-section-card/PortalSectionCard';
+import type { ClientAppointment, ClientPet, VetAvailability } from '@/services/clientPortal';
 
 interface AppointmentsTabProps {
   pets: ClientPet[];

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import type { BackofficeClient } from '../../../services/backoffice';
+import type { BackofficeClient } from '@/services/backoffice';
 import { BackofficeSectionCard } from '../components/BackofficeSectionCard';
 
 interface AdminClientsTabProps {

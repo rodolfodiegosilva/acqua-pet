@@ -233,6 +233,15 @@
   min-height: 100%;
 }
 
+.backoffice-auth-screen,
+.backoffice-auth-shell,
+.backoffice-auth-card,
+.backoffice-auth-head,
+.backoffice-auth-form,
+.backoffice-auth-credentials {
+  min-width: 0;
+}
+
 @media (max-width: 1180px) {
   .backoffice-shell,
   .backoffice-two-cols,
@@ -309,7 +318,33 @@
 }
 
 @media (max-width: 620px) {
-  .backoffice-app {
+  .backoffice-auth-screen {
+    padding-top: 132px !important;
+    padding-bottom: 8px !important;
+  }
+
+  .backoffice-auth-card {
+    padding: 22px !important;
+    gap: 18px !important;
+    border-radius: 20px !important;
+  }
+
+  .backoffice-auth-head p,
+  .backoffice-auth-credentials span {
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+  }
+
+  .backoffice-auth-form .backoffice-input {
+    padding: 13px 14px;
+    font-size: 14px;
+  }
+
+  .backoffice-auth-form .backoffice-primary-btn {
+    width: 100%;
+  }
+
+  .backoffice-app:not(.backoffice-auth-screen) {
     padding-top: 18px !important;
     padding-bottom: 18px !important;
   }

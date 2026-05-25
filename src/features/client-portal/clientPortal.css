@@ -222,6 +222,16 @@
   min-height: 100%;
 }
 
+.portal-auth-screen,
+.portal-auth-shell,
+.portal-auth-card,
+.portal-auth-head,
+.portal-auth-mode-switch,
+.portal-auth-form,
+.portal-auth-credentials {
+  min-width: 0;
+}
+
 @media (max-width: 1120px) {
   .portal-shell,
   .portal-two-cols,
@@ -286,6 +296,47 @@
   .portal-sidebar.is-open {
     transform: translateX(0);
     pointer-events: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .portal-auth-screen {
+    padding-top: 132px !important;
+    padding-bottom: 24px !important;
+  }
+
+  .portal-auth-card {
+    padding: 22px !important;
+    gap: 18px !important;
+    border-radius: 20px !important;
+  }
+
+  .portal-auth-mode-switch {
+    flex-direction: column !important;
+  }
+
+  .portal-auth-mode-btn {
+    width: 100%;
+  }
+
+  .portal-auth-credentials,
+  .portal-auth-form {
+    gap: 12px !important;
+  }
+
+  .portal-auth-head p,
+  .portal-auth-credentials span {
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+  }
+
+  .portal-auth-form .portal-input {
+    padding: 13px 14px;
+    font-size: 14px;
+  }
+
+  .portal-auth-form button[type='submit'] {
+    width: 100%;
   }
 }
 

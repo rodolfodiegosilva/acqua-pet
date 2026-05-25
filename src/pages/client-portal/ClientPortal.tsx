@@ -1,6 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { CalendarDays, HeartPulse, LayoutDashboard, PawPrint, ShoppingBag, Stethoscope } from 'lucide-react';
-import type { Product } from '../services/api';
+import { Footer } from '@/components/footer/Footer';
+import { Header } from '@/components/header/Header';
+import { ClientPortalAuth } from '@/features/client-portal/components/ClientPortalAuth';
+import { ClientPortalSidebar } from '@/features/client-portal/components/ClientPortalSidebar';
+import { ClientPortalTopbar } from '@/features/client-portal/components/ClientPortalTopbar';
+import { AppointmentsTab } from '@/features/client-portal/tabs/AppointmentsTab';
+import { DashboardTab } from '@/features/client-portal/tabs/DashboardTab';
+import { MedicalTab } from '@/features/client-portal/tabs/MedicalTab';
+import { PetsTab } from '@/features/client-portal/tabs/PetsTab';
+import { StoreTab } from '@/features/client-portal/tabs/StoreTab';
+import { VetsTab } from '@/features/client-portal/tabs/VetsTab';
+import type { AuthMode, PortalTab, PortalTabItem, PortalTheme } from '@/features/client-portal/types';
+import type { Product } from '@/services/api';
 import {
   clearStoredClientAuthSession,
   createClientAppointment,
@@ -20,21 +32,13 @@ import {
   type ClientUser,
   type MedicalRecord,
   type VetAvailability
-} from '../services/clientPortal';
-import { ClientPortalAuth } from '../features/client-portal/components/ClientPortalAuth';
-import { ClientPortalSidebar } from '../features/client-portal/components/ClientPortalSidebar';
-import { ClientPortalTopbar } from '../features/client-portal/components/ClientPortalTopbar';
-import { DashboardTab } from '../features/client-portal/tabs/DashboardTab';
-import { PetsTab } from '../features/client-portal/tabs/PetsTab';
-import { AppointmentsTab } from '../features/client-portal/tabs/AppointmentsTab';
-import { MedicalTab } from '../features/client-portal/tabs/MedicalTab';
-import { VetsTab } from '../features/client-portal/tabs/VetsTab';
-import { StoreTab } from '../features/client-portal/tabs/StoreTab';
-import type { AuthMode, PortalTab, PortalTabItem, PortalTheme } from '../features/client-portal/types';
-import '../features/client-portal/clientPortal.css';
+} from '@/services/clientPortal';
+import { subscribeToAppSessionUpdates } from '@/services/mockStorage';
+import type { AppView } from '@/types/navigation';
+import '@/features/client-portal/clientPortal.css';
 
 interface ClientPortalProps {
-  setView: (view: 'landing' | 'store' | 'client') => void;
+  setView: (view: AppView) => void;
   addToCart: (product: Product) => void;
 }
 
@@ -49,6 +53,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
   const [authMode, setAuthMode] = useState<AuthMode>('login');
   const [activeTab, setActiveTab] = useState<PortalTab>('dashboard');
   const [authLoading, setAuthLoading] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [portalTheme, setPortalTheme] = useState<PortalTheme>(() => {
     const saved = localStorage.getItem('acqua-pet-client-theme');
@@ -87,6 +92,8 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
     transportMode: 'Somente ida' as NonNullable<ClientAppointment['transportMode']>,
     companion: 'Tutor acompanha' as NonNullable<ClientAppointment['companion']>
   });
+  const authBackground =
+    'radial-gradient(circle at top left, rgba(3, 2, 116, 0.08), transparent 28%), radial-gradient(circle at bottom right, rgba(214, 20, 44, 0.08), transparent 24%), var(--bg-primary)';
 
   useEffect(() => {
     localStorage.setItem('acqua-pet-client-theme', portalTheme);
@@ -96,27 +103,37 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
     if (!currentUser) return;
 
     let isMounted = true;
-    setPortalLoading(true);
+    const syncSnapshot = (withLoading = false) => {
+      if (withLoading) {
+        setPortalLoading(true);
+      }
 
-    fetchClientPortalSnapshot().then((snapshot) => {
-      if (!isMounted) return;
-      setPets(snapshot.pets);
-      setAppointments(snapshot.appointments);
-      setRecords(snapshot.medicalRecords);
-      setVeterinarians(snapshot.veterinarians);
-      setOrders(snapshot.orders);
-      setProducts(snapshot.recommendedProducts);
-      setSelectedMedicalPetId(snapshot.pets[0]?.id ?? 1);
-      setAppointmentForm((current) => ({
-        ...current,
-        petId: String(snapshot.pets[0]?.id ?? 1),
-        veterinarian: snapshot.veterinarians[0]?.name ?? ''
-      }));
-      setPortalLoading(false);
+      fetchClientPortalSnapshot().then((snapshot) => {
+        if (!isMounted) return;
+        setPets(snapshot.pets);
+        setAppointments(snapshot.appointments);
+        setRecords(snapshot.medicalRecords);
+        setVeterinarians(snapshot.veterinarians);
+        setOrders(snapshot.orders);
+        setProducts(snapshot.recommendedProducts);
+        setSelectedMedicalPetId(snapshot.pets[0]?.id ?? 1);
+        setAppointmentForm((current) => ({
+          ...current,
+          petId: String(snapshot.pets[0]?.id ?? 1),
+          veterinarian: snapshot.veterinarians[0]?.name ?? ''
+        }));
+        setPortalLoading(false);
+      });
+    };
+
+    syncSnapshot(true);
+    const unsubscribe = subscribeToAppSessionUpdates(() => {
+      syncSnapshot(false);
     });
 
     return () => {
       isMounted = false;
+      unsubscribe();
     };
   }, [currentUser]);
 
@@ -135,26 +152,38 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     setAuthLoading(true);
-    const session = await mockAuthLogin(loginForm.email);
-    saveClientAuthSession(session);
-    setCurrentUser(session.user);
-    setAuthLoading(false);
+    setAuthError(null);
+    try {
+      const session = await mockAuthLogin(loginForm.email);
+      saveClientAuthSession(session);
+      setCurrentUser(session.user);
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : 'Não foi possível autenticar com este e-mail.');
+    } finally {
+      setAuthLoading(false);
+    }
   };
 
   const handleRegister = async (event: React.FormEvent) => {
     event.preventDefault();
     setAuthLoading(true);
-    const session = await mockAuthRegister(registerForm.name, registerForm.email);
-    const hydratedSession = {
-      ...session,
-      user: {
-        ...session.user,
-        phone: registerForm.phone || session.user.phone
-      }
-    };
-    saveClientAuthSession(hydratedSession);
-    setCurrentUser(hydratedSession.user);
-    setAuthLoading(false);
+    setAuthError(null);
+    try {
+      const session = await mockAuthRegister(registerForm.name, registerForm.email, registerForm.phone);
+      const hydratedSession = {
+        ...session,
+        user: {
+          ...session.user,
+          phone: registerForm.phone || session.user.phone
+        }
+      };
+      saveClientAuthSession(hydratedSession);
+      setCurrentUser(hydratedSession.user);
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : 'Não foi possível concluir o cadastro mockado.');
+    } finally {
+      setAuthLoading(false);
+    }
   };
 
   const handleAddPet = async (event: React.FormEvent) => {
@@ -300,18 +329,24 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
 
   if (!currentUser) {
     return (
-      <ClientPortalAuth
-        authMode={authMode}
-        authLoading={authLoading}
-        loginForm={loginForm}
-        registerForm={registerForm}
-        setAuthMode={setAuthMode}
-        setView={setView}
-        setLoginForm={setLoginForm}
-        setRegisterForm={setRegisterForm}
-        onLogin={handleLogin}
-        onRegister={handleRegister}
-      />
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Header view="client" setView={setView} cartItemCount={0} onCartClick={() => undefined} />
+        <main style={{ flex: '1 0 auto', background: authBackground }}>
+          <ClientPortalAuth
+            authMode={authMode}
+            authLoading={authLoading}
+            authError={authError}
+            loginForm={loginForm}
+            registerForm={registerForm}
+            setAuthMode={setAuthMode}
+            setLoginForm={setLoginForm}
+            setRegisterForm={setRegisterForm}
+            onLogin={handleLogin}
+            onRegister={handleRegister}
+          />
+        </main>
+        <Footer setView={setView} />
+      </div>
     );
   }
 

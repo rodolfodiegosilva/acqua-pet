@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { ArrowLeft, FilePlus2, Stethoscope } from 'lucide-react';
-import type { MedicalRecord } from '../../../services/clientPortal';
-import type { BackofficePet } from '../../../services/backoffice';
+import type { BackofficePet } from '@/services/backoffice';
+import type { MedicalRecord } from '@/services/clientPortal';
 import type { VetRecordDraft } from '../types';
 import { BackofficeSectionCard } from './BackofficeSectionCard';
 import { VetRecordComposer } from './VetRecordComposer';

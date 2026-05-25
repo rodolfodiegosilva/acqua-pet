@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import CloseRounded from '@mui/icons-material/CloseRounded';
 import { LogOut, Moon, Sun } from 'lucide-react';
-import type { ClientUser } from '../../../services/clientPortal';
+import type { ClientUser } from '@/services/clientPortal';
 import type { PortalTab, PortalTabItem, PortalTheme } from '../types';
 
 interface ClientPortalSidebarProps {

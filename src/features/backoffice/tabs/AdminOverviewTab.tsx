@@ -1,6 +1,6 @@
 import React from 'react';
 import { AlertTriangle, Boxes, PackageSearch, PawPrint, UserRound, Wallet } from 'lucide-react';
-import type { BackofficeAlert, BackofficeClient, BackofficeInventoryItem, BackofficeOrder, BackofficePet } from '../../../services/backoffice';
+import type { BackofficeAlert, BackofficeClient, BackofficeInventoryItem, BackofficeOrder, BackofficePet } from '@/services/backoffice';
 import { BackofficeMetricCard } from '../components/BackofficeMetricCard';
 import { BackofficeSectionCard } from '../components/BackofficeSectionCard';
 

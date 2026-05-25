@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Boxes, LayoutDashboard, PackageSearch, PawPrint, Users } from 'lucide-react';
+import { Footer } from '@/components/footer/Footer';
+import { Header } from '@/components/header/Header';
 import {
   cancelBackofficeOrder,
   createBackofficeInventoryItem,
@@ -15,19 +17,21 @@ import {
   updateBackofficeInventoryStock,
   updateBackofficePet,
   updateBackofficeOrderStatus
-} from '../services/backoffice';
-import { BackofficeAuth } from '../features/backoffice/components/BackofficeAuth';
-import { BackofficeShell } from '../features/backoffice/components/BackofficeShell';
-import { AdminClientsTab } from '../features/backoffice/tabs/AdminClientsTab';
-import { AdminInventoryTab } from '../features/backoffice/tabs/AdminInventoryTab';
-import { AdminOverviewTab } from '../features/backoffice/tabs/AdminOverviewTab';
-import { AdminOrdersTab } from '../features/backoffice/tabs/AdminOrdersTab';
-import { AdminPetsTab } from '../features/backoffice/tabs/AdminPetsTab';
-import type { AdminTab, BackofficeNavItem, BackofficeTheme } from '../features/backoffice/types';
-import '../features/backoffice/backoffice.css';
+} from '@/services/backoffice';
+import { subscribeToAppSessionUpdates } from '@/services/mockStorage';
+import { BackofficeAuth } from '@/features/backoffice/components/BackofficeAuth';
+import { BackofficeShell } from '@/features/backoffice/components/BackofficeShell';
+import { AdminClientsTab } from '@/features/backoffice/tabs/AdminClientsTab';
+import { AdminInventoryTab } from '@/features/backoffice/tabs/AdminInventoryTab';
+import { AdminOverviewTab } from '@/features/backoffice/tabs/AdminOverviewTab';
+import { AdminOrdersTab } from '@/features/backoffice/tabs/AdminOrdersTab';
+import { AdminPetsTab } from '@/features/backoffice/tabs/AdminPetsTab';
+import type { AdminTab, BackofficeNavItem, BackofficeTheme } from '@/features/backoffice/types';
+import type { AppView } from '@/types/navigation';
+import '@/features/backoffice/backoffice.css';
 
 interface AdminPortalProps {
-  setView: (view: 'landing' | 'store' | 'client' | 'admin' | 'veterinary') => void;
+  setView: (view: AppView) => void;
 }
 
 export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
@@ -35,10 +39,13 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
   const [sessionUser, setSessionUser] = useState(() => getStoredBackofficeSession('admin')?.user ?? null);
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
   const [panelLoading, setPanelLoading] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<AdminTab>('overview');
   const [snapshot, setSnapshot] = useState<BackofficeSnapshot | null>(null);
+  const authBackground =
+    'radial-gradient(circle at top left, rgba(3, 2, 116, 0.08), transparent 28%), radial-gradient(circle at bottom right, rgba(214, 20, 44, 0.08), transparent 24%), var(--bg-primary)';
 
   useEffect(() => {
     localStorage.setItem('acqua-pet-admin-theme', theme);
@@ -46,11 +53,29 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
 
   useEffect(() => {
     if (!sessionUser) return;
-    setPanelLoading(true);
-    fetchBackofficeSnapshot().then((nextSnapshot) => {
-      setSnapshot(nextSnapshot);
-      setPanelLoading(false);
+
+    let isMounted = true;
+    const syncSnapshot = (withLoading = false) => {
+      if (withLoading) {
+        setPanelLoading(true);
+      }
+
+      fetchBackofficeSnapshot().then((nextSnapshot) => {
+        if (!isMounted) return;
+        setSnapshot(nextSnapshot);
+        setPanelLoading(false);
+      });
+    };
+
+    syncSnapshot(true);
+    const unsubscribe = subscribeToAppSessionUpdates(() => {
+      syncSnapshot(false);
     });
+
+    return () => {
+      isMounted = false;
+      unsubscribe();
+    };
   }, [sessionUser]);
 
   const navItems: BackofficeNavItem<AdminTab>[] = [
@@ -64,10 +89,16 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
-    const session = await mockBackofficeLogin('admin', credentials.email);
-    saveBackofficeSession('admin', session);
-    setSessionUser(session.user);
-    setLoading(false);
+    setAuthError(null);
+    try {
+      const session = await mockBackofficeLogin('admin', credentials.email);
+      saveBackofficeSession('admin', session);
+      setSessionUser(session.user);
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : 'Não foi possível autenticar neste painel.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLogout = () => {
@@ -112,14 +143,20 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({ setView }) => {
 
   if (!sessionUser) {
     return (
-      <BackofficeAuth
-        role="admin"
-        loading={loading}
-        credentials={credentials}
-        setCredentials={setCredentials}
-        onSubmit={handleLogin}
-        onBackToSite={() => setView('landing')}
-      />
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Header view="admin" setView={setView} cartItemCount={0} onCartClick={() => undefined} />
+        <main style={{ flex: '1 0 auto', background: authBackground }}>
+          <BackofficeAuth
+            role="admin"
+            loading={loading}
+            authError={authError}
+            credentials={credentials}
+            setCredentials={setCredentials}
+            onSubmit={handleLogin}
+          />
+        </main>
+        <Footer setView={setView} />
+      </div>
     );
   }
 

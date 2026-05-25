@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, X } from 'lucide-react';
-import { CLIENT_PET_SEXES, CLIENT_PET_SPECIES, type ClientPet, type ClientPetSex, type ClientPetSpecies } from '../../../services/clientPortal';
-import { PortalSectionCard } from '../../../components/client/PortalSectionCard';
+import { PortalSectionCard } from '@/components/client/portal-section-card/PortalSectionCard';
+import { CLIENT_PET_SEXES, CLIENT_PET_SPECIES, type ClientPet, type ClientPetSex, type ClientPetSpecies } from '@/services/clientPortal';
 
 interface PetsTabProps {
   pets: ClientPet[];

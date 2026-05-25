@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import type { Product } from '../../../services/api';
-import type { ClientOrder, ClientPet } from '../../../services/clientPortal';
-import { PortalSectionCard } from '../../../components/client/PortalSectionCard';
+import { PortalSectionCard } from '@/components/client/portal-section-card/PortalSectionCard';
+import type { Product } from '@/services/api';
+import type { ClientOrder, ClientPet } from '@/services/clientPortal';
 
 interface StoreTabProps {
   pets: ClientPet[];

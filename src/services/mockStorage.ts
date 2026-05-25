@@ -1,5 +1,6 @@
 const MOCK_API_DELAY_MS = 1000;
 const APP_SESSION_STORAGE_KEY = 'acqua-pet-session-state';
+const APP_SESSION_UPDATED_EVENT = 'acqua-pet:session-updated';
 
 const isBrowser = typeof window !== 'undefined';
 
@@ -36,6 +37,11 @@ export const readSeededSessionState = <T>(key: string, fallback: T): T => {
 
 type AppSessionState = Record<string, unknown>;
 
+const dispatchAppSessionUpdated = (slice: string) => {
+  if (!isBrowser) return;
+  window.dispatchEvent(new CustomEvent(APP_SESSION_UPDATED_EVENT, { detail: { slice } }));
+};
+
 const readAppSessionRoot = (): AppSessionState => {
   if (!isBrowser) return {};
 
@@ -65,6 +71,7 @@ export const writeAppSessionSlice = <T>(slice: string, value: T) => {
     ...root,
     [slice]: value
   });
+  dispatchAppSessionUpdated(slice);
 };
 
 export const readSeededAppSessionSlice = <T>(slice: string, fallback: T): T => {
@@ -74,5 +81,19 @@ export const readSeededAppSessionSlice = <T>(slice: string, fallback: T): T => {
     ...root,
     [slice]: fallback
   });
+  dispatchAppSessionUpdated(slice);
   return fallback;
+};
+
+export const subscribeToAppSessionUpdates = (listener: () => void) => {
+  if (!isBrowser) return () => undefined;
+
+  const handleUpdate = () => {
+    listener();
+  };
+
+  window.addEventListener(APP_SESSION_UPDATED_EVENT, handleUpdate);
+  return () => {
+    window.removeEventListener(APP_SESSION_UPDATED_EVENT, handleUpdate);
+  };
 };

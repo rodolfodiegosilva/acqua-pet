@@ -1,4 +1,4 @@
-import type { Product } from '../../services/api';
+import type { Product } from '@/services/api';
 import type {
   ClientAppointment,
   ClientPet,
@@ -6,7 +6,7 @@ import type {
   MedicalRecord,
   VetAvailability,
   ClientOrder
-} from '../../services/clientPortal';
+} from '@/services/clientPortal';
 
 export type PortalTab = 'dashboard' | 'pets' | 'appointments' | 'medical' | 'vets' | 'store';
 export type AuthMode = 'login' | 'register';

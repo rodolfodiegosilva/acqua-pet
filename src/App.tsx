@@ -1,17 +1,17 @@
 import { useCallback, useEffect, useState } from 'react';
-import { Header } from './components/Header';
-import { Hero } from './sections/Hero';
-import { Essence } from './sections/Essence';
-import { Services } from './sections/Services';
-import { Contact } from './sections/Contact';
-import { Footer } from './components/Footer';
-import { Store } from './pages/Store';
-import { ClientPortal } from './pages/ClientPortal';
-import { AdminPortal } from './pages/AdminPortal';
-import { VeterinaryPortal } from './pages/VeterinaryPortal';
-import type { CartItem } from './pages/Store';
-import type { Product } from './services/api';
-import type { AppView } from './types/navigation';
+import { Footer } from '@/components/footer/Footer';
+import { Header } from '@/components/header/Header';
+import { AdminPortal } from '@/pages/admin-portal/AdminPortal';
+import { ClientPortal } from '@/pages/client-portal/ClientPortal';
+import { Store } from '@/pages/store/Store';
+import type { CartItem } from '@/pages/store/Store';
+import { VeterinaryPortal } from '@/pages/veterinary-portal/VeterinaryPortal';
+import { Contact } from '@/sections/contact/Contact';
+import { Essence } from '@/sections/essence/Essence';
+import { Hero } from '@/sections/hero/Hero';
+import { Services } from '@/sections/services/Services';
+import type { Product } from '@/services/api';
+import type { AppView } from '@/types/navigation';
 
 function App() {
   const resolveViewFromPath = useCallback((pathname: string): AppView => {
@@ -81,6 +81,13 @@ function App() {
     return () => window.removeEventListener('popstate', handlePopState);
   }, [resolveViewFromPath]);
 
+  const handleCartClick = useCallback(() => {
+    if (view !== 'store') {
+      setView('store');
+    }
+    setIsCartOpen(true);
+  }, [setView, view]);
+
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       {!isPrivatePortal && (
@@ -88,7 +95,7 @@ function App() {
           view={view}
           setView={setView}
           cartItemCount={cartItemCount}
-          onCartClick={() => setIsCartOpen(true)}
+          onCartClick={handleCartClick}
         />
       )}
       

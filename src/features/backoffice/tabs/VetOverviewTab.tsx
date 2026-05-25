@@ -1,7 +1,7 @@
 import React from 'react';
 import { CalendarClock, HeartPulse, Syringe, TriangleAlert } from 'lucide-react';
-import type { ClientAppointment, MedicalRecord } from '../../../services/clientPortal';
-import type { BackofficePet } from '../../../services/backoffice';
+import type { BackofficePet } from '@/services/backoffice';
+import type { ClientAppointment, MedicalRecord } from '@/services/clientPortal';
 import { BackofficeMetricCard } from '../components/BackofficeMetricCard';
 import { BackofficeSectionCard } from '../components/BackofficeSectionCard';
 

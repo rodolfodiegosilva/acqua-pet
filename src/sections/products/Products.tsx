@@ -1,5 +1,5 @@
 import React from 'react';
-import { ProductCard } from '../components/ProductCard';
+import { ProductCard } from '@/components/product-card/ProductCard';
 import { ArrowRight } from 'lucide-react';
 
 export const Products: React.FC = () => {

@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import type { MedicalRecord } from '../../../services/clientPortal';
+import type { MedicalRecord } from '@/services/clientPortal';
 import type { VetRecordDraft } from '../types';
 
 interface VetRecordComposerProps {

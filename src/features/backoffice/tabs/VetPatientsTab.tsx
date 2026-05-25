@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import type { MedicalRecord } from '../../../services/clientPortal';
-import type { BackofficePet } from '../../../services/backoffice';
+import type { BackofficePet } from '@/services/backoffice';
+import type { MedicalRecord } from '@/services/clientPortal';
 import type { VetRecordDraft } from '../types';
 import { BackofficeSectionCard } from '../components/BackofficeSectionCard';
 import { VetPatientDetailView } from '../components/VetPatientDetailView';

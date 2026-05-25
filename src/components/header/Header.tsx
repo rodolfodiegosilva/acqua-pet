@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Menu, X, ShoppingBag } from 'lucide-react';
-import { ThemeToggle } from './ThemeToggle';
-import acquaPetIcon from '../assets/acqua_pet_icon.svg';
-import type { AppView } from '../types/navigation';
+import acquaPetIcon from '@/assets/acqua_pet_icon.svg';
+import { ThemeToggle } from '@/components/theme-toggle/ThemeToggle';
+import type { AppView } from '@/types/navigation';
 
 interface HeaderProps {
   view: AppView;
@@ -24,8 +24,6 @@ export const Header: React.FC<HeaderProps> = ({
   const menuItems = [
     { name: 'Início', id: 'inicio', type: 'anchor' },
     { name: 'Serviços', id: 'servicos', type: 'anchor' },
-    { name: 'Loja Pet', id: 'loja', type: 'store' },
-    { name: 'Área do Cliente', id: 'cliente', type: 'client' },
     { name: 'Agendamento', id: 'agendamento', type: 'anchor' },
     { name: 'Contato', id: 'contato', type: 'anchor' }
   ];
@@ -157,13 +155,14 @@ export const Header: React.FC<HeaderProps> = ({
         <div style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '20px'
+          gap: '14px'
         }}>
           <ThemeToggle />
 
           {/* Carrinho Flutuante e Luminoso */}
           <button
             onClick={onCartClick}
+            className="header-cart-btn"
             style={{
               background: 'var(--bg-secondary)',
               border: '1px solid var(--border-glass)',
@@ -215,6 +214,34 @@ export const Header: React.FC<HeaderProps> = ({
               </span>
             )}
           </button>
+
+          <button
+            onClick={() => handleNavClick({ name: 'Loja Pet', id: 'loja', type: 'store' })}
+            className="desktop-store-btn"
+            style={{
+              display: 'none',
+              padding: '11px 18px',
+              borderRadius: 'var(--radius-full)',
+              color: 'var(--primary)',
+              fontSize: '14px',
+              fontWeight: 700,
+              background: 'color-mix(in srgb, var(--primary) 10%, var(--bg-secondary))',
+              border: '1px solid color-mix(in srgb, var(--primary) 18%, var(--border-glass))',
+              cursor: 'pointer',
+              transition: 'var(--transition-smooth)',
+              whiteSpace: 'nowrap'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-1px)';
+              e.currentTarget.style.borderColor = 'var(--primary)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.borderColor = 'color-mix(in srgb, var(--primary) 18%, var(--border-glass))';
+            }}
+          >
+            Loja Pet
+          </button>
           
           <button
             onClick={() => handleNavClick({ name: 'Área do Cliente', id: 'cliente', type: 'client' })}
@@ -232,7 +259,7 @@ export const Header: React.FC<HeaderProps> = ({
               transition: 'var(--transition-smooth)'
             }}
           >
-            Entrar no Portal
+            Área do Cliente
           </button>
 
           {/* Mobile Menu Toggle */}
@@ -270,11 +297,13 @@ export const Header: React.FC<HeaderProps> = ({
           <ul style={{
             display: 'flex',
             flexDirection: 'column',
-            gap: '20px',
-            alignItems: 'center',
+            gap: '18px',
+            alignItems: 'stretch',
             listStyle: 'none',
             fontSize: '18px',
-            fontWeight: 600
+            fontWeight: 600,
+            width: 'min(100%, 320px)',
+            margin: '0 auto'
           }}>
             {menuItems.map((item) => (
               <li key={item.id}>
@@ -287,14 +316,66 @@ export const Header: React.FC<HeaderProps> = ({
                     cursor: 'pointer',
                     fontSize: '18px',
                     fontWeight: 600,
-                    transition: 'var(--transition-smooth)'
+                    transition: 'var(--transition-smooth)',
+                    width: '100%',
+                    textAlign: 'left',
+                    padding: '0 4px'
                   }}
                 >
                   {item.name}
                 </button>
               </li>
             ))}
-            <li style={{ width: '80%', marginTop: '8px' }}>
+            <li>
+              <button
+                onClick={() => handleNavClick({ name: 'Loja Pet', id: 'loja', type: 'store' })}
+                style={{
+                  color: 'var(--text-main)',
+                  background: 'color-mix(in srgb, var(--primary) 10%, var(--bg-secondary))',
+                  border: '1px solid color-mix(in srgb, var(--primary) 18%, var(--border-glass))',
+                  cursor: 'pointer',
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  transition: 'var(--transition-smooth)',
+                  width: '100%',
+                  textAlign: 'center',
+                  padding: '14px 18px',
+                  borderRadius: 'var(--radius-md)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                Loja Pet
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={onCartClick}
+                style={{
+                  color: 'var(--text-main)',
+                  background: 'var(--bg-secondary)',
+                  border: '1px solid var(--border-glass)',
+                  cursor: 'pointer',
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  transition: 'var(--transition-smooth)',
+                  width: '100%',
+                  textAlign: 'center',
+                  padding: '14px 18px',
+                  borderRadius: 'var(--radius-md)',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '10px'
+                }}
+              >
+                <ShoppingBag size={18} />
+                Carrinho
+                {cartItemCount > 0 ? `(${cartItemCount})` : ''}
+              </button>
+            </li>
+            <li style={{ width: '100%', marginTop: '8px' }}>
               <button
                 onClick={() => handleNavClick({ name: 'Área do Cliente', id: 'cliente', type: 'client' })}
                 className="gradient-bg text-center"
@@ -307,10 +388,11 @@ export const Header: React.FC<HeaderProps> = ({
                   border: 'none',
                   fontSize: '16px',
                   fontWeight: 600,
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  textAlign: 'center'
                 }}
               >
-                Entrar no Portal
+                Área do Cliente
               </button>
             </li>
           </ul>
@@ -337,10 +419,27 @@ export const Header: React.FC<HeaderProps> = ({
           .desktop-menu {
             display: block !important;
           }
+          .desktop-store-btn {
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+          }
           .cta-header-btn {
             display: inline-block !important;
           }
+          .header-cart-btn {
+            display: inline-flex !important;
+          }
           .mobile-toggle {
+            display: none !important;
+          }
+        }
+
+        @media (max-width: 767px) {
+          .header-cart-btn,
+          .cta-header-btn,
+          .desktop-store-btn,
+          .desktop-menu {
             display: none !important;
           }
         }

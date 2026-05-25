@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Search, ShoppingBag, X, Plus, Minus, Trash2, Check, ArrowRight, CreditCard, ChevronRight, CheckCircle } from 'lucide-react';
-import { fetchProducts } from '../services/api';
-import type { Product } from '../services/api';
+import { fetchProducts } from '@/services/api';
+import type { Product } from '@/services/api';
 
 export interface CartItem {
   product: Product;

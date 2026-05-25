@@ -1,6 +1,6 @@
 import React from 'react';
-import type { VetAvailability } from '../../../services/clientPortal';
-import { PortalSectionCard } from '../../../components/client/PortalSectionCard';
+import { PortalSectionCard } from '@/components/client/portal-section-card/PortalSectionCard';
+import type { VetAvailability } from '@/services/clientPortal';
 
 interface VetsTabProps {
   veterinarians: VetAvailability[];

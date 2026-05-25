@@ -1,91 +1,72 @@
 import React from 'react';
-import { ShieldCheck, Stethoscope } from 'lucide-react';
-import type { BackofficeRole } from '../../../services/backoffice';
+import { MOCK_SYSTEM_USERS, type BackofficeRole } from '@/services/backoffice';
 
 interface BackofficeAuthProps {
   role: BackofficeRole;
   loading: boolean;
+  authError?: string | null;
   credentials: { email: string; password: string };
   setCredentials: React.Dispatch<React.SetStateAction<{ email: string; password: string }>>;
   onSubmit: (event: React.FormEvent) => void;
-  onBackToSite: () => void;
 }
 
 export const BackofficeAuth: React.FC<BackofficeAuthProps> = ({
   role,
   loading,
+  authError,
   credentials,
   setCredentials,
-  onSubmit,
-  onBackToSite
+  onSubmit
 }) => {
   const isAdmin = role === 'admin';
-  const Icon = isAdmin ? ShieldCheck : Stethoscope;
+  const accessUser = isAdmin ? MOCK_SYSTEM_USERS.admin : MOCK_SYSTEM_USERS.veterinarian;
+  const authBackground =
+    'radial-gradient(circle at top left, rgba(3, 2, 116, 0.08), transparent 28%), radial-gradient(circle at bottom right, rgba(214, 20, 44, 0.08), transparent 24%), var(--bg-primary)';
 
   return (
-    <div className="backoffice-app" data-backoffice-theme="light" style={{ minHeight: '100vh', background: 'var(--backoffice-bg)', padding: '24px 0' }}>
+    <div className="backoffice-app backoffice-auth-screen" data-backoffice-theme="light" style={{ background: authBackground, padding: '168px 0 8px' }}>
       <div className="container">
-        <div className="backoffice-auth" style={{ display: 'grid', gridTemplateColumns: '1.08fr 0.92fr', gap: '22px', alignItems: 'stretch' }}>
-          <div className="backoffice-card" style={{ padding: '30px', background: 'var(--backoffice-hero)' }}>
-            <span className="backoffice-pill backoffice-status-info" style={{ marginBottom: '16px' }}>
-              <Icon size={14} />
-              {isAdmin ? 'Área administrativa' : 'Área veterinária'}
-            </span>
-            <h1 style={{ fontSize: 'clamp(30px, 5vw, 48px)', lineHeight: 1.02, color: 'var(--backoffice-text)', marginBottom: '14px' }}>
-              {isAdmin ? 'Controle operacional completo da base de clientes.' : 'Painel clínico para acompanhar agenda, pacientes e prontuários.'}
-            </h1>
-            <p style={{ fontSize: '15px', lineHeight: 1.75, color: 'var(--backoffice-muted)', maxWidth: '640px', marginBottom: '24px' }}>
-              Fluxo mockado, mas estruturado como backoffice real, com sessão persistida e camada pronta para integração HTTP depois.
-            </p>
-            <div className="backoffice-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', gap: '14px' }}>
-              {[
-                isAdmin ? 'Clientes e pets' : 'Fila clínica',
-                isAdmin ? 'Indicadores operacionais' : 'Histórico e prescrição',
-                isAdmin ? 'Relacionamento e riscos' : 'Acompanhamento por paciente'
-              ].map((item) => (
-                <div key={item} className="backoffice-card" style={{ padding: '18px', background: 'color-mix(in srgb, var(--backoffice-surface) 88%, transparent)' }}>
-                  <strong style={{ display: 'block', color: 'var(--backoffice-text)', lineHeight: 1.45 }}>{item}</strong>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="backoffice-card" style={{ padding: '30px' }}>
-            <div style={{ marginBottom: '22px' }}>
-              <span style={{ display: 'block', fontSize: '12px', fontWeight: 800, letterSpacing: '1.4px', textTransform: 'uppercase', color: 'var(--backoffice-accent-strong)', marginBottom: '8px' }}>
-                Login
-              </span>
-              <h2 style={{ fontSize: '30px', color: 'var(--backoffice-text)', marginBottom: '10px' }}>
-                {isAdmin ? 'Entrar como admin geral' : 'Entrar como admin veterinário'}
-              </h2>
+        <div className="backoffice-auth-shell" style={{ maxWidth: '560px', margin: '0 auto' }}>
+          <div className="backoffice-card backoffice-auth-card" style={{ padding: '32px', display: 'grid', gap: '22px' }}>
+            <div className="backoffice-auth-head" style={{ display: 'grid', gap: '10px' }}>
+              <h1 style={{ fontSize: 'clamp(28px, 4vw, 38px)', lineHeight: 1.08, color: 'var(--backoffice-text)' }}>
+                {isAdmin ? 'Acesso do admin geral' : 'Acesso do veterinário'}
+              </h1>
               <p style={{ color: 'var(--backoffice-muted)', lineHeight: 1.65 }}>
-                Como é mockado, qualquer combinação válida entra. A sessão fica salva no navegador.
+                Use o e-mail mockado deste painel para testar o backoffice.
               </p>
             </div>
 
-            <form onSubmit={onSubmit} style={{ display: 'grid', gap: '14px' }}>
+            <div className="backoffice-card backoffice-auth-credentials" style={{ padding: '16px', background: 'var(--backoffice-soft)' }}>
+              <strong style={{ display: 'block', color: 'var(--backoffice-text)', marginBottom: '8px' }}>Conta pronta para teste</strong>
+              <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '14px', marginBottom: '4px' }}>E-mail: {accessUser.email}</span>
+              <span style={{ display: 'block', color: 'var(--backoffice-muted)', fontSize: '14px' }}>Senha: 123456</span>
+            </div>
+
+            <form className="backoffice-auth-form" onSubmit={onSubmit} style={{ display: 'grid', gap: '14px' }}>
               <input
                 className="backoffice-input"
                 type="email"
-                placeholder={isAdmin ? 'admin@acquapet.mock' : 'vet@acquapet.mock'}
+                placeholder={accessUser.email}
                 value={credentials.email}
                 onChange={(event) => setCredentials((prev) => ({ ...prev, email: event.target.value }))}
               />
               <input
                 className="backoffice-input"
                 type="password"
-                placeholder="Digite qualquer senha"
+                placeholder="123456"
                 value={credentials.password}
                 onChange={(event) => setCredentials((prev) => ({ ...prev, password: event.target.value }))}
               />
+              {authError && (
+                <div style={{ padding: '12px 14px', borderRadius: '16px', border: '1px solid color-mix(in srgb, var(--backoffice-danger) 24%, transparent)', background: 'color-mix(in srgb, var(--backoffice-danger) 10%, transparent)', color: 'var(--backoffice-danger)', fontSize: '14px', lineHeight: 1.55 }}>
+                  {authError}
+                </div>
+              )}
               <button type="submit" className="backoffice-primary-btn" disabled={loading}>
                 {loading ? 'Autenticando...' : isAdmin ? 'Entrar no admin' : 'Entrar na área veterinária'}
               </button>
             </form>
-
-            <button type="button" className="backoffice-ghost-btn" style={{ marginTop: '14px', width: '100%' }} onClick={onBackToSite}>
-              Voltar para o site
-            </button>
           </div>
         </div>
       </div>

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { CalendarDays, HeartPulse, MapPin, PawPrint, ShoppingBag, Sparkles } from 'lucide-react';
-import type { ClientAppointment, ClientOrder, ClientPet, ClientUser } from '../../../services/clientPortal';
-import { PortalSectionCard } from '../../../components/client/PortalSectionCard';
-import { PortalStatCard } from '../../../components/client/PortalStatCard';
+import { PortalSectionCard } from '@/components/client/portal-section-card/PortalSectionCard';
+import { PortalStatCard } from '@/components/client/portal-stat-card/PortalStatCard';
+import type { ClientAppointment, ClientOrder, ClientPet, ClientUser } from '@/services/clientPortal';
 
 interface DashboardTabProps {
   pets: ClientPet[];

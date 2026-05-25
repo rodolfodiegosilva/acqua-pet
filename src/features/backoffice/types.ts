@@ -1,5 +1,5 @@
 import type { LucideIcon } from 'lucide-react';
-import type { MedicalRecord } from '../../services/clientPortal';
+import type { MedicalRecord } from '@/services/clientPortal';
 
 export type BackofficeTheme = 'light' | 'dark';
 export type AdminTab = 'overview' | 'clients' | 'pets' | 'inventory' | 'orders';

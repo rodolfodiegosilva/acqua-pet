@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import CloseRounded from '@mui/icons-material/CloseRounded';
 import MenuRounded from '@mui/icons-material/MenuRounded';
 import { LogOut, Moon, Sun } from 'lucide-react';
-import type { BackofficeSessionUser } from '../../../services/backoffice';
+import type { BackofficeSessionUser } from '@/services/backoffice';
 import type { BackofficeNavItem, BackofficeTheme } from '../types';
 
 interface BackofficeShellProps<TTab extends string> {

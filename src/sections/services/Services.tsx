@@ -1,6 +1,6 @@
 import React from 'react';
 import { Droplet, Heart, Sparkles, ShieldAlert } from 'lucide-react';
-import { ServiceCard } from '../components/ServiceCard';
+import { ServiceCard } from '@/components/service-card/ServiceCard';
 
 export const Services: React.FC = () => {
   const servicesData = [

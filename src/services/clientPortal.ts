@@ -431,6 +431,19 @@ export const MOCK_CLIENT_PORTAL: ClientPortalSnapshot = {
   recommendedProducts: getStoredProductsCatalog().slice(0, 8)
 };
 
+const PRIMARY_CLIENT = MOCK_BACKOFFICE.clients[0];
+const DEFAULT_CLIENT_PROFILE: ClientUser = {
+  id: PRIMARY_CLIENT.id,
+  name: PRIMARY_CLIENT.name,
+  email: PRIMARY_CLIENT.email,
+  cpf: MOCK_CLIENT_PORTAL.user.cpf,
+  phone: PRIMARY_CLIENT.phone,
+  neighborhood: PRIMARY_CLIENT.neighborhood,
+  plan: PRIMARY_CLIENT.plan,
+  memberSince: PRIMARY_CLIENT.joinedAt,
+  city: PRIMARY_CLIENT.city
+};
+
 const buildMockSession = (user: ClientUser): ClientAuthSession => ({
   user,
   accessToken: 'mock-access-token',
@@ -438,13 +451,20 @@ const buildMockSession = (user: ClientUser): ClientAuthSession => ({
   expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30).toISOString()
 });
 
+const normalizeClientProfile = (profile: Partial<ClientUser> | null | undefined): ClientUser => ({
+  ...DEFAULT_CLIENT_PROFILE,
+  ...profile
+});
+
 const readClientProfile = () =>
-  readSeededAppSessionSlice<ClientUser>(CLIENT_PROFILE_SLICE, {
-    ...MOCK_CLIENT_PORTAL.user
-  });
+  normalizeClientProfile(
+    readSeededAppSessionSlice<ClientUser>(CLIENT_PROFILE_SLICE, {
+      ...DEFAULT_CLIENT_PROFILE
+    })
+  );
 
 const writeClientProfile = (profile: ClientUser) => {
-  writeAppSessionSlice(CLIENT_PROFILE_SLICE, profile);
+  writeAppSessionSlice(CLIENT_PROFILE_SLICE, normalizeClientProfile(profile));
 };
 
 const buildFallbackClientSnapshot = (): ClientPortalSnapshot => ({
@@ -453,6 +473,46 @@ const buildFallbackClientSnapshot = (): ClientPortalSnapshot => ({
   recommendedProducts: getStoredProductsCatalog().slice(0, 8)
 });
 
+const findClientByEmail = (email: string) => {
+  const normalizedEmail = email.trim().toLowerCase();
+  const clients = readSeededAppSessionSlice<BackofficeClient[]>(CLIENTS_SLICE, [...MOCK_BACKOFFICE.clients]);
+  return clients.find((client) => client.email.trim().toLowerCase() === normalizedEmail) ?? null;
+};
+
+const resolveClientUserByEmail = (email: string, name?: string, phone?: string): ClientUser => {
+  const normalizedEmail = email.trim().toLowerCase();
+  const currentProfile = readClientProfile();
+  const clients = readSeededAppSessionSlice<BackofficeClient[]>(CLIENTS_SLICE, [...MOCK_BACKOFFICE.clients]);
+  const existingClient = clients.find((client) => client.email.trim().toLowerCase() === normalizedEmail);
+  const nextClientId = clients.reduce((highestId, client) => Math.max(highestId, client.id), 0) + 1;
+
+  if (existingClient) {
+    const nextProfile = normalizeClientProfile({
+      ...currentProfile,
+      id: existingClient.id,
+      name: existingClient.name,
+      email: existingClient.email,
+      phone: existingClient.phone,
+      city: existingClient.city,
+      neighborhood: existingClient.neighborhood,
+      plan: existingClient.plan,
+      memberSince: existingClient.joinedAt
+    });
+    writeClientProfile(nextProfile);
+    return nextProfile;
+  }
+
+  const nextProfile = normalizeClientProfile({
+    ...currentProfile,
+    id: nextClientId,
+    name: name?.trim() || currentProfile.name,
+    email: normalizedEmail || currentProfile.email,
+    phone: phone?.trim() || currentProfile.phone
+  });
+
+  return upsertSharedClientFromUser(nextProfile);
+};
+
 const upsertSharedClientFromUser = (user: ClientUser): ClientUser => {
   const clients = readSeededAppSessionSlice<BackofficeClient[]>(CLIENTS_SLICE, [...MOCK_BACKOFFICE.clients]);
   const existingClient = clients.find((client) => client.email === user.email || client.id === user.id);
@@ -460,7 +520,7 @@ const upsertSharedClientFromUser = (user: ClientUser): ClientUser => {
 
   const syncedUser: ClientUser = {
     ...user,
-    id: existingClient?.id ?? nextClientId
+    id: existingClient?.id ?? user.id ?? nextClientId
   };
 
   const mirroredClient: BackofficeClient = existingClient
@@ -632,8 +692,7 @@ export const getStoredClientAuthSession = (): ClientAuthSession | null => {
     return {
       ...parsed,
       user: {
-        ...fallbackProfile,
-        ...parsed.user,
+        ...normalizeClientProfile(parsed.user),
         cpf: parsed.user.cpf ?? fallbackProfile.cpf,
         neighborhood: parsed.user.neighborhood ?? fallbackProfile.neighborhood
       }
@@ -652,20 +711,23 @@ export const clearStoredClientAuthSession = () => {
 };
 
 export const mockAuthLogin = (email: string): Promise<ClientAuthSession> => {
-  const user = upsertSharedClientFromUser({
-    ...readClientProfile(),
-    email: email || readClientProfile().email
-  });
+  const normalizedEmail = email.trim().toLowerCase();
+  if (!findClientByEmail(normalizedEmail)) {
+    throw new Error('E-mail não encontrado. Crie uma conta antes de entrar.');
+  }
+
+  const user = resolveClientUserByEmail(normalizedEmail);
 
   return simulateApiDelay(buildMockSession(user));
 };
 
-export const mockAuthRegister = (name: string, email: string): Promise<ClientAuthSession> => {
-  const user = upsertSharedClientFromUser({
-    ...readClientProfile(),
-    name: name || readClientProfile().name,
-    email: email || readClientProfile().email
-  });
+export const mockAuthRegister = (name: string, email: string, phone?: string): Promise<ClientAuthSession> => {
+  const normalizedEmail = email.trim().toLowerCase();
+  if (!normalizedEmail) {
+    throw new Error('Informe um e-mail válido para concluir o cadastro.');
+  }
+
+  const user = resolveClientUserByEmail(normalizedEmail, name || DEFAULT_CLIENT_PROFILE.name, phone);
 
   return simulateApiDelay(buildMockSession(user));
 };

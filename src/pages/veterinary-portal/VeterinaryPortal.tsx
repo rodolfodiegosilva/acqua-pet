@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { CalendarClock, HeartPulse, LayoutDashboard } from 'lucide-react';
+import { Footer } from '@/components/footer/Footer';
+import { Header } from '@/components/header/Header';
+import { BackofficeAuth } from '@/features/backoffice/components/BackofficeAuth';
+import { BackofficeShell } from '@/features/backoffice/components/BackofficeShell';
+import { VetAgendaTab } from '@/features/backoffice/tabs/VetAgendaTab';
+import { VetOverviewTab } from '@/features/backoffice/tabs/VetOverviewTab';
+import { VetPatientsTab } from '@/features/backoffice/tabs/VetPatientsTab';
+import type { BackofficeNavItem, BackofficeTheme, VetRecordDraft, VetTab } from '@/features/backoffice/types';
 import {
   type BackofficePet,
   clearBackofficeSession,
@@ -8,18 +16,14 @@ import {
   getStoredBackofficeSession,
   mockBackofficeLogin,
   saveBackofficeSession
-} from '../services/backoffice';
-import type { ClientAppointment, MedicalRecord } from '../services/clientPortal';
-import { BackofficeAuth } from '../features/backoffice/components/BackofficeAuth';
-import { BackofficeShell } from '../features/backoffice/components/BackofficeShell';
-import { VetAgendaTab } from '../features/backoffice/tabs/VetAgendaTab';
-import { VetOverviewTab } from '../features/backoffice/tabs/VetOverviewTab';
-import { VetPatientsTab } from '../features/backoffice/tabs/VetPatientsTab';
-import type { BackofficeNavItem, BackofficeTheme, VetRecordDraft, VetTab } from '../features/backoffice/types';
-import '../features/backoffice/backoffice.css';
+} from '@/services/backoffice';
+import type { ClientAppointment, MedicalRecord } from '@/services/clientPortal';
+import { subscribeToAppSessionUpdates } from '@/services/mockStorage';
+import type { AppView } from '@/types/navigation';
+import '@/features/backoffice/backoffice.css';
 
 interface VeterinaryPortalProps {
-  setView: (view: 'landing' | 'store' | 'client' | 'admin' | 'veterinary') => void;
+  setView: (view: AppView) => void;
 }
 
 export const VeterinaryPortal: React.FC<VeterinaryPortalProps> = ({ setView }) => {
@@ -27,12 +31,15 @@ export const VeterinaryPortal: React.FC<VeterinaryPortalProps> = ({ setView }) =
   const [sessionUser, setSessionUser] = useState(() => getStoredBackofficeSession('veterinarian')?.user ?? null);
   const [credentials, setCredentials] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
   const [panelLoading, setPanelLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<VetTab>('overview');
   const [selectedPetId, setSelectedPetId] = useState<number | null>(null);
   const [pets, setPets] = useState<BackofficePet[]>([]);
   const [records, setRecords] = useState<MedicalRecord[]>([]);
   const [appointments, setAppointments] = useState<ClientAppointment[]>([]);
+  const authBackground =
+    'radial-gradient(circle at top left, rgba(3, 2, 116, 0.08), transparent 28%), radial-gradient(circle at bottom right, rgba(214, 20, 44, 0.08), transparent 24%), var(--bg-primary)';
 
   useEffect(() => {
     localStorage.setItem('acqua-pet-veterinary-theme', theme);
@@ -46,13 +53,31 @@ export const VeterinaryPortal: React.FC<VeterinaryPortalProps> = ({ setView }) =
 
   useEffect(() => {
     if (!sessionUser) return;
-    setPanelLoading(true);
-    fetchBackofficeSnapshot().then((snapshot) => {
-      setPets(snapshot.pets);
-      setRecords(snapshot.records);
-      setAppointments(snapshot.appointments);
-      setPanelLoading(false);
+
+    let isMounted = true;
+    const syncSnapshot = (withLoading = false) => {
+      if (withLoading) {
+        setPanelLoading(true);
+      }
+
+      fetchBackofficeSnapshot().then((snapshot) => {
+        if (!isMounted) return;
+        setPets(snapshot.pets);
+        setRecords(snapshot.records);
+        setAppointments(snapshot.appointments);
+        setPanelLoading(false);
+      });
+    };
+
+    syncSnapshot(true);
+    const unsubscribe = subscribeToAppSessionUpdates(() => {
+      syncSnapshot(false);
     });
+
+    return () => {
+      isMounted = false;
+      unsubscribe();
+    };
   }, [sessionUser]);
 
   const navItems: BackofficeNavItem<VetTab>[] = [
@@ -64,10 +89,16 @@ export const VeterinaryPortal: React.FC<VeterinaryPortalProps> = ({ setView }) =
   const handleLogin = async (event: React.FormEvent) => {
     event.preventDefault();
     setLoading(true);
-    const session = await mockBackofficeLogin('veterinarian', credentials.email);
-    saveBackofficeSession('veterinarian', session);
-    setSessionUser(session.user);
-    setLoading(false);
+    setAuthError(null);
+    try {
+      const session = await mockBackofficeLogin('veterinarian', credentials.email);
+      saveBackofficeSession('veterinarian', session);
+      setSessionUser(session.user);
+    } catch (error) {
+      setAuthError(error instanceof Error ? error.message : 'Não foi possível autenticar neste painel.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLogout = () => {
@@ -84,14 +115,20 @@ export const VeterinaryPortal: React.FC<VeterinaryPortalProps> = ({ setView }) =
 
   if (!sessionUser) {
     return (
-      <BackofficeAuth
-        role="veterinarian"
-        loading={loading}
-        credentials={credentials}
-        setCredentials={setCredentials}
-        onSubmit={handleLogin}
-        onBackToSite={() => setView('landing')}
-      />
+      <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        <Header view="veterinary" setView={setView} cartItemCount={0} onCartClick={() => undefined} />
+        <main style={{ flex: '1 0 auto', background: authBackground }}>
+          <BackofficeAuth
+            role="veterinarian"
+            loading={loading}
+            authError={authError}
+            credentials={credentials}
+            setCredentials={setCredentials}
+            onSubmit={handleLogin}
+          />
+        </main>
+        <Footer setView={setView} />
+      </div>
     );
   }
 
