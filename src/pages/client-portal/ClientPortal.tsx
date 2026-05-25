@@ -6,6 +6,8 @@ import LocalMallRounded from '@mui/icons-material/LocalMallRounded';
 import MedicalServicesRounded from '@mui/icons-material/MedicalServicesRounded';
 import PersonRounded from '@mui/icons-material/PersonRounded';
 import PetsRounded from '@mui/icons-material/PetsRounded';
+import ArrowForwardRounded from '@mui/icons-material/ArrowForwardRounded';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { Footer } from '@/components/footer/Footer';
 import { Header } from '@/components/header/Header';
 import { ClientPortalAuth } from '@/features/client-portal/components/ClientPortalAuth';
@@ -63,6 +65,7 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
   const [authLoading, setAuthLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const isMobile = useMediaQuery('(max-width: 980px)');
   const [portalTheme, setPortalTheme] = useState<PortalTheme>(() => {
     const saved = localStorage.getItem('acqua-pet-client-theme');
     return saved === 'dark' ? 'dark' : 'light';
@@ -508,6 +511,32 @@ export const ClientPortal: React.FC<ClientPortalProps> = ({ setView, addToCart }
           </div>
         </div>
       </div>
+      {isMobile && !isSidebarOpen && (
+        <button
+          type="button"
+          onClick={() => setIsSidebarOpen(true)}
+          style={{
+            position: 'fixed',
+            bottom: '24px',
+            left: '24px',
+            zIndex: 1000,
+            width: '50px',
+            height: '50px',
+            borderRadius: '50%',
+            background: 'var(--portal-accent)',
+            color: '#ffffff',
+            boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)',
+            border: '1px solid var(--portal-border)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            lineHeight: 0,
+            cursor: 'pointer',
+          }}
+        >
+          <ArrowForwardRounded sx={{ fontSize: 22, color: '#ffffff' }} />
+        </button>
+      )}
     </div>
   );
 };
